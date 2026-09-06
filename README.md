@@ -25,7 +25,7 @@ A modern, interactive weather dashboard tracking **12 major world cities** using
   - **⚖️ Head-to-Head Comparison**: Select any 2 cities from dropdowns to compare their atmospheric conditions and forecasts side-by-side.
 - **High-Speed Concurrent Fetching**: Powered by Python's `ThreadPoolExecutor` (4 concurrent worker threads), speeding up multi-city fetching by ~70% while respecting server limits.
 - **Metric / Imperial Unit Switcher**: Seamless live toggle between **°C (km/h)** and **°F (mph)**.
-- **Tactile ("Clicky") Locations Bar**: Mouse wheel and trackpad horizontal scrolling with CSS Scroll Snapping (`scroll-snap-type: x mandatory`, `scroll-snap-stop: always`) that only intercepts scrolling when hovering over the bar.
+- **Scroll-Driven Location Selection**: Scrolling over the locations bar automatically activates and selects the next/previous city, updating the entire dashboard in real time. Supports both single-notch 1-at-a-time navigation and rapid multi-item scrolling with CSS Scroll Snapping (`scroll-snap-type: x mandatory`, `scroll-snap-align: center`).
 - **Modern Glassmorphic UI**: Sleek dark aesthetic with responsive layout for desktop and mobile.
 
 ---

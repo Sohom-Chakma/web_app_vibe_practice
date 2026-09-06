@@ -383,7 +383,7 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
       scroll-snap-type: x mandatory;
       scroll-behavior: smooth;
-      scroll-padding: 0 18px;
+      scroll-padding: 0 40px;
       overscroll-behavior-x: contain;
       -webkit-overflow-scrolling: touch;
     }}
@@ -403,8 +403,8 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       white-space: nowrap;
       transition: var(--transition-smooth);
       user-select: none;
-      scroll-snap-align: start;
-      scroll-snap-stop: always;
+      scroll-snap-align: center;
+      scroll-snap-stop: normal;
       flex-shrink: 0;
     }}
 
@@ -1295,7 +1295,7 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       currentUnit = unit;
       document.getElementById('btn-celsius').classList.toggle('active', unit === 'C');
       document.getElementById('btn-fahrenheit').classList.toggle('active', unit === 'F');
-      renderNavBar();
+      updateNavTemperatures();
       if (currentViewMode === 'single') renderDashboard();
       if (currentViewMode === 'all') renderAllCitiesGrid();
       if (currentViewMode === 'compare') updateComparison();
@@ -1311,17 +1311,26 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       document.getElementById('all-cities-view').style.display = mode === 'all' ? 'flex' : 'none';
       document.getElementById('compare-view').style.display = mode === 'compare' ? 'flex' : 'none';
 
+      updateNavActiveState(currentCityId, false);
+
       if (mode === 'single') renderDashboard();
       if (mode === 'all') renderAllCitiesGrid();
       if (mode === 'compare') updateComparison();
     }}
 
-    function selectCity(cityId) {{
+    function selectCity(cityId, shouldScroll = true) {{
       currentCityId = cityId;
       selectedDayIndex = 0;
       setViewMode('single');
-      renderNavBar();
+      updateNavActiveState(cityId, shouldScroll);
       renderDashboard();
+    }}
+
+    function selectCityByIndex(index, shouldScroll = true) {{
+      if (index < 0 || index >= cityList.length) return;
+      const city = cityList[index];
+      const cid = city.name.toLowerCase().replace(' ', '-');
+      selectCity(cid, shouldScroll);
     }}
 
     function selectDay(index) {{
@@ -1337,11 +1346,11 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       return {{ text: 'Very High', class: 'badge-rose' }};
     }}
 
-    function renderNavBar() {{
+    function buildNavBar() {{
       const nav = document.getElementById('city-nav-bar');
       nav.innerHTML = '';
 
-      cityList.forEach(c => {{
+      cityList.forEach((c, idx) => {{
         const cid = c.name.toLowerCase().replace(' ', '-');
         const data = weatherData[cid];
         if (!data) return;
@@ -1349,13 +1358,42 @@ def generate_html(weather_data: dict, city_list: list) -> str:
         const tempVal = currentUnit === 'C' ? data.current.tempC : data.current.tempF;
         const btn = document.createElement('div');
         btn.className = `city-nav-item ${{cid === currentCityId && currentViewMode === 'single' ? 'active' : ''}}`;
-        btn.onclick = () => selectCity(cid);
+        btn.setAttribute('data-city-id', cid);
+        btn.setAttribute('data-index', idx);
+        btn.onclick = () => selectCity(cid, true);
         btn.innerHTML = `
           <span>${{c.flag}}</span>
           <span>${{c.name}}</span>
-          <span class="city-nav-pill-temp">${{tempVal}}°${{currentUnit}}</span>
+          <span class="city-nav-pill-temp" id="nav-temp-${{cid}}">${{tempVal}}°${{currentUnit}}</span>
         `;
         nav.appendChild(btn);
+      }});
+    }}
+
+    function updateNavActiveState(cityId, shouldScroll = false) {{
+      const nav = document.getElementById('city-nav-bar');
+      if (!nav) return;
+      const items = nav.querySelectorAll('.city-nav-item');
+      let targetItem = null;
+      items.forEach(item => {{
+        const isMatch = item.getAttribute('data-city-id') === cityId && currentViewMode === 'single';
+        item.classList.toggle('active', isMatch);
+        if (isMatch) targetItem = item;
+      }});
+      if (shouldScroll && targetItem) {{
+        targetItem.scrollIntoView({{ behavior: 'smooth', inline: 'center', block: 'nearest' }});
+      }}
+    }}
+
+    function updateNavTemperatures() {{
+      cityList.forEach(c => {{
+        const cid = c.name.toLowerCase().replace(' ', '-');
+        const data = weatherData[cid];
+        const el = document.getElementById(`nav-temp-${{cid}}`);
+        if (data && el) {{
+          const tempVal = currentUnit === 'C' ? data.current.tempC : data.current.tempF;
+          el.textContent = `${{tempVal}}°${{currentUnit}}`;
+        }}
       }});
     }}
 
@@ -1602,27 +1640,84 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       const navBar = document.getElementById('city-nav-bar');
       if (!navBar) return;
 
-      // Intercept mouse wheel when pointer is directly over the locations bar
-      navBar.addEventListener('wheel', (e) => {{
-        // When vertical scroll (deltaY) is dominant, translate it into horizontal snap scroll
-        if (Math.abs(e.deltaY) >= Math.abs(e.deltaX)) {{
-          e.preventDefault(); // Stop main page from scrolling vertically
-          
-          const item = navBar.querySelector('.city-nav-item');
-          const step = item ? (item.offsetWidth + 10) : 150;
-          const direction = Math.sign(e.deltaY);
+      let lastWheelTime = 0;
+      let isProgrammaticScroll = false;
+      let programmaticTimer = null;
 
-          navBar.scrollBy({{
-            left: direction * step,
-            behavior: 'smooth'
-          }});
+      // Mouse wheel listener: single-notch step & rapid spin multi-step with auto-selection
+      navBar.addEventListener('wheel', (e) => {{
+        // Intercept when hovering over the locations bar and vertical movement is dominant
+        if (Math.abs(e.deltaY) >= Math.abs(e.deltaX)) {{
+          e.preventDefault(); // Stop main webpage from scrolling vertically
+
+          const now = Date.now();
+          const timeDiff = now - lastWheelTime;
+          lastWheelTime = now;
+
+          // Find current active city index
+          const currentIndex = cityList.findIndex(c => c.name.toLowerCase().replace(' ', '-') === currentCityId);
+          if (currentIndex === -1) return;
+
+          const direction = Math.sign(e.deltaY); // 1 = next, -1 = prev
+          const absDelta = Math.abs(e.deltaY);
+
+          // Determine step size based on wheel velocity
+          let step = 1;
+          // Rapid spin detection: rapid successive events (< 80ms) with significant delta
+          if (absDelta > 200 || (timeDiff < 80 && absDelta > 70)) {{
+            step = Math.min(4, Math.max(1, Math.round(absDelta / 70)));
+          }}
+
+          let targetIndex = currentIndex + (direction * step);
+          targetIndex = Math.max(0, Math.min(cityList.length - 1, targetIndex));
+
+          if (targetIndex !== currentIndex) {{
+            isProgrammaticScroll = true;
+            clearTimeout(programmaticTimer);
+            programmaticTimer = setTimeout(() => {{ isProgrammaticScroll = false; }}, 400);
+
+            selectCityByIndex(targetIndex, true);
+          }}
         }}
       }}, {{ passive: false }});
+
+      // Debounced center-detection for trackpad horizontal scrolling or manual drags
+      let scrollDebounceTimer = null;
+      navBar.addEventListener('scroll', () => {{
+        if (isProgrammaticScroll) return;
+
+        clearTimeout(scrollDebounceTimer);
+        scrollDebounceTimer = setTimeout(() => {{
+          const navRect = navBar.getBoundingClientRect();
+          const navCenter = navRect.left + navRect.width / 2;
+
+          const items = navBar.querySelectorAll('.city-nav-item');
+          let closestItem = null;
+          let minDistance = Infinity;
+
+          items.forEach(item => {{
+            const rect = item.getBoundingClientRect();
+            const itemCenter = rect.left + rect.width / 2;
+            const dist = Math.abs(navCenter - itemCenter);
+            if (dist < minDistance) {{
+              minDistance = dist;
+              closestItem = item;
+            }}
+          }});
+
+          if (closestItem) {{
+            const cid = closestItem.getAttribute('data-city-id');
+            if (cid && cid !== currentCityId && currentViewMode === 'single') {{
+              selectCity(cid, false);
+            }}
+          }}
+        }}, 60);
+      }}, {{ passive: true }});
     }}
 
     // Initialize
     initCompareDropdowns();
-    renderNavBar();
+    buildNavBar();
     renderDashboard();
     setupNavBarScroll();
   </script>
