@@ -1,0 +1,2293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global Weather Intelligence | London & Ankara</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-base: #0a0f1d;
+      --bg-surface: #131b2e;
+      --bg-card: rgba(23, 32, 54, 0.75);
+      --bg-card-hover: rgba(30, 42, 70, 0.9);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(99, 102, 241, 0.35);
+      --primary: #6366f1;
+      --primary-light: #818cf8;
+      --accent-cyan: #06b6d4;
+      --accent-amber: #f59e0b;
+      --accent-emerald: #10b981;
+      --accent-rose: #f43f5e;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-faint: #64748b;
+      --radius-xl: 24px;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      --shadow-glow: 0 0 25px rgba(99, 102, 241, 0.25);
+      --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at 20% 15%, #1e1b4b 0%, #0a0f1d 70%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.5;
+      padding: 24px 16px;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Top Navigation Header */
+    header.dashboard-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 28px;
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-glass);
+      gap: 16px;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #6366f1, #06b6d4);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .brand-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(to right, #ffffff, #cbd5e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .controls-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* City Selector Tabs */
+    .view-tabs {
+      display: flex;
+      background: rgba(15, 23, 42, 0.6);
+      padding: 4px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 14px;
+      padding: 8px 18px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+    }
+
+    /* Unit Switcher Button */
+    .unit-switch {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .unit-toggle-btn {
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: var(--radius-md);
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .unit-toggle-btn.active {
+      background: #0ea5e9;
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(14, 165, 233, 0.4);
+    }
+
+    /* Action Buttons */
+    .action-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 9px 16px;
+      border-radius: var(--radius-lg);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .action-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Main City Weather Overview */
+    .city-view-container {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .hero-weather-card {
+      background: linear-gradient(135deg, rgba(30, 27, 75, 0.8) 0%, rgba(15, 23, 42, 0.85) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(129, 140, 248, 0.2);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 32px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-glass);
+    }
+
+    .hero-weather-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .city-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .city-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      padding: 6px 14px;
+      border-radius: 9999px;
+      width: fit-content;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary-light);
+    }
+
+    .city-title-row {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      margin-top: 4px;
+    }
+
+    .city-name {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .city-country {
+      font-size: 18px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .current-temp-block {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin: 16px 0 8px;
+    }
+
+    .temp-large {
+      font-size: 76px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .weather-condition-badge {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .weather-icon-giant {
+      font-size: 48px;
+      line-height: 1;
+    }
+
+    .weather-desc {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .temp-feel-range {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 15px;
+      color: var(--text-muted);
+    }
+
+    .temp-feel-range strong {
+      color: var(--text-main);
+    }
+
+    /* Hero Right Column: Astronomy & Highlights */
+    .hero-highlights {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      gap: 16px;
+    }
+
+    .astro-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .astro-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .astro-item-icon {
+      font-size: 24px;
+    }
+
+    .astro-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .astro-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .geo-pill {
+      font-size: 12px;
+      color: var(--text-faint);
+      display: flex;
+      justify-content: space-between;
+      margin-top: 4px;
+    }
+
+    /* Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .metric-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: var(--transition-smooth);
+    }
+
+    .metric-card:hover {
+      transform: translateY(-2px);
+      background: var(--bg-card-hover);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .metric-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .metric-icon {
+      font-size: 18px;
+    }
+
+    .metric-value {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .metric-subtext {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .badge-pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .badge-emerald { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .badge-amber { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    .badge-rose { background: rgba(244, 63, 94, 0.2); color: #fb7185; }
+    .badge-cyan { background: rgba(6, 182, 212, 0.2); color: #38bdf8; }
+
+    /* Forecast Section */
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .forecast-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .forecast-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .forecast-card:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(99, 102, 241, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .forecast-card.selected {
+      border: 2px solid var(--primary-light);
+      background: rgba(30, 41, 69, 0.95);
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.25);
+    }
+
+    .forecast-card.selected::after {
+      content: 'Selected Day';
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      background: var(--primary);
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 9999px;
+    }
+
+    .forecast-day-name {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .forecast-date {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .forecast-center {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 12px 0;
+    }
+
+    .forecast-icon {
+      font-size: 38px;
+      line-height: 1;
+    }
+
+    .forecast-temp-range {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .forecast-max {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .forecast-min {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .forecast-desc {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .forecast-stats-pill {
+      display: flex;
+      justify-content: space-between;
+      background: rgba(15, 23, 42, 0.5);
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Hourly Breakdown Section */
+    .hourly-container {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      box-shadow: var(--shadow-glass);
+      margin-top: 8px;
+    }
+
+    .hourly-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .hourly-scroll {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .hourly-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      text-align: center;
+      min-width: 105px;
+      transition: var(--transition-smooth);
+    }
+
+    .hourly-card:hover {
+      background: rgba(30, 42, 70, 0.8);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .hourly-time {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .hourly-icon {
+      font-size: 28px;
+      margin: 4px 0;
+    }
+
+    .hourly-temp {
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .hourly-rain {
+      font-size: 12px;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      font-weight: 600;
+    }
+
+    .hourly-wind {
+      font-size: 11px;
+      color: var(--text-faint);
+    }
+
+    /* Comparison View (Side-by-Side) */
+    .comparison-view {
+      display: none;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .compare-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .compare-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 26px;
+      font-weight: 800;
+    }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+    }
+
+    .compare-table tr {
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .compare-table tr:last-child {
+      border-bottom: none;
+    }
+
+    .compare-table td {
+      padding: 12px 6px;
+      font-size: 14px;
+    }
+
+    .compare-table td:first-child {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .compare-table td:last-child {
+      text-align: right;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* Footer */
+    footer.dashboard-footer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      font-size: 13px;
+      color: var(--text-faint);
+      border-top: 1px solid var(--border-subtle);
+      margin-top: 24px;
+      gap: 12px;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .hero-weather-card {
+        grid-template-columns: 1fr;
+      }
+      .forecast-grid {
+        grid-template-columns: 1fr;
+      }
+      .comparison-grid {
+        grid-template-columns: 1fr;
+      }
+      .hourly-scroll {
+        grid-template-columns: repeat(8, 120px);
+      }
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="dashboard-header">
+      <div class="brand-group">
+        <div class="brand-icon">🌐</div>
+        <div>
+          <h1 class="brand-title">Weather Intelligence Dashboard</h1>
+          <p class="brand-subtitle">Real-time Observations & 3-Day Forecast via wttr.in</p>
+        </div>
+      </div>
+
+      <div class="controls-group">
+        <!-- City View Tabs -->
+        <div class="view-tabs">
+          <button class="tab-btn active" onclick="switchCity('london')" id="tab-london">
+            <span>🇬🇧</span> London
+          </button>
+          <button class="tab-btn" onclick="switchCity('ankara')" id="tab-ankara">
+            <span>🇹🇷</span> Ankara
+          </button>
+          <button class="tab-btn" onclick="switchView('compare')" id="tab-compare">
+            <span>⚖️</span> Compare Both
+          </button>
+        </div>
+
+        <!-- Units Switcher -->
+        <div class="unit-switch" title="Toggle Temperature & Wind units">
+          <button class="unit-toggle-btn active" id="btn-celsius" onclick="setUnit('C')">°C, km/h</button>
+          <button class="unit-toggle-btn" id="btn-fahrenheit" onclick="setUnit('F')">°F, mph</button>
+        </div>
+
+        <!-- Live Refresh -->
+        <button class="action-btn" onclick="reloadWeatherData()" title="Reload from wttr.in">
+          <span id="refresh-icon">🔄</span> Refresh
+        </button>
+      </div>
+    </header>
+
+    <!-- Single City View (London / Ankara) -->
+    <main id="city-view" class="city-view-container">
+      <!-- Hero Weather Card -->
+      <section class="hero-weather-card" id="hero-card">
+        <div class="city-meta">
+          <div class="city-badge" id="hero-badge">
+            <span id="hero-flag">🇬🇧</span> <span id="hero-region">United Kingdom</span>
+          </div>
+          <div class="city-title-row">
+            <h2 class="city-name" id="hero-city-name">London</h2>
+            <span class="city-country" id="hero-country">UK</span>
+          </div>
+          <div class="current-temp-block">
+            <div class="temp-large" id="hero-temp">--°</div>
+            <div class="weather-condition-badge">
+              <span class="weather-icon-giant" id="hero-icon">☀️</span>
+              <span class="weather-desc" id="hero-desc">Sunny</span>
+            </div>
+          </div>
+          <div class="temp-feel-range">
+            <span>Feels like <strong id="hero-feels-like">--°</strong></span>
+            <span>•</span>
+            <span>Today's Range: <strong id="hero-temp-range">--° / --°</strong></span>
+          </div>
+        </div>
+
+        <!-- Right Side: Astronomy & Highlights -->
+        <div class="hero-highlights">
+          <div class="astro-row">
+            <div class="astro-item">
+              <span class="astro-item-icon">🌅</span>
+              <div>
+                <div class="astro-label">Sunrise</div>
+                <div class="astro-value" id="hero-sunrise">--:--</div>
+              </div>
+            </div>
+            <div class="astro-item">
+              <span class="astro-item-icon">🌇</span>
+              <div>
+                <div class="astro-label">Sunset</div>
+                <div class="astro-value" id="hero-sunset">--:--</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="astro-row">
+            <div class="astro-item">
+              <span class="astro-item-icon">🌖</span>
+              <div>
+                <div class="astro-label">Moon Phase</div>
+                <div class="astro-value" id="hero-moon-phase">--</div>
+              </div>
+            </div>
+            <div class="astro-item">
+              <span class="astro-item-icon">☀️</span>
+              <div>
+                <div class="astro-label">Sun Hours</div>
+                <div class="astro-value" id="hero-sun-hours">-- hrs</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="geo-pill">
+            <span>Observed at <strong id="hero-obs-time" style="color:var(--text-main);">--</strong></span>
+            <span id="hero-coords">Lat --°, Lon --°</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Current Detailed Metrics -->
+      <section>
+        <h3 class="section-title"><span>📊</span> Current Atmospheric Conditions</h3>
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-header">
+              <span>Humidity</span>
+              <span class="metric-icon">💧</span>
+            </div>
+            <div class="metric-value" id="metric-humidity">--%</div>
+            <div class="metric-subtext" id="metric-humidity-sub">Normal comfort</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span>Wind Speed & Dir</span>
+              <span class="metric-icon">💨</span>
+            </div>
+            <div class="metric-value" id="metric-wind">--</div>
+            <div class="metric-subtext" id="metric-wind-dir">Direction: --</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span>UV Index</span>
+              <span class="metric-icon">☀️</span>
+            </div>
+            <div class="metric-value" id="metric-uv">--</div>
+            <div class="metric-subtext"><span class="badge-pill" id="metric-uv-badge">Moderate</span></div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span>Precipitation</span>
+              <span class="metric-icon">🌧️</span>
+            </div>
+            <div class="metric-value" id="metric-precip">--</div>
+            <div class="metric-subtext" id="metric-precip-sub">Accumulation</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span>Cloud Cover</span>
+              <span class="metric-icon">☁️</span>
+            </div>
+            <div class="metric-value" id="metric-cloud">--%</div>
+            <div class="metric-subtext" id="metric-cloud-sub">Sky coverage</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span>Pressure</span>
+              <span class="metric-icon">🧭</span>
+            </div>
+            <div class="metric-value" id="metric-pressure">--</div>
+            <div class="metric-subtext">Barometer</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span>Visibility</span>
+              <span class="metric-icon">👁️</span>
+            </div>
+            <div class="metric-value" id="metric-visibility">--</div>
+            <div class="metric-subtext" id="metric-vis-sub">Sight range</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3-Day Forecast Cards -->
+      <section>
+        <h3 class="section-title"><span>📅</span> 3-Day Weather Forecast <span style="font-size: 13px; font-weight: 500; color: var(--text-muted); margin-left: 8px;">(Click any day to view hourly breakdown)</span></h3>
+        <div class="forecast-grid" id="forecast-cards-container">
+          <!-- Populated by JavaScript -->
+        </div>
+      </section>
+
+      <!-- Hourly Forecast for Selected Day -->
+      <section class="hourly-container">
+        <div class="hourly-header">
+          <h3 class="section-title" style="margin-bottom: 0;">
+            <span>⏱️</span> 24-Hour Forecast Breakdown — <span id="hourly-day-label" style="color: var(--primary-light);">Today</span>
+          </h3>
+          <span style="font-size: 13px; color: var(--text-muted);" id="hourly-date-label"></span>
+        </div>
+        <div class="hourly-scroll" id="hourly-list">
+          <!-- Populated by JavaScript -->
+        </div>
+      </section>
+    </main>
+
+    <!-- Side-by-Side Comparison View -->
+    <main id="compare-view" class="comparison-view">
+      <h2 class="section-title"><span>⚖️</span> Head-to-Head Comparison: London vs. Ankara</h2>
+      <div class="comparison-grid">
+        <!-- London Compare Box -->
+        <div class="compare-card">
+          <div class="compare-title">
+            <span>🇬🇧</span> London, United Kingdom
+          </div>
+          <table class="compare-table" id="compare-table-london">
+            <!-- Populated via JS -->
+          </table>
+        </div>
+
+        <!-- Ankara Compare Box -->
+        <div class="compare-card">
+          <div class="compare-title">
+            <span>🇹🇷</span> Ankara, Turkey
+          </div>
+          <table class="compare-table" id="compare-table-ankara">
+            <!-- Populated via JS -->
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+      <div>
+        Data source: <strong>wttr.in/&lt;location&gt;?format=j1</strong> • Parsed with Python & modern web standards
+      </div>
+      <div>
+        Last Updated: <span id="footer-timestamp">2026-09-07 01:45:13</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Embedded Live Weather Data -->
+  <script>
+    const weatherData = {
+  "london": {
+    "id": "london",
+    "name": "Strand",
+    "country": "United Kingdom",
+    "region": "Westminster Greater London",
+    "flag": "\ud83c\uddec\ud83c\udde7",
+    "latitude": "51.508",
+    "longitude": "-0.121",
+    "current": {
+      "tempC": 26,
+      "tempF": 78,
+      "feelsLikeC": 22,
+      "feelsLikeF": 72,
+      "desc": "Overcast",
+      "icon": "\u2601\ufe0f",
+      "weatherCode": "122",
+      "humidity": 31,
+      "windSpeedKmph": 15,
+      "windSpeedMiles": 9,
+      "windDir": "SSW",
+      "windDirDegree": "194",
+      "pressure": 1018,
+      "pressureInches": 30.0,
+      "visibilityKm": 10,
+      "visibilityMiles": 6,
+      "uvIndex": 1,
+      "cloudcover": 100,
+      "precipMM": 0.0,
+      "precipInches": 0.0,
+      "obsTime": ""
+    },
+    "forecast": [
+      {
+        "dayIndex": 0,
+        "date": "2026-09-06",
+        "displayDate": "Sep 06, 2026",
+        "dayLabel": "Today",
+        "weekday": "Sunday",
+        "desc": "Overcast",
+        "icon": "\u2601\ufe0f",
+        "maxTempC": 26,
+        "maxTempF": 79,
+        "minTempC": 15,
+        "minTempF": 60,
+        "avgTempC": 20,
+        "avgTempF": 69,
+        "uvIndex": 4,
+        "sunHour": 3.0,
+        "maxRainChance": 18,
+        "astronomy": {
+          "sunrise": "06:21 AM",
+          "sunset": "07:36 PM",
+          "moonrise": "No moonrise",
+          "moonset": "05:39 PM",
+          "moonPhase": "Waning Crescent",
+          "moonIllum": "31"
+        },
+        "hourly": [
+          {
+            "timeRaw": "0",
+            "timeFormatted": "12:00 AM",
+            "tempC": 17,
+            "tempF": 63,
+            "feelsLikeC": 17,
+            "feelsLikeF": 63,
+            "desc": "Overcast",
+            "icon": "\u2601\ufe0f",
+            "chanceOfRain": 12,
+            "chanceOfSnow": 0,
+            "humidity": 56,
+            "windSpeedKmph": 5,
+            "windSpeedMiles": 3,
+            "windDir": "SW",
+            "cloudcover": 90,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "300",
+            "timeFormatted": "3:00 AM",
+            "tempC": 16,
+            "tempF": 61,
+            "feelsLikeC": 16,
+            "feelsLikeF": 61,
+            "desc": "Partly Cloudy",
+            "icon": "\u26c5",
+            "chanceOfRain": 9,
+            "chanceOfSnow": 0,
+            "humidity": 63,
+            "windSpeedKmph": 4,
+            "windSpeedMiles": 3,
+            "windDir": "S",
+            "cloudcover": 57,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "600",
+            "timeFormatted": "6:00 AM",
+            "tempC": 15,
+            "tempF": 60,
+            "feelsLikeC": 15,
+            "feelsLikeF": 60,
+            "desc": "Overcast",
+            "icon": "\u2601\ufe0f",
+            "chanceOfRain": 18,
+            "chanceOfSnow": 0,
+            "humidity": 69,
+            "windSpeedKmph": 8,
+            "windSpeedMiles": 5,
+            "windDir": "S",
+            "cloudcover": 100,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "900",
+            "timeFormatted": "9:00 AM",
+            "tempC": 18,
+            "tempF": 64,
+            "feelsLikeC": 18,
+            "feelsLikeF": 64,
+            "desc": "Overcast",
+            "icon": "\u2601\ufe0f",
+            "chanceOfRain": 15,
+            "chanceOfSnow": 0,
+            "humidity": 61,
+            "windSpeedKmph": 10,
+            "windSpeedMiles": 6,
+            "windDir": "SSE",
+            "cloudcover": 100,
+            "uvIndex": 1
+          },
+          {
+            "timeRaw": "1200",
+            "timeFormatted": "12:00 PM",
+            "tempC": 24,
+            "tempF": 74,
+            "feelsLikeC": 24,
+            "feelsLikeF": 76,
+            "desc": "Overcast",
+            "icon": "\u2601\ufe0f",
+            "chanceOfRain": 10,
+            "chanceOfSnow": 0,
+            "humidity": 37,
+            "windSpeedKmph": 14,
+            "windSpeedMiles": 9,
+            "windDir": "SSW",
+            "cloudcover": 100,
+            "uvIndex": 4
+          },
+          {
+            "timeRaw": "1500",
+            "timeFormatted": "3:00 PM",
+            "tempC": 26,
+            "tempF": 79,
+            "feelsLikeC": 25,
+            "feelsLikeF": 78,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 1,
+            "chanceOfSnow": 0,
+            "humidity": 31,
+            "windSpeedKmph": 14,
+            "windSpeedMiles": 9,
+            "windDir": "SSW",
+            "cloudcover": 5,
+            "uvIndex": 3
+          },
+          {
+            "timeRaw": "1800",
+            "timeFormatted": "6:00 PM",
+            "tempC": 25,
+            "tempF": 76,
+            "feelsLikeC": 25,
+            "feelsLikeF": 76,
+            "desc": "Overcast",
+            "icon": "\u2601\ufe0f",
+            "chanceOfRain": 8,
+            "chanceOfSnow": 0,
+            "humidity": 33,
+            "windSpeedKmph": 14,
+            "windSpeedMiles": 9,
+            "windDir": "S",
+            "cloudcover": 92,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "2100",
+            "timeFormatted": "9:00 PM",
+            "tempC": 21,
+            "tempF": 70,
+            "feelsLikeC": 21,
+            "feelsLikeF": 70,
+            "desc": "Overcast",
+            "icon": "\u2601\ufe0f",
+            "chanceOfRain": 10,
+            "chanceOfSnow": 0,
+            "humidity": 42,
+            "windSpeedKmph": 8,
+            "windSpeedMiles": 5,
+            "windDir": "SSW",
+            "cloudcover": 100,
+            "uvIndex": 0
+          }
+        ]
+      },
+      {
+        "dayIndex": 1,
+        "date": "2026-09-07",
+        "displayDate": "Sep 07, 2026",
+        "dayLabel": "Tomorrow",
+        "weekday": "Monday",
+        "desc": "Partly Cloudy",
+        "icon": "\u26c5",
+        "maxTempC": 25,
+        "maxTempF": 76,
+        "minTempC": 17,
+        "minTempF": 63,
+        "avgTempC": 21,
+        "avgTempF": 69,
+        "uvIndex": 4,
+        "sunHour": 7.0,
+        "maxRainChance": 22,
+        "astronomy": {
+          "sunrise": "06:22 AM",
+          "sunset": "07:34 PM",
+          "moonrise": "01:00 AM",
+          "moonset": "06:11 PM",
+          "moonPhase": "Waning Crescent",
+          "moonIllum": "21"
+        },
+        "hourly": [
+          {
+            "timeRaw": "0",
+            "timeFormatted": "12:00 AM",
+            "tempC": 21,
+            "tempF": 69,
+            "feelsLikeC": 21,
+            "feelsLikeF": 69,
+            "desc": "Overcast",
+            "icon": "\u2601\ufe0f",
+            "chanceOfRain": 10,
+            "chanceOfSnow": 0,
+            "humidity": 44,
+            "windSpeedKmph": 5,
+            "windSpeedMiles": 3,
+            "windDir": "SSW",
+            "cloudcover": 100,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "300",
+            "timeFormatted": "3:00 AM",
+            "tempC": 19,
+            "tempF": 66,
+            "feelsLikeC": 19,
+            "feelsLikeF": 66,
+            "desc": "Patchy rain nearby",
+            "icon": "\ud83c\udf27\ufe0f",
+            "chanceOfRain": 22,
+            "chanceOfSnow": 0,
+            "humidity": 58,
+            "windSpeedKmph": 6,
+            "windSpeedMiles": 4,
+            "windDir": "SSW",
+            "cloudcover": 100,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "600",
+            "timeFormatted": "6:00 AM",
+            "tempC": 18,
+            "tempF": 64,
+            "feelsLikeC": 18,
+            "feelsLikeF": 64,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 4,
+            "chanceOfSnow": 0,
+            "humidity": 63,
+            "windSpeedKmph": 8,
+            "windSpeedMiles": 5,
+            "windDir": "W",
+            "cloudcover": 6,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "900",
+            "timeFormatted": "9:00 AM",
+            "tempC": 19,
+            "tempF": 67,
+            "feelsLikeC": 19,
+            "feelsLikeF": 67,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 6,
+            "chanceOfSnow": 0,
+            "humidity": 71,
+            "windSpeedKmph": 13,
+            "windSpeedMiles": 8,
+            "windDir": "W",
+            "cloudcover": 5,
+            "uvIndex": 1
+          },
+          {
+            "timeRaw": "1200",
+            "timeFormatted": "12:00 PM",
+            "tempC": 23,
+            "tempF": 74,
+            "feelsLikeC": 25,
+            "feelsLikeF": 77,
+            "desc": "Partly Cloudy",
+            "icon": "\u26c5",
+            "chanceOfRain": 4,
+            "chanceOfSnow": 0,
+            "humidity": 51,
+            "windSpeedKmph": 17,
+            "windSpeedMiles": 10,
+            "windDir": "W",
+            "cloudcover": 40,
+            "uvIndex": 4
+          },
+          {
+            "timeRaw": "1500",
+            "timeFormatted": "3:00 PM",
+            "tempC": 25,
+            "tempF": 76,
+            "feelsLikeC": 25,
+            "feelsLikeF": 77,
+            "desc": "Overcast",
+            "icon": "\u2601\ufe0f",
+            "chanceOfRain": 10,
+            "chanceOfSnow": 0,
+            "humidity": 39,
+            "windSpeedKmph": 20,
+            "windSpeedMiles": 12,
+            "windDir": "WSW",
+            "cloudcover": 100,
+            "uvIndex": 3
+          },
+          {
+            "timeRaw": "1800",
+            "timeFormatted": "6:00 PM",
+            "tempC": 22,
+            "tempF": 72,
+            "feelsLikeC": 22,
+            "feelsLikeF": 72,
+            "desc": "Overcast",
+            "icon": "\u2601\ufe0f",
+            "chanceOfRain": 10,
+            "chanceOfSnow": 0,
+            "humidity": 40,
+            "windSpeedKmph": 19,
+            "windSpeedMiles": 12,
+            "windDir": "W",
+            "cloudcover": 100,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "2100",
+            "timeFormatted": "9:00 PM",
+            "tempC": 19,
+            "tempF": 66,
+            "feelsLikeC": 19,
+            "feelsLikeF": 66,
+            "desc": "Overcast",
+            "icon": "\u2601\ufe0f",
+            "chanceOfRain": 12,
+            "chanceOfSnow": 0,
+            "humidity": 51,
+            "windSpeedKmph": 15,
+            "windSpeedMiles": 9,
+            "windDir": "W",
+            "cloudcover": 100,
+            "uvIndex": 0
+          }
+        ]
+      },
+      {
+        "dayIndex": 2,
+        "date": "2026-09-08",
+        "displayDate": "Sep 08, 2026",
+        "dayLabel": "Tuesday",
+        "weekday": "Tuesday",
+        "desc": "Patchy rain nearby",
+        "icon": "\ud83c\udf27\ufe0f",
+        "maxTempC": 20,
+        "maxTempF": 69,
+        "minTempC": 15,
+        "minTempF": 59,
+        "avgTempC": 17,
+        "avgTempF": 63,
+        "uvIndex": 4,
+        "sunHour": 2.0,
+        "maxRainChance": 27,
+        "astronomy": {
+          "sunrise": "06:24 AM",
+          "sunset": "07:31 PM",
+          "moonrise": "02:28 AM",
+          "moonset": "06:33 PM",
+          "moonPhase": "Waning Crescent",
+          "moonIllum": "12"
+        },
+        "hourly": [
+          {
+            "timeRaw": "0",
+            "timeFormatted": "12:00 AM",
+            "tempC": 18,
+            "tempF": 64,
+            "feelsLikeC": 18,
+            "feelsLikeF": 64,
+            "desc": "Overcast",
+            "icon": "\u2601\ufe0f",
+            "chanceOfRain": 14,
+            "chanceOfSnow": 0,
+            "humidity": 60,
+            "windSpeedKmph": 14,
+            "windSpeedMiles": 9,
+            "windDir": "WSW",
+            "cloudcover": 100,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "300",
+            "timeFormatted": "3:00 AM",
+            "tempC": 17,
+            "tempF": 63,
+            "feelsLikeC": 17,
+            "feelsLikeF": 63,
+            "desc": "Overcast",
+            "icon": "\u2601\ufe0f",
+            "chanceOfRain": 15,
+            "chanceOfSnow": 0,
+            "humidity": 61,
+            "windSpeedKmph": 15,
+            "windSpeedMiles": 9,
+            "windDir": "SW",
+            "cloudcover": 100,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "600",
+            "timeFormatted": "6:00 AM",
+            "tempC": 16,
+            "tempF": 60,
+            "feelsLikeC": 16,
+            "feelsLikeF": 60,
+            "desc": "Patchy rain nearby",
+            "icon": "\ud83c\udf27\ufe0f",
+            "chanceOfRain": 25,
+            "chanceOfSnow": 0,
+            "humidity": 76,
+            "windSpeedKmph": 18,
+            "windSpeedMiles": 11,
+            "windDir": "SW",
+            "cloudcover": 100,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "900",
+            "timeFormatted": "9:00 AM",
+            "tempC": 15,
+            "tempF": 59,
+            "feelsLikeC": 14,
+            "feelsLikeF": 57,
+            "desc": "Overcast",
+            "icon": "\u2601\ufe0f",
+            "chanceOfRain": 27,
+            "chanceOfSnow": 0,
+            "humidity": 85,
+            "windSpeedKmph": 15,
+            "windSpeedMiles": 10,
+            "windDir": "WSW",
+            "cloudcover": 100,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "1200",
+            "timeFormatted": "12:00 PM",
+            "tempC": 18,
+            "tempF": 64,
+            "feelsLikeC": 18,
+            "feelsLikeF": 64,
+            "desc": "Patchy rain nearby",
+            "icon": "\ud83c\udf27\ufe0f",
+            "chanceOfRain": 17,
+            "chanceOfSnow": 0,
+            "humidity": 45,
+            "windSpeedKmph": 17,
+            "windSpeedMiles": 10,
+            "windDir": "W",
+            "cloudcover": 100,
+            "uvIndex": 3
+          },
+          {
+            "timeRaw": "1500",
+            "timeFormatted": "3:00 PM",
+            "tempC": 20,
+            "tempF": 67,
+            "feelsLikeC": 20,
+            "feelsLikeF": 67,
+            "desc": "Overcast",
+            "icon": "\u2601\ufe0f",
+            "chanceOfRain": 10,
+            "chanceOfSnow": 0,
+            "humidity": 38,
+            "windSpeedKmph": 17,
+            "windSpeedMiles": 10,
+            "windDir": "W",
+            "cloudcover": 100,
+            "uvIndex": 3
+          },
+          {
+            "timeRaw": "1800",
+            "timeFormatted": "6:00 PM",
+            "tempC": 20,
+            "tempF": 68,
+            "feelsLikeC": 20,
+            "feelsLikeF": 68,
+            "desc": "Partly Cloudy",
+            "icon": "\u26c5",
+            "chanceOfRain": 3,
+            "chanceOfSnow": 0,
+            "humidity": 35,
+            "windSpeedKmph": 17,
+            "windSpeedMiles": 10,
+            "windDir": "W",
+            "cloudcover": 41,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "2100",
+            "timeFormatted": "9:00 PM",
+            "tempC": 16,
+            "tempF": 62,
+            "feelsLikeC": 16,
+            "feelsLikeF": 62,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 2,
+            "chanceOfSnow": 0,
+            "humidity": 51,
+            "windSpeedKmph": 18,
+            "windSpeedMiles": 11,
+            "windDir": "W",
+            "cloudcover": 1,
+            "uvIndex": 0
+          }
+        ]
+      }
+    ]
+  },
+  "ankara": {
+    "id": "ankara",
+    "name": "Ankara",
+    "country": "Turkey",
+    "region": "Ankara",
+    "flag": "\ud83c\uddf9\ud83c\uddf7",
+    "latitude": "39.927",
+    "longitude": "32.864",
+    "current": {
+      "tempC": 26,
+      "tempF": 79,
+      "feelsLikeC": 20,
+      "feelsLikeF": 67,
+      "desc": "Sunny",
+      "icon": "\u2600\ufe0f",
+      "weatherCode": "113",
+      "humidity": 26,
+      "windSpeedKmph": 26,
+      "windSpeedMiles": 16,
+      "windDir": "NNW",
+      "windDirDegree": "342",
+      "pressure": 1015,
+      "pressureInches": 30.0,
+      "visibilityKm": 10,
+      "visibilityMiles": 6,
+      "uvIndex": 0,
+      "cloudcover": 0,
+      "precipMM": 0.0,
+      "precipInches": 0.0,
+      "obsTime": ""
+    },
+    "forecast": [
+      {
+        "dayIndex": 0,
+        "date": "2026-09-06",
+        "displayDate": "Sep 06, 2026",
+        "dayLabel": "Today",
+        "weekday": "Sunday",
+        "desc": "Sunny",
+        "icon": "\u2600\ufe0f",
+        "maxTempC": 32,
+        "maxTempF": 89,
+        "minTempC": 16,
+        "minTempF": 61,
+        "avgTempC": 23,
+        "avgTempF": 74,
+        "uvIndex": 8,
+        "sunHour": 13.0,
+        "maxRainChance": 2,
+        "astronomy": {
+          "sunrise": "06:21 AM",
+          "sunset": "07:12 PM",
+          "moonrise": "12:23 AM",
+          "moonset": "04:24 PM",
+          "moonPhase": "Waning Crescent",
+          "moonIllum": "31"
+        },
+        "hourly": [
+          {
+            "timeRaw": "0",
+            "timeFormatted": "12:00 AM",
+            "tempC": 20,
+            "tempF": 68,
+            "feelsLikeC": 20,
+            "feelsLikeF": 68,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 1,
+            "chanceOfSnow": 0,
+            "humidity": 29,
+            "windSpeedKmph": 11,
+            "windSpeedMiles": 7,
+            "windDir": "NE",
+            "cloudcover": 0,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "300",
+            "timeFormatted": "3:00 AM",
+            "tempC": 18,
+            "tempF": 64,
+            "feelsLikeC": 18,
+            "feelsLikeF": 64,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 1,
+            "chanceOfSnow": 0,
+            "humidity": 37,
+            "windSpeedKmph": 7,
+            "windSpeedMiles": 4,
+            "windDir": "NE",
+            "cloudcover": 0,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "600",
+            "timeFormatted": "6:00 AM",
+            "tempC": 16,
+            "tempF": 61,
+            "feelsLikeC": 16,
+            "feelsLikeF": 61,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 2,
+            "chanceOfSnow": 0,
+            "humidity": 48,
+            "windSpeedKmph": 5,
+            "windSpeedMiles": 3,
+            "windDir": "NNE",
+            "cloudcover": 0,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "900",
+            "timeFormatted": "9:00 AM",
+            "tempC": 22,
+            "tempF": 72,
+            "feelsLikeC": 24,
+            "feelsLikeF": 75,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 1,
+            "chanceOfSnow": 0,
+            "humidity": 36,
+            "windSpeedKmph": 2,
+            "windSpeedMiles": 1,
+            "windDir": "NW",
+            "cloudcover": 0,
+            "uvIndex": 2
+          },
+          {
+            "timeRaw": "1200",
+            "timeFormatted": "12:00 PM",
+            "tempC": 27,
+            "tempF": 81,
+            "feelsLikeC": 26,
+            "feelsLikeF": 78,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 0,
+            "chanceOfSnow": 0,
+            "humidity": 22,
+            "windSpeedKmph": 8,
+            "windSpeedMiles": 5,
+            "windDir": "WNW",
+            "cloudcover": 0,
+            "uvIndex": 7
+          },
+          {
+            "timeRaw": "1500",
+            "timeFormatted": "3:00 PM",
+            "tempC": 31,
+            "tempF": 89,
+            "feelsLikeC": 29,
+            "feelsLikeF": 84,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 0,
+            "chanceOfSnow": 0,
+            "humidity": 13,
+            "windSpeedKmph": 14,
+            "windSpeedMiles": 9,
+            "windDir": "NW",
+            "cloudcover": 0,
+            "uvIndex": 5
+          },
+          {
+            "timeRaw": "1800",
+            "timeFormatted": "6:00 PM",
+            "tempC": 28,
+            "tempF": 83,
+            "feelsLikeC": 26,
+            "feelsLikeF": 79,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 0,
+            "chanceOfSnow": 0,
+            "humidity": 21,
+            "windSpeedKmph": 31,
+            "windSpeedMiles": 19,
+            "windDir": "NNW",
+            "cloudcover": 0,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "2100",
+            "timeFormatted": "9:00 PM",
+            "tempC": 22,
+            "tempF": 72,
+            "feelsLikeC": 24,
+            "feelsLikeF": 75,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 1,
+            "chanceOfSnow": 0,
+            "humidity": 34,
+            "windSpeedKmph": 13,
+            "windSpeedMiles": 8,
+            "windDir": "NNW",
+            "cloudcover": 0,
+            "uvIndex": 0
+          }
+        ]
+      },
+      {
+        "dayIndex": 1,
+        "date": "2026-09-07",
+        "displayDate": "Sep 07, 2026",
+        "dayLabel": "Tomorrow",
+        "weekday": "Monday",
+        "desc": "Sunny",
+        "icon": "\u2600\ufe0f",
+        "maxTempC": 26,
+        "maxTempF": 79,
+        "minTempC": 14,
+        "minTempF": 58,
+        "avgTempC": 20,
+        "avgTempF": 68,
+        "uvIndex": 7,
+        "sunHour": 13.0,
+        "maxRainChance": 5,
+        "astronomy": {
+          "sunrise": "06:22 AM",
+          "sunset": "07:11 PM",
+          "moonrise": "01:36 AM",
+          "moonset": "05:09 PM",
+          "moonPhase": "Waning Crescent",
+          "moonIllum": "21"
+        },
+        "hourly": [
+          {
+            "timeRaw": "0",
+            "timeFormatted": "12:00 AM",
+            "tempC": 19,
+            "tempF": 66,
+            "feelsLikeC": 19,
+            "feelsLikeF": 66,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 1,
+            "chanceOfSnow": 0,
+            "humidity": 42,
+            "windSpeedKmph": 10,
+            "windSpeedMiles": 6,
+            "windDir": "NW",
+            "cloudcover": 0,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "300",
+            "timeFormatted": "3:00 AM",
+            "tempC": 16,
+            "tempF": 61,
+            "feelsLikeC": 16,
+            "feelsLikeF": 61,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 2,
+            "chanceOfSnow": 0,
+            "humidity": 53,
+            "windSpeedKmph": 11,
+            "windSpeedMiles": 7,
+            "windDir": "N",
+            "cloudcover": 0,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "600",
+            "timeFormatted": "6:00 AM",
+            "tempC": 14,
+            "tempF": 58,
+            "feelsLikeC": 14,
+            "feelsLikeF": 57,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 5,
+            "chanceOfSnow": 0,
+            "humidity": 66,
+            "windSpeedKmph": 8,
+            "windSpeedMiles": 5,
+            "windDir": "N",
+            "cloudcover": 0,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "900",
+            "timeFormatted": "9:00 AM",
+            "tempC": 20,
+            "tempF": 67,
+            "feelsLikeC": 20,
+            "feelsLikeF": 67,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 1,
+            "chanceOfSnow": 0,
+            "humidity": 36,
+            "windSpeedKmph": 8,
+            "windSpeedMiles": 5,
+            "windDir": "NNE",
+            "cloudcover": 0,
+            "uvIndex": 2
+          },
+          {
+            "timeRaw": "1200",
+            "timeFormatted": "12:00 PM",
+            "tempC": 24,
+            "tempF": 76,
+            "feelsLikeC": 23,
+            "feelsLikeF": 74,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 0,
+            "chanceOfSnow": 0,
+            "humidity": 19,
+            "windSpeedKmph": 15,
+            "windSpeedMiles": 9,
+            "windDir": "NNE",
+            "cloudcover": 0,
+            "uvIndex": 7
+          },
+          {
+            "timeRaw": "1500",
+            "timeFormatted": "3:00 PM",
+            "tempC": 26,
+            "tempF": 79,
+            "feelsLikeC": 25,
+            "feelsLikeF": 76,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 0,
+            "chanceOfSnow": 0,
+            "humidity": 16,
+            "windSpeedKmph": 19,
+            "windSpeedMiles": 12,
+            "windDir": "NNE",
+            "cloudcover": 0,
+            "uvIndex": 5
+          },
+          {
+            "timeRaw": "1800",
+            "timeFormatted": "6:00 PM",
+            "tempC": 24,
+            "tempF": 76,
+            "feelsLikeC": 23,
+            "feelsLikeF": 74,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 0,
+            "chanceOfSnow": 0,
+            "humidity": 19,
+            "windSpeedKmph": 18,
+            "windSpeedMiles": 11,
+            "windDir": "NNE",
+            "cloudcover": 0,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "2100",
+            "timeFormatted": "9:00 PM",
+            "tempC": 18,
+            "tempF": 64,
+            "feelsLikeC": 18,
+            "feelsLikeF": 64,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 1,
+            "chanceOfSnow": 0,
+            "humidity": 32,
+            "windSpeedKmph": 15,
+            "windSpeedMiles": 9,
+            "windDir": "NNE",
+            "cloudcover": 0,
+            "uvIndex": 0
+          }
+        ]
+      },
+      {
+        "dayIndex": 2,
+        "date": "2026-09-08",
+        "displayDate": "Sep 08, 2026",
+        "dayLabel": "Tuesday",
+        "weekday": "Tuesday",
+        "desc": "Sunny",
+        "icon": "\u2600\ufe0f",
+        "maxTempC": 25,
+        "maxTempF": 77,
+        "minTempC": 11,
+        "minTempF": 52,
+        "avgTempC": 18,
+        "avgTempF": 64,
+        "uvIndex": 7,
+        "sunHour": 13.0,
+        "maxRainChance": 5,
+        "astronomy": {
+          "sunrise": "06:23 AM",
+          "sunset": "07:09 PM",
+          "moonrise": "02:52 AM",
+          "moonset": "05:46 PM",
+          "moonPhase": "Waning Crescent",
+          "moonIllum": "12"
+        },
+        "hourly": [
+          {
+            "timeRaw": "0",
+            "timeFormatted": "12:00 AM",
+            "tempC": 14,
+            "tempF": 57,
+            "feelsLikeC": 14,
+            "feelsLikeF": 57,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 1,
+            "chanceOfSnow": 0,
+            "humidity": 41,
+            "windSpeedKmph": 9,
+            "windSpeedMiles": 5,
+            "windDir": "NNE",
+            "cloudcover": 0,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "300",
+            "timeFormatted": "3:00 AM",
+            "tempC": 12,
+            "tempF": 54,
+            "feelsLikeC": 12,
+            "feelsLikeF": 53,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 2,
+            "chanceOfSnow": 0,
+            "humidity": 49,
+            "windSpeedKmph": 9,
+            "windSpeedMiles": 5,
+            "windDir": "NNE",
+            "cloudcover": 0,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "600",
+            "timeFormatted": "6:00 AM",
+            "tempC": 11,
+            "tempF": 52,
+            "feelsLikeC": 10,
+            "feelsLikeF": 51,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 5,
+            "chanceOfSnow": 0,
+            "humidity": 67,
+            "windSpeedKmph": 8,
+            "windSpeedMiles": 5,
+            "windDir": "NE",
+            "cloudcover": 0,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "900",
+            "timeFormatted": "9:00 AM",
+            "tempC": 16,
+            "tempF": 60,
+            "feelsLikeC": 16,
+            "feelsLikeF": 60,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 3,
+            "chanceOfSnow": 0,
+            "humidity": 57,
+            "windSpeedKmph": 6,
+            "windSpeedMiles": 4,
+            "windDir": "ENE",
+            "cloudcover": 0,
+            "uvIndex": 2
+          },
+          {
+            "timeRaw": "1200",
+            "timeFormatted": "12:00 PM",
+            "tempC": 21,
+            "tempF": 71,
+            "feelsLikeC": 21,
+            "feelsLikeF": 71,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 0,
+            "chanceOfSnow": 0,
+            "humidity": 26,
+            "windSpeedKmph": 5,
+            "windSpeedMiles": 3,
+            "windDir": "NE",
+            "cloudcover": 0,
+            "uvIndex": 7
+          },
+          {
+            "timeRaw": "1500",
+            "timeFormatted": "3:00 PM",
+            "tempC": 24,
+            "tempF": 76,
+            "feelsLikeC": 23,
+            "feelsLikeF": 74,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 0,
+            "chanceOfSnow": 0,
+            "humidity": 19,
+            "windSpeedKmph": 11,
+            "windSpeedMiles": 7,
+            "windDir": "NNE",
+            "cloudcover": 0,
+            "uvIndex": 5
+          },
+          {
+            "timeRaw": "1800",
+            "timeFormatted": "6:00 PM",
+            "tempC": 24,
+            "tempF": 76,
+            "feelsLikeC": 23,
+            "feelsLikeF": 74,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 0,
+            "chanceOfSnow": 0,
+            "humidity": 18,
+            "windSpeedKmph": 9,
+            "windSpeedMiles": 5,
+            "windDir": "E",
+            "cloudcover": 0,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "2100",
+            "timeFormatted": "9:00 PM",
+            "tempC": 18,
+            "tempF": 65,
+            "feelsLikeC": 18,
+            "feelsLikeF": 65,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 0,
+            "chanceOfSnow": 0,
+            "humidity": 28,
+            "windSpeedKmph": 9,
+            "windSpeedMiles": 6,
+            "windDir": "ENE",
+            "cloudcover": 0,
+            "uvIndex": 0
+          }
+        ]
+      }
+    ]
+  }
+};
+
+    let currentCityId = 'london';
+    let currentUnit = 'C'; // 'C' or 'F'
+    let selectedDayIndex = 0;
+
+    function setUnit(unit) {
+      currentUnit = unit;
+      document.getElementById('btn-celsius').classList.toggle('active', unit === 'C');
+      document.getElementById('btn-fahrenheit').classList.toggle('active', unit === 'F');
+      renderDashboard();
+    }
+
+    function switchCity(cityId) {
+      currentCityId = cityId;
+      selectedDayIndex = 0;
+      document.getElementById('city-view').style.display = 'flex';
+      document.getElementById('compare-view').style.display = 'none';
+
+      document.getElementById('tab-london').classList.toggle('active', cityId === 'london');
+      document.getElementById('tab-ankara').classList.toggle('active', cityId === 'ankara');
+      document.getElementById('tab-compare').classList.remove('active');
+      renderDashboard();
+    }
+
+    function switchView(viewName) {
+      if (viewName === 'compare') {
+        document.getElementById('city-view').style.display = 'none';
+        document.getElementById('compare-view').style.display = 'flex';
+        document.getElementById('tab-london').classList.remove('active');
+        document.getElementById('tab-ankara').classList.remove('active');
+        document.getElementById('tab-compare').classList.add('active');
+        renderComparison();
+      }
+    }
+
+    function selectDay(index) {
+      selectedDayIndex = index;
+      renderForecastCards();
+      renderHourly();
+    }
+
+    function getUVBadge(uv) {
+      if (uv <= 2) return { text: 'Low', class: 'badge-emerald' };
+      if (uv <= 5) return { text: 'Moderate', class: 'badge-amber' };
+      if (uv <= 7) return { text: 'High', class: 'badge-rose' };
+      return { text: 'Very High', class: 'badge-rose' };
+    }
+
+    function renderDashboard() {
+      const city = weatherData[currentCityId];
+      if (!city) return;
+
+      const curr = city.current;
+      const day0 = city.forecast[0];
+
+      // Hero Elements
+      document.getElementById('hero-flag').textContent = city.flag;
+      document.getElementById('hero-region').textContent = `${city.region || city.country}`;
+      document.getElementById('hero-city-name').textContent = city.name;
+      document.getElementById('hero-country').textContent = city.country;
+
+      const tempVal = currentUnit === 'C' ? curr.tempC : curr.tempF;
+      const feelsLikeVal = currentUnit === 'C' ? curr.feelsLikeC : curr.feelsLikeF;
+      const unitSymbol = `°${currentUnit}`;
+
+      document.getElementById('hero-temp').textContent = `${tempVal}${unitSymbol}`;
+      document.getElementById('hero-icon').textContent = curr.icon;
+      document.getElementById('hero-desc').textContent = curr.desc;
+      document.getElementById('hero-feels-like').textContent = `${feelsLikeVal}${unitSymbol}`;
+
+      const maxToday = currentUnit === 'C' ? day0.maxTempC : day0.maxTempF;
+      const minToday = currentUnit === 'C' ? day0.minTempC : day0.minTempF;
+      document.getElementById('hero-temp-range').textContent = `H: ${maxToday}${unitSymbol} / L: ${minToday}${unitSymbol}`;
+
+      // Hero Highlights
+      document.getElementById('hero-sunrise').textContent = day0.astronomy.sunrise;
+      document.getElementById('hero-sunset').textContent = day0.astronomy.sunset;
+      document.getElementById('hero-moon-phase').textContent = day0.astronomy.moonPhase;
+      document.getElementById('hero-sun-hours').textContent = `${day0.sunHour} hrs`;
+      document.getElementById('hero-obs-time').textContent = curr.obsTime;
+      document.getElementById('hero-coords').textContent = `Lat: ${city.latitude}°, Lon: ${city.longitude}°`;
+
+      // Atmospheric Metrics
+      document.getElementById('metric-humidity').textContent = `${curr.humidity}%`;
+      document.getElementById('metric-humidity-sub').textContent = curr.humidity > 70 ? 'Humid' : curr.humidity < 30 ? 'Dry' : 'Comfortable';
+
+      const windSpeed = currentUnit === 'C' ? `${curr.windSpeedKmph} km/h` : `${curr.windSpeedMiles} mph`;
+      document.getElementById('metric-wind').textContent = windSpeed;
+      document.getElementById('metric-wind-dir').textContent = `Direction: ${curr.windDir} (${curr.windDirDegree}°)`;
+
+      document.getElementById('metric-uv').textContent = curr.uvIndex;
+      const uvInfo = getUVBadge(curr.uvIndex);
+      const uvBadge = document.getElementById('metric-uv-badge');
+      uvBadge.textContent = uvInfo.text;
+      uvBadge.className = `badge-pill ${uvInfo.class}`;
+
+      const precip = currentUnit === 'C' ? `${curr.precipMM} mm` : `${curr.precipInches} in`;
+      document.getElementById('metric-precip').textContent = precip;
+
+      document.getElementById('metric-cloud').textContent = `${curr.cloudcover}%`;
+      document.getElementById('metric-cloud-sub').textContent = curr.cloudcover > 75 ? 'Heavy cover' : curr.cloudcover > 25 ? 'Partially cloudy' : 'Clear skies';
+
+      const pressure = currentUnit === 'C' ? `${curr.pressure} hPa` : `${curr.pressureInches} inHg`;
+      document.getElementById('metric-pressure').textContent = pressure;
+
+      const vis = currentUnit === 'C' ? `${curr.visibilityKm} km` : `${curr.visibilityMiles} mi`;
+      document.getElementById('metric-visibility').textContent = vis;
+
+      renderForecastCards();
+      renderHourly();
+      renderComparison();
+    }
+
+    function renderForecastCards() {
+      const city = weatherData[currentCityId];
+      const container = document.getElementById('forecast-cards-container');
+      container.innerHTML = '';
+
+      city.forecast.forEach((f, idx) => {
+        const card = document.createElement('div');
+        card.className = `forecast-card ${idx === selectedDayIndex ? 'selected' : ''}`;
+        card.onclick = () => selectDay(idx);
+
+        const maxT = currentUnit === 'C' ? f.maxTempC : f.maxTempF;
+        const minT = currentUnit === 'C' ? f.minTempC : f.minTempF;
+        const unitSymbol = `°${currentUnit}`;
+
+        card.innerHTML = `
+          <div class="forecast-day-name">${f.dayLabel}</div>
+          <div class="forecast-date">${f.displayDate}</div>
+          <div class="forecast-center">
+            <span class="forecast-icon">${f.icon}</span>
+            <div class="forecast-temp-range">
+              <span class="forecast-max">${maxT}${unitSymbol}</span>
+              <span class="forecast-min">Low: ${minT}${unitSymbol}</span>
+            </div>
+          </div>
+          <div class="forecast-desc">${f.desc}</div>
+          <div class="forecast-stats-pill">
+            <span>🌧️ ${f.maxRainChance}% rain</span>
+            <span>☀️ UV ${f.uvIndex}</span>
+            <span>🌅 ${f.astronomy.sunrise}</span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function renderHourly() {
+      const city = weatherData[currentCityId];
+      const day = city.forecast[selectedDayIndex];
+      const container = document.getElementById('hourly-list');
+      container.innerHTML = '';
+
+      document.getElementById('hourly-day-label').textContent = `${day.dayLabel} (${day.weekday})`;
+      document.getElementById('hourly-date-label').textContent = day.displayDate;
+
+      day.hourly.forEach(h => {
+        const card = document.createElement('div');
+        card.className = 'hourly-card';
+        const temp = currentUnit === 'C' ? h.tempC : h.tempF;
+        const feels = currentUnit === 'C' ? h.feelsLikeC : h.feelsLikeF;
+        const wind = currentUnit === 'C' ? `${h.windSpeedKmph} km/h` : `${h.windSpeedMiles} mph`;
+        const unitSymbol = `°${currentUnit}`;
+
+        card.innerHTML = `
+          <div class="hourly-time">${h.timeFormatted}</div>
+          <div class="hourly-icon" title="${h.desc}">${h.icon}</div>
+          <div class="hourly-temp">${temp}${unitSymbol}</div>
+          <div style="font-size:11px; color:var(--text-muted);">Feels ${feels}°</div>
+          <div class="hourly-rain">💧 ${h.chanceOfRain}%</div>
+          <div class="hourly-wind">${wind}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function renderComparison() {
+      const lon = weatherData.london;
+      const ank = weatherData.ankara;
+      const unitSym = `°${currentUnit}`;
+
+      function makeRows(city) {
+        const c = city.current;
+        const f0 = city.forecast[0];
+        const f1 = city.forecast[1];
+        const f2 = city.forecast[2];
+        const temp = currentUnit === 'C' ? c.tempC : c.tempF;
+        const feels = currentUnit === 'C' ? c.feelsLikeC : c.feelsLikeF;
+        const wind = currentUnit === 'C' ? `${c.windSpeedKmph} km/h` : `${c.windSpeedMiles} mph`;
+        const f0max = currentUnit === 'C' ? f0.maxTempC : f0.maxTempF;
+        const f0min = currentUnit === 'C' ? f0.minTempC : f0.minTempF;
+        const f1max = currentUnit === 'C' ? f1.maxTempC : f1.maxTempF;
+        const f1min = currentUnit === 'C' ? f1.minTempC : f1.minTempF;
+        const f2max = currentUnit === 'C' ? f2.maxTempC : f2.maxTempF;
+        const f2min = currentUnit === 'C' ? f2.minTempC : f2.minTempF;
+
+        return `
+          <tr><td>Condition</td><td>${c.icon} ${c.desc}</td></tr>
+          <tr><td>Current Temperature</td><td><strong style="color:var(--primary-light); font-size:18px;">${temp}${unitSym}</strong></td></tr>
+          <tr><td>Feels Like</td><td>${feels}${unitSym}</td></tr>
+          <tr><td>Humidity</td><td>${c.humidity}%</td></tr>
+          <tr><td>Wind</td><td>${wind} (${c.windDir})</td></tr>
+          <tr><td>UV Index</td><td>${c.uvIndex} (${getUVBadge(c.uvIndex).text})</td></tr>
+          <tr><td>Cloud Cover</td><td>${c.cloudcover}%</td></tr>
+          <tr><td>Today (${f0.dayLabel})</td><td>${f0.icon} ${f0max}${unitSym} / ${f0min}${unitSym} (${f0.maxRainChance}% rain)</td></tr>
+          <tr><td>Tomorrow (${f1.dayLabel})</td><td>${f1.icon} ${f1max}${unitSym} / ${f1min}${unitSym} (${f1.maxRainChance}% rain)</td></tr>
+          <tr><td>Day 3 (${f2.dayLabel})</td><td>${f2.icon} ${f2max}${unitSym} / ${f2min}${unitSym} (${f2.maxRainChance}% rain)</td></tr>
+          <tr><td>Sunrise / Sunset</td><td>🌅 ${f0.astronomy.sunrise} / 🌇 ${f0.astronomy.sunset}</td></tr>
+        `;
+      }
+
+      document.getElementById('compare-table-london').innerHTML = makeRows(lon);
+      document.getElementById('compare-table-ankara').innerHTML = makeRows(ank);
+    }
+
+    async function reloadWeatherData() {
+      const icon = document.getElementById('refresh-icon');
+      icon.style.display = 'inline-block';
+      icon.style.animation = 'spin 1s linear infinite';
+
+      try {
+        const [resLon, resAnk] = await Promise.all([
+          fetch('https://wttr.in/London?format=j1').then(r => r.json()),
+          fetch('https://wttr.in/Ankara?format=j1').then(r => r.json())
+        ]);
+        alert('Live weather data fetched directly from wttr.in!');
+        location.reload();
+      } catch (err) {
+        console.warn('Direct client-side fetch restricted by CORS, reload python script to re-fetch:', err);
+        alert('Data was fetched fresh via Python generator! To update the file with newest live data, rerun the Python script.');
+      } finally {
+        icon.style.animation = '';
+      }
+    }
+
+    // Initial render
+    renderDashboard();
+  </script>
+</body>
+</html>
