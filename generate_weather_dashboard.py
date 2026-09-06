@@ -437,14 +437,15 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       background: rgba(15, 23, 42, 0.6);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-lg);
-      padding: 4px;
-      display: flex;
+      padding: 3px;
+      display: inline-flex;
       align-items: center;
+      gap: 2px;
     }}
 
     .unit-toggle-btn {{
-      padding: 6px 12px;
-      font-size: 13px;
+      padding: 5px 10px;
+      font-size: 12px;
       font-weight: 700;
       border-radius: var(--radius-md);
       border: none;
@@ -458,6 +459,152 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       background: #0ea5e9;
       color: #fff;
       box-shadow: 0 2px 8px rgba(14, 165, 233, 0.4);
+    }}
+
+    /* Settings Dropdown & Hamburger Menu */
+    .settings-menu-container {{
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }}
+
+    .hamburger-btn {{
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 7px 14px;
+      cursor: pointer;
+      user-select: none;
+    }}
+
+    .hamburger-icon {{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 3.5px;
+      width: 16px;
+      height: 14px;
+    }}
+
+    .hamburger-icon span {{
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: currentColor;
+      border-radius: 2px;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }}
+
+    .hamburger-btn.open .hamburger-icon span:nth-child(1) {{
+      transform: translateY(5.5px) rotate(45deg);
+    }}
+
+    .hamburger-btn.open .hamburger-icon span:nth-child(2) {{
+      opacity: 0;
+      transform: scaleX(0);
+    }}
+
+    .hamburger-btn.open .hamburger-icon span:nth-child(3) {{
+      transform: translateY(-5.5px) rotate(-45deg);
+    }}
+
+    .settings-dropdown {{
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      width: 290px;
+      background: rgba(18, 26, 48, 0.94);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 20px 45px -8px rgba(0, 0, 0, 0.7), var(--glass-bevel);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px) scale(0.96);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }}
+
+    .settings-dropdown.open {{
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }}
+
+    .dropdown-header {{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 8px;
+      margin-bottom: 2px;
+      border-bottom: 1px solid var(--border-subtle);
+    }}
+
+    .dropdown-header-title {{
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--primary-light);
+    }}
+
+    .dropdown-item {{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-radius: var(--radius-md);
+      transition: var(--transition-smooth);
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.02);
+    }}
+
+    .dropdown-item:hover {{
+      background: rgba(255, 255, 255, 0.05);
+    }}
+
+    .dropdown-item-info {{
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }}
+
+    .dropdown-item-title {{
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+    }}
+
+    .dropdown-item-desc {{
+      font-size: 11px;
+      color: var(--text-muted);
+    }}
+
+    .action-btn-sm {{
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      color: var(--text-main);
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }}
+
+    .action-btn-sm:hover {{
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--glass-border-hover);
+      transform: translateY(-1px);
     }}
 
     /* City Selector Bar (12 Cities) with Tactile Scroll Snapping */
@@ -1225,6 +1372,44 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       box-shadow: 0 4px 14px rgba(66, 133, 244, 0.2);
     }}
 
+    [data-theme="light"] .settings-dropdown {{
+      background: rgba(255, 255, 255, 0.96);
+      border-color: rgba(226, 232, 240, 0.95);
+      box-shadow: 0 20px 45px -8px rgba(15, 23, 42, 0.15), var(--glass-bevel);
+    }}
+
+    [data-theme="light"] .dropdown-header {{
+      border-color: rgba(226, 232, 240, 0.95);
+    }}
+
+    [data-theme="light"] .dropdown-header-title {{
+      color: #4285F4;
+    }}
+
+    [data-theme="light"] .dropdown-item {{
+      background: rgba(241, 245, 249, 0.5);
+    }}
+
+    [data-theme="light"] .dropdown-item:hover {{
+      background: rgba(241, 245, 249, 0.95);
+    }}
+
+    [data-theme="light"] .dropdown-item-title {{
+      color: #0f172a;
+    }}
+
+    [data-theme="light"] .action-btn-sm {{
+      background: rgba(255, 255, 255, 0.9);
+      border-color: rgba(226, 232, 240, 0.95);
+      color: #0f172a;
+    }}
+
+    [data-theme="light"] .action-btn-sm:hover {{
+      background: #ffffff;
+      border-color: rgba(66, 133, 244, 0.5);
+      box-shadow: 0 2px 8px rgba(66, 133, 244, 0.2);
+    }}
+
     [data-theme="light"] .city-nav-item {{
       background: rgba(255, 255, 255, 0.55);
       border-color: rgba(226, 232, 240, 0.9);
@@ -1413,21 +1598,64 @@ def generate_html(weather_data: dict, city_list: list) -> str:
           </button>
         </div>
 
-        <!-- Units Switcher -->
-        <div class="unit-switch" title="Toggle Units">
-          <button class="unit-toggle-btn active" id="btn-celsius" onclick="setUnit('C')">°C, km/h</button>
-          <button class="unit-toggle-btn" id="btn-fahrenheit" onclick="setUnit('F')">°F, mph</button>
+        <!-- Settings Hamburger Dropdown Container -->
+        <div class="settings-menu-container" id="settings-menu-container">
+          <button class="action-btn hamburger-btn" id="hamburger-btn" onclick="toggleSettingsMenu(event)" aria-label="Settings Menu" aria-expanded="false" title="Settings & Controls">
+            <span class="hamburger-icon" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+            <span class="hamburger-label">Settings</span>
+          </button>
+
+          <!-- Dropdown Menu Card -->
+          <div class="settings-dropdown" id="settings-dropdown" onclick="event.stopPropagation()">
+            <div class="dropdown-header">
+              <span class="dropdown-header-title">⚙️ Preferences</span>
+            </div>
+
+            <!-- Option 1: Theme Switcher -->
+            <div class="dropdown-item">
+              <div class="dropdown-item-info">
+                <span class="dropdown-item-title">Appearance</span>
+                <span class="dropdown-item-desc">Light or dark theme</span>
+              </div>
+              <div class="dropdown-item-control">
+                <button class="action-btn-sm" id="btn-theme-toggle" onclick="toggleTheme()" title="Switch Light / Dark Theme">
+                  <span id="theme-icon">☀️</span> <span id="theme-label">Light</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Option 2: Measurement Units -->
+            <div class="dropdown-item">
+              <div class="dropdown-item-info">
+                <span class="dropdown-item-title">Units</span>
+                <span class="dropdown-item-desc">Temp & wind velocity</span>
+              </div>
+              <div class="dropdown-item-control">
+                <div class="unit-switch" title="Toggle Units">
+                  <button class="unit-toggle-btn active" id="btn-celsius" onclick="setUnit('C')">°C</button>
+                  <button class="unit-toggle-btn" id="btn-fahrenheit" onclick="setUnit('F')">°F</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Option 3: Atmospheric Weather FX -->
+            <div class="dropdown-item">
+              <div class="dropdown-item-info">
+                <span class="dropdown-item-title">Weather FX</span>
+                <span class="dropdown-item-desc">Canvas particle physics</span>
+              </div>
+              <div class="dropdown-item-control">
+                <button class="action-btn-sm" id="btn-toggle-fx" onclick="toggleWeatherFX()" title="Toggle Weather Particle Canvas Animation">
+                  <span>✨</span> <span id="fx-label">FX: On</span>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <!-- Theme Switcher (☀️ Light / 🌙 Dark) -->
-        <button class="action-btn" id="btn-theme-toggle" onclick="toggleTheme()" title="Switch Light / Dark Theme">
-          <span id="theme-icon">☀️</span> <span id="theme-label">Light</span>
-        </button>
-
-        <!-- Dynamic Weather Canvas FX Switcher -->
-        <button class="action-btn" id="btn-toggle-fx" onclick="toggleWeatherFX()" title="Toggle Weather Particle Canvas Animation">
-          <span>✨</span> <span id="fx-label">FX: On</span>
-        </button>
       </div>
     </header>
 
@@ -2467,6 +2695,40 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       }} catch (e) {{}}
       applyTheme(savedTheme);
     }}
+
+    /* Settings Hamburger Dropdown Controller */
+    function toggleSettingsMenu(e) {{
+      if (e) e.stopPropagation();
+      const dropdown = document.getElementById('settings-dropdown');
+      const btn = document.getElementById('hamburger-btn');
+      if (!dropdown || !btn) return;
+
+      const isOpen = dropdown.classList.toggle('open');
+      btn.classList.toggle('open', isOpen);
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    }}
+
+    function closeSettingsMenu() {{
+      const dropdown = document.getElementById('settings-dropdown');
+      const btn = document.getElementById('hamburger-btn');
+      if (dropdown) dropdown.classList.remove('open');
+      if (btn) {{
+        btn.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      }}
+    }}
+
+    // Auto-close settings menu on outside click and Escape key
+    document.addEventListener('click', (e) => {{
+      const container = document.getElementById('settings-menu-container');
+      if (container && !container.contains(e.target)) {{
+        closeSettingsMenu();
+      }}
+    }});
+
+    document.addEventListener('keydown', (e) => {{
+      if (e.key === 'Escape') closeSettingsMenu();
+    }});
 
     // Initialize
     initTheme();

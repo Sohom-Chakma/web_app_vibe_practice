@@ -24,11 +24,14 @@ A modern, interactive weather dashboard tracking **12 major world cities** using
   - **🗺️ 12-City Overview**: At-a-glance cards for all 12 cities showing real-time temperature, condition badge, humidity, and today's high/low range.
   - **⚖️ Head-to-Head Comparison**: Select any 2 cities from dropdowns to compare their atmospheric conditions and forecasts side-by-side.
 - **High-Speed Concurrent Fetching**: Powered by Python's `ThreadPoolExecutor` (4 concurrent worker threads), speeding up multi-city fetching by ~70% while respecting server limits.
-- **Metric / Imperial Unit Switcher**: Seamless live toggle between **°C (km/h)** and **°F (mph)**.
-- **Scroll-Driven Location Selection**: Scrolling over the locations bar automatically activates and selects the next/previous city, updating the entire dashboard in real time. Supports both single-notch 1-at-a-time navigation and rapid multi-item scrolling with CSS Scroll Snapping (`scroll-snap-type: x mandatory`, `scroll-snap-align: center`) and hidden scrollbars across all modern browsers.
-- **Refractive Glassmorphism UI**: Multi-layered frosted glass panels (`backdrop-filter: blur(24px) saturate(190%)`), specular bevel rim highlights, and condition-adaptive ambient background glow that shifts dynamically with the active city's weather.
-- **Light & Dark Mode Switcher with Scoped Google Signature Accents**:
-  - Interactive header toggle (**☀️ Light / 🌙 Dark**) with `localStorage` persistence.
+- **Consolidated Settings Hamburger Dropdown Menu**:
+  - A modern, tactile **☰ Settings** button in the header with an animated 3-bar icon that transitions into a close icon (`✕`).
+  - Opens a refractive frosted glass dropdown card consolidating all three configuration toggles:
+    1. **Appearance / Theme**: Seamless toggle between **Dark Mode** and **Light Mode** (with scoped Google Signature Accents).
+    2. **Measurement Units**: Switch between **Metric (°C, km/h)** and **Imperial (°F, mph)**.
+    3. **Weather Canvas FX**: Toggle live particle physics simulation On and Off.
+  - Features click-outside auto-dismiss, Escape key support, and `localStorage` persistence.
+- **Light & Dark Mode with Scoped Google Signature Accents**:
   - **Dark Mode**: Retains the original cyber/cosmic glassmorphism aesthetic with deep navy background (`#060913`), indigo/cyan ambient glows, and dark frosted glass.
   - **Light Mode**: Exclusively unlocks **Google Signature Brand Accents**:
     - Signature 4-color Google stripe at top (`#4285F4`, `#EA4335`, `#FBBC05`, `#34A853`).

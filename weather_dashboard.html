@@ -244,14 +244,15 @@
       background: rgba(15, 23, 42, 0.6);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-lg);
-      padding: 4px;
-      display: flex;
+      padding: 3px;
+      display: inline-flex;
       align-items: center;
+      gap: 2px;
     }
 
     .unit-toggle-btn {
-      padding: 6px 12px;
-      font-size: 13px;
+      padding: 5px 10px;
+      font-size: 12px;
       font-weight: 700;
       border-radius: var(--radius-md);
       border: none;
@@ -265,6 +266,152 @@
       background: #0ea5e9;
       color: #fff;
       box-shadow: 0 2px 8px rgba(14, 165, 233, 0.4);
+    }
+
+    /* Settings Dropdown & Hamburger Menu */
+    .settings-menu-container {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .hamburger-btn {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 7px 14px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .hamburger-icon {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 3.5px;
+      width: 16px;
+      height: 14px;
+    }
+
+    .hamburger-icon span {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: currentColor;
+      border-radius: 2px;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .hamburger-btn.open .hamburger-icon span:nth-child(1) {
+      transform: translateY(5.5px) rotate(45deg);
+    }
+
+    .hamburger-btn.open .hamburger-icon span:nth-child(2) {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+
+    .hamburger-btn.open .hamburger-icon span:nth-child(3) {
+      transform: translateY(-5.5px) rotate(-45deg);
+    }
+
+    .settings-dropdown {
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      width: 290px;
+      background: rgba(18, 26, 48, 0.94);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 20px 45px -8px rgba(0, 0, 0, 0.7), var(--glass-bevel);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px) scale(0.96);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .settings-dropdown.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
+
+    .dropdown-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 8px;
+      margin-bottom: 2px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .dropdown-header-title {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--primary-light);
+    }
+
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-radius: var(--radius-md);
+      transition: var(--transition-smooth);
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .dropdown-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .dropdown-item-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .dropdown-item-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .dropdown-item-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .action-btn-sm {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      color: var(--text-main);
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .action-btn-sm:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--glass-border-hover);
+      transform: translateY(-1px);
     }
 
     /* City Selector Bar (12 Cities) with Tactile Scroll Snapping */
@@ -1032,6 +1179,44 @@
       box-shadow: 0 4px 14px rgba(66, 133, 244, 0.2);
     }
 
+    [data-theme="light"] .settings-dropdown {
+      background: rgba(255, 255, 255, 0.96);
+      border-color: rgba(226, 232, 240, 0.95);
+      box-shadow: 0 20px 45px -8px rgba(15, 23, 42, 0.15), var(--glass-bevel);
+    }
+
+    [data-theme="light"] .dropdown-header {
+      border-color: rgba(226, 232, 240, 0.95);
+    }
+
+    [data-theme="light"] .dropdown-header-title {
+      color: #4285F4;
+    }
+
+    [data-theme="light"] .dropdown-item {
+      background: rgba(241, 245, 249, 0.5);
+    }
+
+    [data-theme="light"] .dropdown-item:hover {
+      background: rgba(241, 245, 249, 0.95);
+    }
+
+    [data-theme="light"] .dropdown-item-title {
+      color: #0f172a;
+    }
+
+    [data-theme="light"] .action-btn-sm {
+      background: rgba(255, 255, 255, 0.9);
+      border-color: rgba(226, 232, 240, 0.95);
+      color: #0f172a;
+    }
+
+    [data-theme="light"] .action-btn-sm:hover {
+      background: #ffffff;
+      border-color: rgba(66, 133, 244, 0.5);
+      box-shadow: 0 2px 8px rgba(66, 133, 244, 0.2);
+    }
+
     [data-theme="light"] .city-nav-item {
       background: rgba(255, 255, 255, 0.55);
       border-color: rgba(226, 232, 240, 0.9);
@@ -1220,21 +1405,64 @@
           </button>
         </div>
 
-        <!-- Units Switcher -->
-        <div class="unit-switch" title="Toggle Units">
-          <button class="unit-toggle-btn active" id="btn-celsius" onclick="setUnit('C')">°C, km/h</button>
-          <button class="unit-toggle-btn" id="btn-fahrenheit" onclick="setUnit('F')">°F, mph</button>
+        <!-- Settings Hamburger Dropdown Container -->
+        <div class="settings-menu-container" id="settings-menu-container">
+          <button class="action-btn hamburger-btn" id="hamburger-btn" onclick="toggleSettingsMenu(event)" aria-label="Settings Menu" aria-expanded="false" title="Settings & Controls">
+            <span class="hamburger-icon" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+            <span class="hamburger-label">Settings</span>
+          </button>
+
+          <!-- Dropdown Menu Card -->
+          <div class="settings-dropdown" id="settings-dropdown" onclick="event.stopPropagation()">
+            <div class="dropdown-header">
+              <span class="dropdown-header-title">⚙️ Preferences</span>
+            </div>
+
+            <!-- Option 1: Theme Switcher -->
+            <div class="dropdown-item">
+              <div class="dropdown-item-info">
+                <span class="dropdown-item-title">Appearance</span>
+                <span class="dropdown-item-desc">Light or dark theme</span>
+              </div>
+              <div class="dropdown-item-control">
+                <button class="action-btn-sm" id="btn-theme-toggle" onclick="toggleTheme()" title="Switch Light / Dark Theme">
+                  <span id="theme-icon">☀️</span> <span id="theme-label">Light</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Option 2: Measurement Units -->
+            <div class="dropdown-item">
+              <div class="dropdown-item-info">
+                <span class="dropdown-item-title">Units</span>
+                <span class="dropdown-item-desc">Temp & wind velocity</span>
+              </div>
+              <div class="dropdown-item-control">
+                <div class="unit-switch" title="Toggle Units">
+                  <button class="unit-toggle-btn active" id="btn-celsius" onclick="setUnit('C')">°C</button>
+                  <button class="unit-toggle-btn" id="btn-fahrenheit" onclick="setUnit('F')">°F</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Option 3: Atmospheric Weather FX -->
+            <div class="dropdown-item">
+              <div class="dropdown-item-info">
+                <span class="dropdown-item-title">Weather FX</span>
+                <span class="dropdown-item-desc">Canvas particle physics</span>
+              </div>
+              <div class="dropdown-item-control">
+                <button class="action-btn-sm" id="btn-toggle-fx" onclick="toggleWeatherFX()" title="Toggle Weather Particle Canvas Animation">
+                  <span>✨</span> <span id="fx-label">FX: On</span>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <!-- Theme Switcher (☀️ Light / 🌙 Dark) -->
-        <button class="action-btn" id="btn-theme-toggle" onclick="toggleTheme()" title="Switch Light / Dark Theme">
-          <span id="theme-icon">☀️</span> <span id="theme-label">Light</span>
-        </button>
-
-        <!-- Dynamic Weather Canvas FX Switcher -->
-        <button class="action-btn" id="btn-toggle-fx" onclick="toggleWeatherFX()" title="Toggle Weather Particle Canvas Animation">
-          <span>✨</span> <span id="fx-label">FX: On</span>
-        </button>
       </div>
     </header>
 
@@ -1457,7 +1685,7 @@
         Data source: <strong>wttr.in/&lt;location&gt;?format=j1</strong> • 12 Global Cities Tracked
       </div>
       <div>
-        Last Updated: <span id="footer-timestamp">2026-09-07 02:55:31</span>
+        Last Updated: <span id="footer-timestamp">2026-09-07 03:04:23</span>
       </div>
     </footer>
   </div>
@@ -1465,60 +1693,232 @@
   <!-- Embedded Live Weather Data -->
   <script>
     const weatherData = {
-  "tokyo": {
-    "id": "tokyo",
-    "name": "Shikinejima",
-    "country": "Japan",
-    "region": "Tokyo",
-    "flag": "\ud83c\uddef\ud83c\uddf5",
-    "latitude": "34.327",
-    "longitude": "139.218",
+  "ankara": {
+    "id": "ankara",
+    "name": "Ankara",
+    "country": "Turkey",
+    "region": "Ankara",
+    "flag": "\ud83c\uddf9\ud83c\uddf7",
+    "latitude": "39.927",
+    "longitude": "32.864",
     "current": {
-      "tempC": 27,
-      "tempF": 80,
-      "feelsLikeC": 29,
-      "feelsLikeF": 84,
-      "desc": "Moderate or heavy rain shower",
-      "icon": "\ud83c\udf27\ufe0f",
-      "weatherCode": "356",
-      "humidity": 90,
-      "windSpeedKmph": 41,
-      "windSpeedMiles": 26,
-      "windDir": "SSE",
-      "windDirDegree": "168",
-      "pressure": 1003,
+      "tempC": 22,
+      "tempF": 72,
+      "feelsLikeC": 19,
+      "feelsLikeF": 66,
+      "desc": "Clear",
+      "icon": "\u2600\ufe0f",
+      "weatherCode": "113",
+      "humidity": 34,
+      "windSpeedKmph": 13,
+      "windSpeedMiles": 8,
+      "windDir": "NNW",
+      "windDirDegree": "331",
+      "pressure": 1018,
       "pressureInches": 30.0,
-      "visibilityKm": 7,
-      "visibilityMiles": 4,
+      "visibilityKm": 10,
+      "visibilityMiles": 6,
       "uvIndex": 0,
-      "cloudcover": 100,
-      "precipMM": 3.5,
-      "precipInches": 0.1,
+      "cloudcover": 0,
+      "precipMM": 0.0,
+      "precipInches": 0.0,
       "obsTime": ""
     },
     "forecast": [
       {
         "dayIndex": 0,
+        "date": "2026-09-06",
+        "displayDate": "Sep 06, 2026",
+        "dayLabel": "Today",
+        "weekday": "Sunday",
+        "desc": "Sunny",
+        "icon": "\u2600\ufe0f",
+        "maxTempC": 32,
+        "maxTempF": 89,
+        "minTempC": 16,
+        "minTempF": 61,
+        "avgTempC": 23,
+        "avgTempF": 74,
+        "uvIndex": 8,
+        "sunHour": 13.0,
+        "maxRainChance": 2,
+        "astronomy": {
+          "sunrise": "06:21 AM",
+          "sunset": "07:12 PM",
+          "moonrise": "12:23 AM",
+          "moonset": "04:24 PM",
+          "moonPhase": "Waning Crescent",
+          "moonIllum": "31"
+        },
+        "hourly": [
+          {
+            "timeRaw": "0",
+            "timeFormatted": "12:00 AM",
+            "tempC": 20,
+            "tempF": 68,
+            "feelsLikeC": 20,
+            "feelsLikeF": 68,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 1,
+            "chanceOfSnow": 0,
+            "humidity": 29,
+            "windSpeedKmph": 11,
+            "windSpeedMiles": 7,
+            "windDir": "NE",
+            "cloudcover": 0,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "300",
+            "timeFormatted": "3:00 AM",
+            "tempC": 18,
+            "tempF": 64,
+            "feelsLikeC": 18,
+            "feelsLikeF": 64,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 1,
+            "chanceOfSnow": 0,
+            "humidity": 37,
+            "windSpeedKmph": 7,
+            "windSpeedMiles": 4,
+            "windDir": "NE",
+            "cloudcover": 0,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "600",
+            "timeFormatted": "6:00 AM",
+            "tempC": 16,
+            "tempF": 61,
+            "feelsLikeC": 16,
+            "feelsLikeF": 61,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 2,
+            "chanceOfSnow": 0,
+            "humidity": 48,
+            "windSpeedKmph": 5,
+            "windSpeedMiles": 3,
+            "windDir": "NNE",
+            "cloudcover": 0,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "900",
+            "timeFormatted": "9:00 AM",
+            "tempC": 22,
+            "tempF": 72,
+            "feelsLikeC": 24,
+            "feelsLikeF": 75,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 1,
+            "chanceOfSnow": 0,
+            "humidity": 36,
+            "windSpeedKmph": 2,
+            "windSpeedMiles": 1,
+            "windDir": "NW",
+            "cloudcover": 0,
+            "uvIndex": 2
+          },
+          {
+            "timeRaw": "1200",
+            "timeFormatted": "12:00 PM",
+            "tempC": 27,
+            "tempF": 81,
+            "feelsLikeC": 26,
+            "feelsLikeF": 78,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 0,
+            "chanceOfSnow": 0,
+            "humidity": 22,
+            "windSpeedKmph": 8,
+            "windSpeedMiles": 5,
+            "windDir": "WNW",
+            "cloudcover": 0,
+            "uvIndex": 7
+          },
+          {
+            "timeRaw": "1500",
+            "timeFormatted": "3:00 PM",
+            "tempC": 31,
+            "tempF": 89,
+            "feelsLikeC": 29,
+            "feelsLikeF": 84,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 0,
+            "chanceOfSnow": 0,
+            "humidity": 13,
+            "windSpeedKmph": 14,
+            "windSpeedMiles": 9,
+            "windDir": "NW",
+            "cloudcover": 0,
+            "uvIndex": 5
+          },
+          {
+            "timeRaw": "1800",
+            "timeFormatted": "6:00 PM",
+            "tempC": 28,
+            "tempF": 83,
+            "feelsLikeC": 26,
+            "feelsLikeF": 79,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 0,
+            "chanceOfSnow": 0,
+            "humidity": 21,
+            "windSpeedKmph": 31,
+            "windSpeedMiles": 19,
+            "windDir": "NNW",
+            "cloudcover": 0,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "2100",
+            "timeFormatted": "9:00 PM",
+            "tempC": 22,
+            "tempF": 72,
+            "feelsLikeC": 24,
+            "feelsLikeF": 75,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 1,
+            "chanceOfSnow": 0,
+            "humidity": 34,
+            "windSpeedKmph": 13,
+            "windSpeedMiles": 8,
+            "windDir": "NNW",
+            "cloudcover": 0,
+            "uvIndex": 0
+          }
+        ]
+      },
+      {
+        "dayIndex": 1,
         "date": "2026-09-07",
         "displayDate": "Sep 07, 2026",
-        "dayLabel": "Today",
+        "dayLabel": "Tomorrow",
         "weekday": "Monday",
-        "desc": "Moderate or heavy rain shower",
-        "icon": "\ud83c\udf27\ufe0f",
-        "maxTempC": 27,
-        "maxTempF": 81,
-        "minTempC": 26,
-        "minTempF": 79,
-        "avgTempC": 27,
-        "avgTempF": 80,
-        "uvIndex": 6,
-        "sunHour": 0.0,
-        "maxRainChance": 86,
+        "desc": "Sunny",
+        "icon": "\u2600\ufe0f",
+        "maxTempC": 26,
+        "maxTempF": 79,
+        "minTempC": 14,
+        "minTempF": 58,
+        "avgTempC": 20,
+        "avgTempF": 68,
+        "uvIndex": 7,
+        "sunHour": 13.0,
+        "maxRainChance": 5,
         "astronomy": {
-          "sunrise": "05:20 AM",
-          "sunset": "06:02 PM",
-          "moonrise": "12:28 AM",
-          "moonset": "03:35 PM",
+          "sunrise": "06:22 AM",
+          "sunset": "07:11 PM",
+          "moonrise": "01:36 AM",
+          "moonset": "05:09 PM",
           "moonPhase": "Waning Crescent",
           "moonIllum": "21"
         },
@@ -1526,171 +1926,171 @@
           {
             "timeRaw": "0",
             "timeFormatted": "12:00 AM",
-            "tempC": 26,
-            "tempF": 80,
-            "feelsLikeC": 30,
-            "feelsLikeF": 87,
-            "desc": "Moderate or heavy rain shower",
-            "icon": "\ud83c\udf27\ufe0f",
-            "chanceOfRain": 85,
+            "tempC": 19,
+            "tempF": 66,
+            "feelsLikeC": 19,
+            "feelsLikeF": 66,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 1,
             "chanceOfSnow": 0,
-            "humidity": 91,
-            "windSpeedKmph": 48,
-            "windSpeedMiles": 30,
-            "windDir": "SE",
-            "cloudcover": 100,
+            "humidity": 42,
+            "windSpeedKmph": 10,
+            "windSpeedMiles": 6,
+            "windDir": "NW",
+            "cloudcover": 0,
             "uvIndex": 0
           },
           {
             "timeRaw": "300",
             "timeFormatted": "3:00 AM",
-            "tempC": 27,
-            "tempF": 80,
-            "feelsLikeC": 31,
-            "feelsLikeF": 88,
-            "desc": "Moderate or heavy rain shower",
-            "icon": "\ud83c\udf27\ufe0f",
-            "chanceOfRain": 86,
+            "tempC": 16,
+            "tempF": 61,
+            "feelsLikeC": 16,
+            "feelsLikeF": 61,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 2,
             "chanceOfSnow": 0,
-            "humidity": 90,
-            "windSpeedKmph": 41,
-            "windSpeedMiles": 26,
-            "windDir": "SSE",
-            "cloudcover": 100,
+            "humidity": 53,
+            "windSpeedKmph": 11,
+            "windSpeedMiles": 7,
+            "windDir": "N",
+            "cloudcover": 0,
             "uvIndex": 0
           },
           {
             "timeRaw": "600",
             "timeFormatted": "6:00 AM",
-            "tempC": 27,
-            "tempF": 80,
-            "feelsLikeC": 31,
-            "feelsLikeF": 88,
-            "desc": "Moderate or heavy rain shower",
-            "icon": "\ud83c\udf27\ufe0f",
-            "chanceOfRain": 83,
+            "tempC": 14,
+            "tempF": 58,
+            "feelsLikeC": 14,
+            "feelsLikeF": 57,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 5,
             "chanceOfSnow": 0,
-            "humidity": 89,
-            "windSpeedKmph": 43,
-            "windSpeedMiles": 27,
-            "windDir": "S",
-            "cloudcover": 100,
+            "humidity": 66,
+            "windSpeedKmph": 8,
+            "windSpeedMiles": 5,
+            "windDir": "N",
+            "cloudcover": 0,
             "uvIndex": 0
           },
           {
             "timeRaw": "900",
             "timeFormatted": "9:00 AM",
-            "tempC": 27,
-            "tempF": 80,
-            "feelsLikeC": 31,
-            "feelsLikeF": 88,
-            "desc": "Light rain shower",
-            "icon": "\ud83c\udf27\ufe0f",
-            "chanceOfRain": 75,
+            "tempC": 20,
+            "tempF": 67,
+            "feelsLikeC": 20,
+            "feelsLikeF": 67,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 1,
             "chanceOfSnow": 0,
-            "humidity": 91,
-            "windSpeedKmph": 42,
-            "windSpeedMiles": 26,
-            "windDir": "S",
-            "cloudcover": 97,
-            "uvIndex": 1
+            "humidity": 36,
+            "windSpeedKmph": 8,
+            "windSpeedMiles": 5,
+            "windDir": "NNE",
+            "cloudcover": 0,
+            "uvIndex": 2
           },
           {
             "timeRaw": "1200",
             "timeFormatted": "12:00 PM",
-            "tempC": 27,
-            "tempF": 81,
-            "feelsLikeC": 32,
-            "feelsLikeF": 89,
-            "desc": "Moderate or heavy rain shower",
-            "icon": "\ud83c\udf27\ufe0f",
-            "chanceOfRain": 83,
+            "tempC": 24,
+            "tempF": 76,
+            "feelsLikeC": 23,
+            "feelsLikeF": 74,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 0,
             "chanceOfSnow": 0,
-            "humidity": 88,
-            "windSpeedKmph": 44,
-            "windSpeedMiles": 27,
-            "windDir": "S",
-            "cloudcover": 100,
-            "uvIndex": 6
+            "humidity": 19,
+            "windSpeedKmph": 15,
+            "windSpeedMiles": 9,
+            "windDir": "NNE",
+            "cloudcover": 0,
+            "uvIndex": 7
           },
           {
             "timeRaw": "1500",
             "timeFormatted": "3:00 PM",
-            "tempC": 27,
-            "tempF": 81,
-            "feelsLikeC": 32,
-            "feelsLikeF": 89,
-            "desc": "Light rain shower",
-            "icon": "\ud83c\udf27\ufe0f",
-            "chanceOfRain": 77,
+            "tempC": 26,
+            "tempF": 79,
+            "feelsLikeC": 25,
+            "feelsLikeF": 76,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 0,
             "chanceOfSnow": 0,
-            "humidity": 89,
-            "windSpeedKmph": 45,
-            "windSpeedMiles": 28,
-            "windDir": "S",
-            "cloudcover": 100,
-            "uvIndex": 1
+            "humidity": 16,
+            "windSpeedKmph": 19,
+            "windSpeedMiles": 12,
+            "windDir": "NNE",
+            "cloudcover": 0,
+            "uvIndex": 5
           },
           {
             "timeRaw": "1800",
             "timeFormatted": "6:00 PM",
-            "tempC": 27,
-            "tempF": 80,
-            "feelsLikeC": 31,
-            "feelsLikeF": 89,
-            "desc": "Light rain shower",
-            "icon": "\ud83c\udf27\ufe0f",
-            "chanceOfRain": 76,
+            "tempC": 24,
+            "tempF": 76,
+            "feelsLikeC": 23,
+            "feelsLikeF": 74,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 0,
             "chanceOfSnow": 0,
-            "humidity": 91,
-            "windSpeedKmph": 41,
-            "windSpeedMiles": 26,
-            "windDir": "S",
-            "cloudcover": 100,
+            "humidity": 19,
+            "windSpeedKmph": 18,
+            "windSpeedMiles": 11,
+            "windDir": "NNE",
+            "cloudcover": 0,
             "uvIndex": 0
           },
           {
             "timeRaw": "2100",
             "timeFormatted": "9:00 PM",
-            "tempC": 27,
-            "tempF": 80,
-            "feelsLikeC": 31,
-            "feelsLikeF": 88,
-            "desc": "Light rain shower",
-            "icon": "\ud83c\udf27\ufe0f",
-            "chanceOfRain": 80,
+            "tempC": 18,
+            "tempF": 64,
+            "feelsLikeC": 18,
+            "feelsLikeF": 64,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 1,
             "chanceOfSnow": 0,
-            "humidity": 91,
-            "windSpeedKmph": 39,
-            "windSpeedMiles": 24,
-            "windDir": "SW",
-            "cloudcover": 100,
+            "humidity": 32,
+            "windSpeedKmph": 15,
+            "windSpeedMiles": 9,
+            "windDir": "NNE",
+            "cloudcover": 0,
             "uvIndex": 0
           }
         ]
       },
       {
-        "dayIndex": 1,
+        "dayIndex": 2,
         "date": "2026-09-08",
         "displayDate": "Sep 08, 2026",
-        "dayLabel": "Tomorrow",
+        "dayLabel": "Tuesday",
         "weekday": "Tuesday",
-        "desc": "Light rain shower",
-        "icon": "\ud83c\udf27\ufe0f",
-        "maxTempC": 27,
-        "maxTempF": 80,
-        "minTempC": 26,
-        "minTempF": 78,
-        "avgTempC": 26,
-        "avgTempF": 79,
-        "uvIndex": 8,
-        "sunHour": 3.0,
-        "maxRainChance": 91,
+        "desc": "Sunny",
+        "icon": "\u2600\ufe0f",
+        "maxTempC": 25,
+        "maxTempF": 77,
+        "minTempC": 11,
+        "minTempF": 52,
+        "avgTempC": 18,
+        "avgTempF": 64,
+        "uvIndex": 7,
+        "sunHour": 13.0,
+        "maxRainChance": 5,
         "astronomy": {
-          "sunrise": "05:21 AM",
-          "sunset": "06:00 PM",
-          "moonrise": "01:41 AM",
-          "moonset": "04:16 PM",
+          "sunrise": "06:23 AM",
+          "sunset": "07:09 PM",
+          "moonrise": "02:52 AM",
+          "moonset": "05:46 PM",
           "moonPhase": "Waning Crescent",
           "moonIllum": "12"
         },
@@ -1698,317 +2098,145 @@
           {
             "timeRaw": "0",
             "timeFormatted": "12:00 AM",
-            "tempC": 26,
-            "tempF": 80,
-            "feelsLikeC": 31,
-            "feelsLikeF": 87,
-            "desc": "Moderate or heavy rain shower",
-            "icon": "\ud83c\udf27\ufe0f",
-            "chanceOfRain": 85,
+            "tempC": 14,
+            "tempF": 57,
+            "feelsLikeC": 14,
+            "feelsLikeF": 57,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 1,
             "chanceOfSnow": 0,
-            "humidity": 93,
-            "windSpeedKmph": 38,
-            "windSpeedMiles": 23,
-            "windDir": "SW",
-            "cloudcover": 100,
+            "humidity": 41,
+            "windSpeedKmph": 9,
+            "windSpeedMiles": 5,
+            "windDir": "NNE",
+            "cloudcover": 0,
             "uvIndex": 0
           },
           {
             "timeRaw": "300",
             "timeFormatted": "3:00 AM",
-            "tempC": 26,
-            "tempF": 78,
-            "feelsLikeC": 30,
-            "feelsLikeF": 86,
-            "desc": "Moderate or heavy rain shower",
-            "icon": "\ud83c\udf27\ufe0f",
-            "chanceOfRain": 91,
+            "tempC": 12,
+            "tempF": 54,
+            "feelsLikeC": 12,
+            "feelsLikeF": 53,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 2,
             "chanceOfSnow": 0,
-            "humidity": 96,
-            "windSpeedKmph": 32,
-            "windSpeedMiles": 20,
-            "windDir": "SW",
-            "cloudcover": 100,
+            "humidity": 49,
+            "windSpeedKmph": 9,
+            "windSpeedMiles": 5,
+            "windDir": "NNE",
+            "cloudcover": 0,
             "uvIndex": 0
           },
           {
             "timeRaw": "600",
             "timeFormatted": "6:00 AM",
-            "tempC": 26,
-            "tempF": 79,
-            "feelsLikeC": 30,
-            "feelsLikeF": 87,
-            "desc": "Light rain shower",
-            "icon": "\ud83c\udf27\ufe0f",
-            "chanceOfRain": 83,
+            "tempC": 11,
+            "tempF": 52,
+            "feelsLikeC": 10,
+            "feelsLikeF": 51,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 5,
             "chanceOfSnow": 0,
-            "humidity": 93,
-            "windSpeedKmph": 31,
-            "windSpeedMiles": 19,
-            "windDir": "SW",
-            "cloudcover": 100,
+            "humidity": 67,
+            "windSpeedKmph": 8,
+            "windSpeedMiles": 5,
+            "windDir": "NE",
+            "cloudcover": 0,
             "uvIndex": 0
           },
           {
             "timeRaw": "900",
             "timeFormatted": "9:00 AM",
-            "tempC": 26,
-            "tempF": 79,
-            "feelsLikeC": 30,
-            "feelsLikeF": 86,
-            "desc": "Light rain shower",
-            "icon": "\ud83c\udf27\ufe0f",
-            "chanceOfRain": 82,
+            "tempC": 16,
+            "tempF": 60,
+            "feelsLikeC": 16,
+            "feelsLikeF": 60,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 3,
             "chanceOfSnow": 0,
-            "humidity": 95,
-            "windSpeedKmph": 16,
-            "windSpeedMiles": 10,
-            "windDir": "SW",
-            "cloudcover": 100,
+            "humidity": 57,
+            "windSpeedKmph": 6,
+            "windSpeedMiles": 4,
+            "windDir": "ENE",
+            "cloudcover": 0,
             "uvIndex": 2
           },
           {
             "timeRaw": "1200",
             "timeFormatted": "12:00 PM",
-            "tempC": 26,
-            "tempF": 79,
-            "feelsLikeC": 30,
-            "feelsLikeF": 87,
-            "desc": "Light rain shower",
-            "icon": "\ud83c\udf27\ufe0f",
-            "chanceOfRain": 75,
+            "tempC": 21,
+            "tempF": 71,
+            "feelsLikeC": 21,
+            "feelsLikeF": 71,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 0,
             "chanceOfSnow": 0,
-            "humidity": 94,
-            "windSpeedKmph": 14,
-            "windSpeedMiles": 9,
-            "windDir": "SSW",
-            "cloudcover": 100,
-            "uvIndex": 8
+            "humidity": 26,
+            "windSpeedKmph": 5,
+            "windSpeedMiles": 3,
+            "windDir": "NE",
+            "cloudcover": 0,
+            "uvIndex": 7
           },
           {
             "timeRaw": "1500",
             "timeFormatted": "3:00 PM",
-            "tempC": 27,
-            "tempF": 80,
-            "feelsLikeC": 31,
-            "feelsLikeF": 88,
-            "desc": "Patchy rain nearby",
-            "icon": "\ud83c\udf27\ufe0f",
-            "chanceOfRain": 72,
+            "tempC": 24,
+            "tempF": 76,
+            "feelsLikeC": 23,
+            "feelsLikeF": 74,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 0,
             "chanceOfSnow": 0,
-            "humidity": 93,
-            "windSpeedKmph": 14,
-            "windSpeedMiles": 9,
-            "windDir": "SSW",
-            "cloudcover": 81,
-            "uvIndex": 3
+            "humidity": 19,
+            "windSpeedKmph": 11,
+            "windSpeedMiles": 7,
+            "windDir": "NNE",
+            "cloudcover": 0,
+            "uvIndex": 5
           },
           {
             "timeRaw": "1800",
             "timeFormatted": "6:00 PM",
-            "tempC": 27,
-            "tempF": 80,
-            "feelsLikeC": 31,
-            "feelsLikeF": 88,
-            "desc": "Light rain shower",
-            "icon": "\ud83c\udf27\ufe0f",
-            "chanceOfRain": 76,
+            "tempC": 24,
+            "tempF": 76,
+            "feelsLikeC": 23,
+            "feelsLikeF": 74,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 0,
             "chanceOfSnow": 0,
-            "humidity": 92,
-            "windSpeedKmph": 17,
-            "windSpeedMiles": 11,
-            "windDir": "S",
-            "cloudcover": 100,
+            "humidity": 18,
+            "windSpeedKmph": 9,
+            "windSpeedMiles": 5,
+            "windDir": "E",
+            "cloudcover": 0,
             "uvIndex": 0
           },
           {
             "timeRaw": "2100",
             "timeFormatted": "9:00 PM",
-            "tempC": 27,
-            "tempF": 80,
-            "feelsLikeC": 31,
-            "feelsLikeF": 89,
-            "desc": "Light rain shower",
-            "icon": "\ud83c\udf27\ufe0f",
-            "chanceOfRain": 74,
+            "tempC": 18,
+            "tempF": 65,
+            "feelsLikeC": 18,
+            "feelsLikeF": 65,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 0,
             "chanceOfSnow": 0,
-            "humidity": 90,
-            "windSpeedKmph": 25,
-            "windSpeedMiles": 15,
-            "windDir": "S",
-            "cloudcover": 100,
-            "uvIndex": 0
-          }
-        ]
-      },
-      {
-        "dayIndex": 2,
-        "date": "2026-09-09",
-        "displayDate": "Sep 09, 2026",
-        "dayLabel": "Wednesday",
-        "weekday": "Wednesday",
-        "desc": "Thundery outbreaks in nearby",
-        "icon": "\u26c8\ufe0f",
-        "maxTempC": 28,
-        "maxTempF": 82,
-        "minTempC": 26,
-        "minTempF": 80,
-        "avgTempC": 27,
-        "avgTempF": 81,
-        "uvIndex": 8,
-        "sunHour": 5.0,
-        "maxRainChance": 84,
-        "astronomy": {
-          "sunrise": "05:22 AM",
-          "sunset": "05:59 PM",
-          "moonrise": "02:53 AM",
-          "moonset": "04:52 PM",
-          "moonPhase": "Waning Crescent",
-          "moonIllum": "6"
-        },
-        "hourly": [
-          {
-            "timeRaw": "0",
-            "timeFormatted": "12:00 AM",
-            "tempC": 27,
-            "tempF": 81,
-            "feelsLikeC": 32,
-            "feelsLikeF": 89,
-            "desc": "Moderate or heavy rain shower",
-            "icon": "\ud83c\udf27\ufe0f",
-            "chanceOfRain": 84,
-            "chanceOfSnow": 0,
-            "humidity": 89,
-            "windSpeedKmph": 36,
-            "windSpeedMiles": 22,
-            "windDir": "S",
-            "cloudcover": 100,
-            "uvIndex": 0
-          },
-          {
-            "timeRaw": "300",
-            "timeFormatted": "3:00 AM",
-            "tempC": 27,
-            "tempF": 81,
-            "feelsLikeC": 32,
-            "feelsLikeF": 89,
-            "desc": "Light rain shower",
-            "icon": "\ud83c\udf27\ufe0f",
-            "chanceOfRain": 78,
-            "chanceOfSnow": 0,
-            "humidity": 90,
-            "windSpeedKmph": 41,
-            "windSpeedMiles": 26,
-            "windDir": "S",
-            "cloudcover": 100,
-            "uvIndex": 0
-          },
-          {
-            "timeRaw": "600",
-            "timeFormatted": "6:00 AM",
-            "tempC": 27,
-            "tempF": 81,
-            "feelsLikeC": 32,
-            "feelsLikeF": 90,
-            "desc": "Light rain shower",
-            "icon": "\ud83c\udf27\ufe0f",
-            "chanceOfRain": 72,
-            "chanceOfSnow": 0,
-            "humidity": 88,
-            "windSpeedKmph": 43,
-            "windSpeedMiles": 27,
-            "windDir": "SSW",
-            "cloudcover": 100,
-            "uvIndex": 0
-          },
-          {
-            "timeRaw": "900",
-            "timeFormatted": "9:00 AM",
-            "tempC": 28,
-            "tempF": 82,
-            "feelsLikeC": 33,
-            "feelsLikeF": 91,
-            "desc": "Light rain shower",
-            "icon": "\ud83c\udf27\ufe0f",
-            "chanceOfRain": 65,
-            "chanceOfSnow": 0,
-            "humidity": 88,
-            "windSpeedKmph": 39,
-            "windSpeedMiles": 24,
-            "windDir": "SSW",
-            "cloudcover": 100,
-            "uvIndex": 4
-          },
-          {
-            "timeRaw": "1200",
-            "timeFormatted": "12:00 PM",
-            "tempC": 28,
-            "tempF": 82,
-            "feelsLikeC": 33,
-            "feelsLikeF": 91,
-            "desc": "Thundery outbreaks in nearby",
-            "icon": "\u26c8\ufe0f",
-            "chanceOfRain": 29,
-            "chanceOfSnow": 0,
-            "humidity": 88,
-            "windSpeedKmph": 35,
-            "windSpeedMiles": 22,
-            "windDir": "SSW",
-            "cloudcover": 67,
-            "uvIndex": 8
-          },
-          {
-            "timeRaw": "1500",
-            "timeFormatted": "3:00 PM",
-            "tempC": 27,
-            "tempF": 81,
-            "feelsLikeC": 32,
-            "feelsLikeF": 90,
-            "desc": "Patchy rain nearby",
-            "icon": "\ud83c\udf27\ufe0f",
-            "chanceOfRain": 48,
-            "chanceOfSnow": 0,
-            "humidity": 88,
-            "windSpeedKmph": 35,
-            "windSpeedMiles": 22,
-            "windDir": "SSW",
-            "cloudcover": 72,
-            "uvIndex": 3
-          },
-          {
-            "timeRaw": "1800",
-            "timeFormatted": "6:00 PM",
-            "tempC": 27,
-            "tempF": 81,
-            "feelsLikeC": 32,
-            "feelsLikeF": 89,
-            "desc": "Patchy rain nearby",
-            "icon": "\ud83c\udf27\ufe0f",
-            "chanceOfRain": 71,
-            "chanceOfSnow": 0,
-            "humidity": 90,
-            "windSpeedKmph": 33,
-            "windSpeedMiles": 21,
-            "windDir": "SSW",
-            "cloudcover": 76,
-            "uvIndex": 0
-          },
-          {
-            "timeRaw": "2100",
-            "timeFormatted": "9:00 PM",
-            "tempC": 27,
-            "tempF": 80,
-            "feelsLikeC": 31,
-            "feelsLikeF": 88,
-            "desc": "Light rain shower",
-            "icon": "\ud83c\udf27\ufe0f",
-            "chanceOfRain": 65,
-            "chanceOfSnow": 0,
-            "humidity": 91,
-            "windSpeedKmph": 26,
-            "windSpeedMiles": 16,
-            "windDir": "SSW",
-            "cloudcover": 54,
+            "humidity": 28,
+            "windSpeedKmph": 9,
+            "windSpeedMiles": 6,
+            "windDir": "ENE",
+            "cloudcover": 0,
             "uvIndex": 0
           }
         ]
@@ -2565,232 +2793,60 @@
       }
     ]
   },
-  "ankara": {
-    "id": "ankara",
-    "name": "Ankara",
-    "country": "Turkey",
-    "region": "Ankara",
-    "flag": "\ud83c\uddf9\ud83c\uddf7",
-    "latitude": "39.927",
-    "longitude": "32.864",
+  "tokyo": {
+    "id": "tokyo",
+    "name": "Shikinejima",
+    "country": "Japan",
+    "region": "Tokyo",
+    "flag": "\ud83c\uddef\ud83c\uddf5",
+    "latitude": "34.327",
+    "longitude": "139.218",
     "current": {
-      "tempC": 22,
-      "tempF": 72,
-      "feelsLikeC": 19,
-      "feelsLikeF": 66,
-      "desc": "Clear",
-      "icon": "\u2600\ufe0f",
-      "weatherCode": "113",
-      "humidity": 34,
-      "windSpeedKmph": 13,
-      "windSpeedMiles": 8,
-      "windDir": "NNW",
-      "windDirDegree": "331",
-      "pressure": 1018,
+      "tempC": 27,
+      "tempF": 80,
+      "feelsLikeC": 29,
+      "feelsLikeF": 84,
+      "desc": "Moderate or heavy rain shower",
+      "icon": "\ud83c\udf27\ufe0f",
+      "weatherCode": "356",
+      "humidity": 90,
+      "windSpeedKmph": 41,
+      "windSpeedMiles": 26,
+      "windDir": "SSE",
+      "windDirDegree": "168",
+      "pressure": 1003,
       "pressureInches": 30.0,
-      "visibilityKm": 10,
-      "visibilityMiles": 6,
+      "visibilityKm": 7,
+      "visibilityMiles": 4,
       "uvIndex": 0,
-      "cloudcover": 0,
-      "precipMM": 0.0,
-      "precipInches": 0.0,
+      "cloudcover": 100,
+      "precipMM": 3.5,
+      "precipInches": 0.1,
       "obsTime": ""
     },
     "forecast": [
       {
         "dayIndex": 0,
-        "date": "2026-09-06",
-        "displayDate": "Sep 06, 2026",
-        "dayLabel": "Today",
-        "weekday": "Sunday",
-        "desc": "Sunny",
-        "icon": "\u2600\ufe0f",
-        "maxTempC": 32,
-        "maxTempF": 89,
-        "minTempC": 16,
-        "minTempF": 61,
-        "avgTempC": 23,
-        "avgTempF": 74,
-        "uvIndex": 8,
-        "sunHour": 13.0,
-        "maxRainChance": 2,
-        "astronomy": {
-          "sunrise": "06:21 AM",
-          "sunset": "07:12 PM",
-          "moonrise": "12:23 AM",
-          "moonset": "04:24 PM",
-          "moonPhase": "Waning Crescent",
-          "moonIllum": "31"
-        },
-        "hourly": [
-          {
-            "timeRaw": "0",
-            "timeFormatted": "12:00 AM",
-            "tempC": 20,
-            "tempF": 68,
-            "feelsLikeC": 20,
-            "feelsLikeF": 68,
-            "desc": "Clear",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 1,
-            "chanceOfSnow": 0,
-            "humidity": 29,
-            "windSpeedKmph": 11,
-            "windSpeedMiles": 7,
-            "windDir": "NE",
-            "cloudcover": 0,
-            "uvIndex": 0
-          },
-          {
-            "timeRaw": "300",
-            "timeFormatted": "3:00 AM",
-            "tempC": 18,
-            "tempF": 64,
-            "feelsLikeC": 18,
-            "feelsLikeF": 64,
-            "desc": "Clear",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 1,
-            "chanceOfSnow": 0,
-            "humidity": 37,
-            "windSpeedKmph": 7,
-            "windSpeedMiles": 4,
-            "windDir": "NE",
-            "cloudcover": 0,
-            "uvIndex": 0
-          },
-          {
-            "timeRaw": "600",
-            "timeFormatted": "6:00 AM",
-            "tempC": 16,
-            "tempF": 61,
-            "feelsLikeC": 16,
-            "feelsLikeF": 61,
-            "desc": "Clear",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 2,
-            "chanceOfSnow": 0,
-            "humidity": 48,
-            "windSpeedKmph": 5,
-            "windSpeedMiles": 3,
-            "windDir": "NNE",
-            "cloudcover": 0,
-            "uvIndex": 0
-          },
-          {
-            "timeRaw": "900",
-            "timeFormatted": "9:00 AM",
-            "tempC": 22,
-            "tempF": 72,
-            "feelsLikeC": 24,
-            "feelsLikeF": 75,
-            "desc": "Sunny",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 1,
-            "chanceOfSnow": 0,
-            "humidity": 36,
-            "windSpeedKmph": 2,
-            "windSpeedMiles": 1,
-            "windDir": "NW",
-            "cloudcover": 0,
-            "uvIndex": 2
-          },
-          {
-            "timeRaw": "1200",
-            "timeFormatted": "12:00 PM",
-            "tempC": 27,
-            "tempF": 81,
-            "feelsLikeC": 26,
-            "feelsLikeF": 78,
-            "desc": "Sunny",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 0,
-            "chanceOfSnow": 0,
-            "humidity": 22,
-            "windSpeedKmph": 8,
-            "windSpeedMiles": 5,
-            "windDir": "WNW",
-            "cloudcover": 0,
-            "uvIndex": 7
-          },
-          {
-            "timeRaw": "1500",
-            "timeFormatted": "3:00 PM",
-            "tempC": 31,
-            "tempF": 89,
-            "feelsLikeC": 29,
-            "feelsLikeF": 84,
-            "desc": "Sunny",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 0,
-            "chanceOfSnow": 0,
-            "humidity": 13,
-            "windSpeedKmph": 14,
-            "windSpeedMiles": 9,
-            "windDir": "NW",
-            "cloudcover": 0,
-            "uvIndex": 5
-          },
-          {
-            "timeRaw": "1800",
-            "timeFormatted": "6:00 PM",
-            "tempC": 28,
-            "tempF": 83,
-            "feelsLikeC": 26,
-            "feelsLikeF": 79,
-            "desc": "Sunny",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 0,
-            "chanceOfSnow": 0,
-            "humidity": 21,
-            "windSpeedKmph": 31,
-            "windSpeedMiles": 19,
-            "windDir": "NNW",
-            "cloudcover": 0,
-            "uvIndex": 0
-          },
-          {
-            "timeRaw": "2100",
-            "timeFormatted": "9:00 PM",
-            "tempC": 22,
-            "tempF": 72,
-            "feelsLikeC": 24,
-            "feelsLikeF": 75,
-            "desc": "Clear",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 1,
-            "chanceOfSnow": 0,
-            "humidity": 34,
-            "windSpeedKmph": 13,
-            "windSpeedMiles": 8,
-            "windDir": "NNW",
-            "cloudcover": 0,
-            "uvIndex": 0
-          }
-        ]
-      },
-      {
-        "dayIndex": 1,
         "date": "2026-09-07",
         "displayDate": "Sep 07, 2026",
-        "dayLabel": "Tomorrow",
+        "dayLabel": "Today",
         "weekday": "Monday",
-        "desc": "Sunny",
-        "icon": "\u2600\ufe0f",
-        "maxTempC": 26,
-        "maxTempF": 79,
-        "minTempC": 14,
-        "minTempF": 58,
-        "avgTempC": 20,
-        "avgTempF": 68,
-        "uvIndex": 7,
-        "sunHour": 13.0,
-        "maxRainChance": 5,
+        "desc": "Moderate or heavy rain shower",
+        "icon": "\ud83c\udf27\ufe0f",
+        "maxTempC": 27,
+        "maxTempF": 81,
+        "minTempC": 26,
+        "minTempF": 79,
+        "avgTempC": 27,
+        "avgTempF": 80,
+        "uvIndex": 6,
+        "sunHour": 0.0,
+        "maxRainChance": 86,
         "astronomy": {
-          "sunrise": "06:22 AM",
-          "sunset": "07:11 PM",
-          "moonrise": "01:36 AM",
-          "moonset": "05:09 PM",
+          "sunrise": "05:20 AM",
+          "sunset": "06:02 PM",
+          "moonrise": "12:28 AM",
+          "moonset": "03:35 PM",
           "moonPhase": "Waning Crescent",
           "moonIllum": "21"
         },
@@ -2798,171 +2854,171 @@
           {
             "timeRaw": "0",
             "timeFormatted": "12:00 AM",
-            "tempC": 19,
-            "tempF": 66,
-            "feelsLikeC": 19,
-            "feelsLikeF": 66,
-            "desc": "Clear",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 1,
+            "tempC": 26,
+            "tempF": 80,
+            "feelsLikeC": 30,
+            "feelsLikeF": 87,
+            "desc": "Moderate or heavy rain shower",
+            "icon": "\ud83c\udf27\ufe0f",
+            "chanceOfRain": 85,
             "chanceOfSnow": 0,
-            "humidity": 42,
-            "windSpeedKmph": 10,
-            "windSpeedMiles": 6,
-            "windDir": "NW",
-            "cloudcover": 0,
+            "humidity": 91,
+            "windSpeedKmph": 48,
+            "windSpeedMiles": 30,
+            "windDir": "SE",
+            "cloudcover": 100,
             "uvIndex": 0
           },
           {
             "timeRaw": "300",
             "timeFormatted": "3:00 AM",
-            "tempC": 16,
-            "tempF": 61,
-            "feelsLikeC": 16,
-            "feelsLikeF": 61,
-            "desc": "Clear",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 2,
+            "tempC": 27,
+            "tempF": 80,
+            "feelsLikeC": 31,
+            "feelsLikeF": 88,
+            "desc": "Moderate or heavy rain shower",
+            "icon": "\ud83c\udf27\ufe0f",
+            "chanceOfRain": 86,
             "chanceOfSnow": 0,
-            "humidity": 53,
-            "windSpeedKmph": 11,
-            "windSpeedMiles": 7,
-            "windDir": "N",
-            "cloudcover": 0,
+            "humidity": 90,
+            "windSpeedKmph": 41,
+            "windSpeedMiles": 26,
+            "windDir": "SSE",
+            "cloudcover": 100,
             "uvIndex": 0
           },
           {
             "timeRaw": "600",
             "timeFormatted": "6:00 AM",
-            "tempC": 14,
-            "tempF": 58,
-            "feelsLikeC": 14,
-            "feelsLikeF": 57,
-            "desc": "Clear",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 5,
+            "tempC": 27,
+            "tempF": 80,
+            "feelsLikeC": 31,
+            "feelsLikeF": 88,
+            "desc": "Moderate or heavy rain shower",
+            "icon": "\ud83c\udf27\ufe0f",
+            "chanceOfRain": 83,
             "chanceOfSnow": 0,
-            "humidity": 66,
-            "windSpeedKmph": 8,
-            "windSpeedMiles": 5,
-            "windDir": "N",
-            "cloudcover": 0,
+            "humidity": 89,
+            "windSpeedKmph": 43,
+            "windSpeedMiles": 27,
+            "windDir": "S",
+            "cloudcover": 100,
             "uvIndex": 0
           },
           {
             "timeRaw": "900",
             "timeFormatted": "9:00 AM",
-            "tempC": 20,
-            "tempF": 67,
-            "feelsLikeC": 20,
-            "feelsLikeF": 67,
-            "desc": "Sunny",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 1,
+            "tempC": 27,
+            "tempF": 80,
+            "feelsLikeC": 31,
+            "feelsLikeF": 88,
+            "desc": "Light rain shower",
+            "icon": "\ud83c\udf27\ufe0f",
+            "chanceOfRain": 75,
             "chanceOfSnow": 0,
-            "humidity": 36,
-            "windSpeedKmph": 8,
-            "windSpeedMiles": 5,
-            "windDir": "NNE",
-            "cloudcover": 0,
-            "uvIndex": 2
+            "humidity": 91,
+            "windSpeedKmph": 42,
+            "windSpeedMiles": 26,
+            "windDir": "S",
+            "cloudcover": 97,
+            "uvIndex": 1
           },
           {
             "timeRaw": "1200",
             "timeFormatted": "12:00 PM",
-            "tempC": 24,
-            "tempF": 76,
-            "feelsLikeC": 23,
-            "feelsLikeF": 74,
-            "desc": "Sunny",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 0,
+            "tempC": 27,
+            "tempF": 81,
+            "feelsLikeC": 32,
+            "feelsLikeF": 89,
+            "desc": "Moderate or heavy rain shower",
+            "icon": "\ud83c\udf27\ufe0f",
+            "chanceOfRain": 83,
             "chanceOfSnow": 0,
-            "humidity": 19,
-            "windSpeedKmph": 15,
-            "windSpeedMiles": 9,
-            "windDir": "NNE",
-            "cloudcover": 0,
-            "uvIndex": 7
+            "humidity": 88,
+            "windSpeedKmph": 44,
+            "windSpeedMiles": 27,
+            "windDir": "S",
+            "cloudcover": 100,
+            "uvIndex": 6
           },
           {
             "timeRaw": "1500",
             "timeFormatted": "3:00 PM",
-            "tempC": 26,
-            "tempF": 79,
-            "feelsLikeC": 25,
-            "feelsLikeF": 76,
-            "desc": "Sunny",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 0,
+            "tempC": 27,
+            "tempF": 81,
+            "feelsLikeC": 32,
+            "feelsLikeF": 89,
+            "desc": "Light rain shower",
+            "icon": "\ud83c\udf27\ufe0f",
+            "chanceOfRain": 77,
             "chanceOfSnow": 0,
-            "humidity": 16,
-            "windSpeedKmph": 19,
-            "windSpeedMiles": 12,
-            "windDir": "NNE",
-            "cloudcover": 0,
-            "uvIndex": 5
+            "humidity": 89,
+            "windSpeedKmph": 45,
+            "windSpeedMiles": 28,
+            "windDir": "S",
+            "cloudcover": 100,
+            "uvIndex": 1
           },
           {
             "timeRaw": "1800",
             "timeFormatted": "6:00 PM",
-            "tempC": 24,
-            "tempF": 76,
-            "feelsLikeC": 23,
-            "feelsLikeF": 74,
-            "desc": "Sunny",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 0,
+            "tempC": 27,
+            "tempF": 80,
+            "feelsLikeC": 31,
+            "feelsLikeF": 89,
+            "desc": "Light rain shower",
+            "icon": "\ud83c\udf27\ufe0f",
+            "chanceOfRain": 76,
             "chanceOfSnow": 0,
-            "humidity": 19,
-            "windSpeedKmph": 18,
-            "windSpeedMiles": 11,
-            "windDir": "NNE",
-            "cloudcover": 0,
+            "humidity": 91,
+            "windSpeedKmph": 41,
+            "windSpeedMiles": 26,
+            "windDir": "S",
+            "cloudcover": 100,
             "uvIndex": 0
           },
           {
             "timeRaw": "2100",
             "timeFormatted": "9:00 PM",
-            "tempC": 18,
-            "tempF": 64,
-            "feelsLikeC": 18,
-            "feelsLikeF": 64,
-            "desc": "Clear",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 1,
+            "tempC": 27,
+            "tempF": 80,
+            "feelsLikeC": 31,
+            "feelsLikeF": 88,
+            "desc": "Light rain shower",
+            "icon": "\ud83c\udf27\ufe0f",
+            "chanceOfRain": 80,
             "chanceOfSnow": 0,
-            "humidity": 32,
-            "windSpeedKmph": 15,
-            "windSpeedMiles": 9,
-            "windDir": "NNE",
-            "cloudcover": 0,
+            "humidity": 91,
+            "windSpeedKmph": 39,
+            "windSpeedMiles": 24,
+            "windDir": "SW",
+            "cloudcover": 100,
             "uvIndex": 0
           }
         ]
       },
       {
-        "dayIndex": 2,
+        "dayIndex": 1,
         "date": "2026-09-08",
         "displayDate": "Sep 08, 2026",
-        "dayLabel": "Tuesday",
+        "dayLabel": "Tomorrow",
         "weekday": "Tuesday",
-        "desc": "Sunny",
-        "icon": "\u2600\ufe0f",
-        "maxTempC": 25,
-        "maxTempF": 77,
-        "minTempC": 11,
-        "minTempF": 52,
-        "avgTempC": 18,
-        "avgTempF": 64,
-        "uvIndex": 7,
-        "sunHour": 13.0,
-        "maxRainChance": 5,
+        "desc": "Light rain shower",
+        "icon": "\ud83c\udf27\ufe0f",
+        "maxTempC": 27,
+        "maxTempF": 80,
+        "minTempC": 26,
+        "minTempF": 78,
+        "avgTempC": 26,
+        "avgTempF": 79,
+        "uvIndex": 8,
+        "sunHour": 3.0,
+        "maxRainChance": 91,
         "astronomy": {
-          "sunrise": "06:23 AM",
-          "sunset": "07:09 PM",
-          "moonrise": "02:52 AM",
-          "moonset": "05:46 PM",
+          "sunrise": "05:21 AM",
+          "sunset": "06:00 PM",
+          "moonrise": "01:41 AM",
+          "moonset": "04:16 PM",
           "moonPhase": "Waning Crescent",
           "moonIllum": "12"
         },
@@ -2970,145 +3026,317 @@
           {
             "timeRaw": "0",
             "timeFormatted": "12:00 AM",
-            "tempC": 14,
-            "tempF": 57,
-            "feelsLikeC": 14,
-            "feelsLikeF": 57,
-            "desc": "Clear",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 1,
+            "tempC": 26,
+            "tempF": 80,
+            "feelsLikeC": 31,
+            "feelsLikeF": 87,
+            "desc": "Moderate or heavy rain shower",
+            "icon": "\ud83c\udf27\ufe0f",
+            "chanceOfRain": 85,
             "chanceOfSnow": 0,
-            "humidity": 41,
-            "windSpeedKmph": 9,
-            "windSpeedMiles": 5,
-            "windDir": "NNE",
-            "cloudcover": 0,
+            "humidity": 93,
+            "windSpeedKmph": 38,
+            "windSpeedMiles": 23,
+            "windDir": "SW",
+            "cloudcover": 100,
             "uvIndex": 0
           },
           {
             "timeRaw": "300",
             "timeFormatted": "3:00 AM",
-            "tempC": 12,
-            "tempF": 54,
-            "feelsLikeC": 12,
-            "feelsLikeF": 53,
-            "desc": "Clear",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 2,
+            "tempC": 26,
+            "tempF": 78,
+            "feelsLikeC": 30,
+            "feelsLikeF": 86,
+            "desc": "Moderate or heavy rain shower",
+            "icon": "\ud83c\udf27\ufe0f",
+            "chanceOfRain": 91,
             "chanceOfSnow": 0,
-            "humidity": 49,
-            "windSpeedKmph": 9,
-            "windSpeedMiles": 5,
-            "windDir": "NNE",
-            "cloudcover": 0,
+            "humidity": 96,
+            "windSpeedKmph": 32,
+            "windSpeedMiles": 20,
+            "windDir": "SW",
+            "cloudcover": 100,
             "uvIndex": 0
           },
           {
             "timeRaw": "600",
             "timeFormatted": "6:00 AM",
-            "tempC": 11,
-            "tempF": 52,
-            "feelsLikeC": 10,
-            "feelsLikeF": 51,
-            "desc": "Clear",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 5,
+            "tempC": 26,
+            "tempF": 79,
+            "feelsLikeC": 30,
+            "feelsLikeF": 87,
+            "desc": "Light rain shower",
+            "icon": "\ud83c\udf27\ufe0f",
+            "chanceOfRain": 83,
             "chanceOfSnow": 0,
-            "humidity": 67,
-            "windSpeedKmph": 8,
-            "windSpeedMiles": 5,
-            "windDir": "NE",
-            "cloudcover": 0,
+            "humidity": 93,
+            "windSpeedKmph": 31,
+            "windSpeedMiles": 19,
+            "windDir": "SW",
+            "cloudcover": 100,
             "uvIndex": 0
           },
           {
             "timeRaw": "900",
             "timeFormatted": "9:00 AM",
-            "tempC": 16,
-            "tempF": 60,
-            "feelsLikeC": 16,
-            "feelsLikeF": 60,
-            "desc": "Sunny",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 3,
+            "tempC": 26,
+            "tempF": 79,
+            "feelsLikeC": 30,
+            "feelsLikeF": 86,
+            "desc": "Light rain shower",
+            "icon": "\ud83c\udf27\ufe0f",
+            "chanceOfRain": 82,
             "chanceOfSnow": 0,
-            "humidity": 57,
-            "windSpeedKmph": 6,
-            "windSpeedMiles": 4,
-            "windDir": "ENE",
-            "cloudcover": 0,
+            "humidity": 95,
+            "windSpeedKmph": 16,
+            "windSpeedMiles": 10,
+            "windDir": "SW",
+            "cloudcover": 100,
             "uvIndex": 2
           },
           {
             "timeRaw": "1200",
             "timeFormatted": "12:00 PM",
-            "tempC": 21,
-            "tempF": 71,
-            "feelsLikeC": 21,
-            "feelsLikeF": 71,
-            "desc": "Sunny",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 0,
+            "tempC": 26,
+            "tempF": 79,
+            "feelsLikeC": 30,
+            "feelsLikeF": 87,
+            "desc": "Light rain shower",
+            "icon": "\ud83c\udf27\ufe0f",
+            "chanceOfRain": 75,
             "chanceOfSnow": 0,
-            "humidity": 26,
-            "windSpeedKmph": 5,
-            "windSpeedMiles": 3,
-            "windDir": "NE",
-            "cloudcover": 0,
-            "uvIndex": 7
+            "humidity": 94,
+            "windSpeedKmph": 14,
+            "windSpeedMiles": 9,
+            "windDir": "SSW",
+            "cloudcover": 100,
+            "uvIndex": 8
           },
           {
             "timeRaw": "1500",
             "timeFormatted": "3:00 PM",
-            "tempC": 24,
-            "tempF": 76,
-            "feelsLikeC": 23,
-            "feelsLikeF": 74,
-            "desc": "Sunny",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 0,
+            "tempC": 27,
+            "tempF": 80,
+            "feelsLikeC": 31,
+            "feelsLikeF": 88,
+            "desc": "Patchy rain nearby",
+            "icon": "\ud83c\udf27\ufe0f",
+            "chanceOfRain": 72,
             "chanceOfSnow": 0,
-            "humidity": 19,
-            "windSpeedKmph": 11,
-            "windSpeedMiles": 7,
-            "windDir": "NNE",
-            "cloudcover": 0,
-            "uvIndex": 5
+            "humidity": 93,
+            "windSpeedKmph": 14,
+            "windSpeedMiles": 9,
+            "windDir": "SSW",
+            "cloudcover": 81,
+            "uvIndex": 3
           },
           {
             "timeRaw": "1800",
             "timeFormatted": "6:00 PM",
-            "tempC": 24,
-            "tempF": 76,
-            "feelsLikeC": 23,
-            "feelsLikeF": 74,
-            "desc": "Sunny",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 0,
+            "tempC": 27,
+            "tempF": 80,
+            "feelsLikeC": 31,
+            "feelsLikeF": 88,
+            "desc": "Light rain shower",
+            "icon": "\ud83c\udf27\ufe0f",
+            "chanceOfRain": 76,
             "chanceOfSnow": 0,
-            "humidity": 18,
-            "windSpeedKmph": 9,
-            "windSpeedMiles": 5,
-            "windDir": "E",
-            "cloudcover": 0,
+            "humidity": 92,
+            "windSpeedKmph": 17,
+            "windSpeedMiles": 11,
+            "windDir": "S",
+            "cloudcover": 100,
             "uvIndex": 0
           },
           {
             "timeRaw": "2100",
             "timeFormatted": "9:00 PM",
-            "tempC": 18,
-            "tempF": 65,
-            "feelsLikeC": 18,
-            "feelsLikeF": 65,
-            "desc": "Clear",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 0,
+            "tempC": 27,
+            "tempF": 80,
+            "feelsLikeC": 31,
+            "feelsLikeF": 89,
+            "desc": "Light rain shower",
+            "icon": "\ud83c\udf27\ufe0f",
+            "chanceOfRain": 74,
             "chanceOfSnow": 0,
-            "humidity": 28,
-            "windSpeedKmph": 9,
-            "windSpeedMiles": 6,
-            "windDir": "ENE",
-            "cloudcover": 0,
+            "humidity": 90,
+            "windSpeedKmph": 25,
+            "windSpeedMiles": 15,
+            "windDir": "S",
+            "cloudcover": 100,
+            "uvIndex": 0
+          }
+        ]
+      },
+      {
+        "dayIndex": 2,
+        "date": "2026-09-09",
+        "displayDate": "Sep 09, 2026",
+        "dayLabel": "Wednesday",
+        "weekday": "Wednesday",
+        "desc": "Thundery outbreaks in nearby",
+        "icon": "\u26c8\ufe0f",
+        "maxTempC": 28,
+        "maxTempF": 82,
+        "minTempC": 26,
+        "minTempF": 80,
+        "avgTempC": 27,
+        "avgTempF": 81,
+        "uvIndex": 8,
+        "sunHour": 5.0,
+        "maxRainChance": 84,
+        "astronomy": {
+          "sunrise": "05:22 AM",
+          "sunset": "05:59 PM",
+          "moonrise": "02:53 AM",
+          "moonset": "04:52 PM",
+          "moonPhase": "Waning Crescent",
+          "moonIllum": "6"
+        },
+        "hourly": [
+          {
+            "timeRaw": "0",
+            "timeFormatted": "12:00 AM",
+            "tempC": 27,
+            "tempF": 81,
+            "feelsLikeC": 32,
+            "feelsLikeF": 89,
+            "desc": "Moderate or heavy rain shower",
+            "icon": "\ud83c\udf27\ufe0f",
+            "chanceOfRain": 84,
+            "chanceOfSnow": 0,
+            "humidity": 89,
+            "windSpeedKmph": 36,
+            "windSpeedMiles": 22,
+            "windDir": "S",
+            "cloudcover": 100,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "300",
+            "timeFormatted": "3:00 AM",
+            "tempC": 27,
+            "tempF": 81,
+            "feelsLikeC": 32,
+            "feelsLikeF": 89,
+            "desc": "Light rain shower",
+            "icon": "\ud83c\udf27\ufe0f",
+            "chanceOfRain": 78,
+            "chanceOfSnow": 0,
+            "humidity": 90,
+            "windSpeedKmph": 41,
+            "windSpeedMiles": 26,
+            "windDir": "S",
+            "cloudcover": 100,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "600",
+            "timeFormatted": "6:00 AM",
+            "tempC": 27,
+            "tempF": 81,
+            "feelsLikeC": 32,
+            "feelsLikeF": 90,
+            "desc": "Light rain shower",
+            "icon": "\ud83c\udf27\ufe0f",
+            "chanceOfRain": 72,
+            "chanceOfSnow": 0,
+            "humidity": 88,
+            "windSpeedKmph": 43,
+            "windSpeedMiles": 27,
+            "windDir": "SSW",
+            "cloudcover": 100,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "900",
+            "timeFormatted": "9:00 AM",
+            "tempC": 28,
+            "tempF": 82,
+            "feelsLikeC": 33,
+            "feelsLikeF": 91,
+            "desc": "Light rain shower",
+            "icon": "\ud83c\udf27\ufe0f",
+            "chanceOfRain": 65,
+            "chanceOfSnow": 0,
+            "humidity": 88,
+            "windSpeedKmph": 39,
+            "windSpeedMiles": 24,
+            "windDir": "SSW",
+            "cloudcover": 100,
+            "uvIndex": 4
+          },
+          {
+            "timeRaw": "1200",
+            "timeFormatted": "12:00 PM",
+            "tempC": 28,
+            "tempF": 82,
+            "feelsLikeC": 33,
+            "feelsLikeF": 91,
+            "desc": "Thundery outbreaks in nearby",
+            "icon": "\u26c8\ufe0f",
+            "chanceOfRain": 29,
+            "chanceOfSnow": 0,
+            "humidity": 88,
+            "windSpeedKmph": 35,
+            "windSpeedMiles": 22,
+            "windDir": "SSW",
+            "cloudcover": 67,
+            "uvIndex": 8
+          },
+          {
+            "timeRaw": "1500",
+            "timeFormatted": "3:00 PM",
+            "tempC": 27,
+            "tempF": 81,
+            "feelsLikeC": 32,
+            "feelsLikeF": 90,
+            "desc": "Patchy rain nearby",
+            "icon": "\ud83c\udf27\ufe0f",
+            "chanceOfRain": 48,
+            "chanceOfSnow": 0,
+            "humidity": 88,
+            "windSpeedKmph": 35,
+            "windSpeedMiles": 22,
+            "windDir": "SSW",
+            "cloudcover": 72,
+            "uvIndex": 3
+          },
+          {
+            "timeRaw": "1800",
+            "timeFormatted": "6:00 PM",
+            "tempC": 27,
+            "tempF": 81,
+            "feelsLikeC": 32,
+            "feelsLikeF": 89,
+            "desc": "Patchy rain nearby",
+            "icon": "\ud83c\udf27\ufe0f",
+            "chanceOfRain": 71,
+            "chanceOfSnow": 0,
+            "humidity": 90,
+            "windSpeedKmph": 33,
+            "windSpeedMiles": 21,
+            "windDir": "SSW",
+            "cloudcover": 76,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "2100",
+            "timeFormatted": "9:00 PM",
+            "tempC": 27,
+            "tempF": 80,
+            "feelsLikeC": 31,
+            "feelsLikeF": 88,
+            "desc": "Light rain shower",
+            "icon": "\ud83c\udf27\ufe0f",
+            "chanceOfRain": 65,
+            "chanceOfSnow": 0,
+            "humidity": 91,
+            "windSpeedKmph": 26,
+            "windSpeedMiles": 16,
+            "windDir": "SSW",
+            "cloudcover": 54,
             "uvIndex": 0
           }
         ]
@@ -4765,556 +4993,6 @@
       }
     ]
   },
-  "dubai": {
-    "id": "dubai",
-    "name": "Dubai",
-    "country": "United Arab Emirates",
-    "region": "Dubai",
-    "flag": "\ud83c\udde6\ud83c\uddea",
-    "latitude": "25.252",
-    "longitude": "55.280",
-    "current": {
-      "tempC": 33,
-      "tempF": 92,
-      "feelsLikeC": 41,
-      "feelsLikeF": 106,
-      "desc": "Clear",
-      "icon": "\u2600\ufe0f",
-      "weatherCode": "113",
-      "humidity": 67,
-      "windSpeedKmph": 12,
-      "windSpeedMiles": 7,
-      "windDir": "NNW",
-      "windDirDegree": "333",
-      "pressure": 1006,
-      "pressureInches": 30.0,
-      "visibilityKm": 10,
-      "visibilityMiles": 6,
-      "uvIndex": 0,
-      "cloudcover": 0,
-      "precipMM": 0.0,
-      "precipInches": 0.0,
-      "obsTime": ""
-    },
-    "forecast": [
-      {
-        "dayIndex": 0,
-        "date": "2026-09-06",
-        "displayDate": "Sep 06, 2026",
-        "dayLabel": "Today",
-        "weekday": "Sunday",
-        "desc": "Sunny",
-        "icon": "\u2600\ufe0f",
-        "maxTempC": 36,
-        "maxTempF": 97,
-        "minTempC": 32,
-        "minTempF": 90,
-        "avgTempC": 34,
-        "avgTempF": 93,
-        "uvIndex": 9,
-        "sunHour": 12.0,
-        "maxRainChance": 11,
-        "astronomy": {
-          "sunrise": "06:01 AM",
-          "sunset": "06:33 PM",
-          "moonrise": "12:38 AM",
-          "moonset": "03:06 PM",
-          "moonPhase": "Waning Crescent",
-          "moonIllum": "31"
-        },
-        "hourly": [
-          {
-            "timeRaw": "0",
-            "timeFormatted": "12:00 AM",
-            "tempC": 33,
-            "tempF": 91,
-            "feelsLikeC": 42,
-            "feelsLikeF": 107,
-            "desc": "Clear",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 5,
-            "chanceOfSnow": 0,
-            "humidity": 69,
-            "windSpeedKmph": 8,
-            "windSpeedMiles": 5,
-            "windDir": "NE",
-            "cloudcover": 0,
-            "uvIndex": 0
-          },
-          {
-            "timeRaw": "300",
-            "timeFormatted": "3:00 AM",
-            "tempC": 32,
-            "tempF": 90,
-            "feelsLikeC": 39,
-            "feelsLikeF": 103,
-            "desc": "Clear",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 4,
-            "chanceOfSnow": 0,
-            "humidity": 64,
-            "windSpeedKmph": 9,
-            "windSpeedMiles": 6,
-            "windDir": "ENE",
-            "cloudcover": 5,
-            "uvIndex": 0
-          },
-          {
-            "timeRaw": "600",
-            "timeFormatted": "6:00 AM",
-            "tempC": 32,
-            "tempF": 90,
-            "feelsLikeC": 37,
-            "feelsLikeF": 99,
-            "desc": "Overcast",
-            "icon": "\u2601\ufe0f",
-            "chanceOfRain": 11,
-            "chanceOfSnow": 0,
-            "humidity": 55,
-            "windSpeedKmph": 9,
-            "windSpeedMiles": 6,
-            "windDir": "ESE",
-            "cloudcover": 90,
-            "uvIndex": 0
-          },
-          {
-            "timeRaw": "900",
-            "timeFormatted": "9:00 AM",
-            "tempC": 35,
-            "tempF": 95,
-            "feelsLikeC": 41,
-            "feelsLikeF": 105,
-            "desc": "Sunny",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 2,
-            "chanceOfSnow": 0,
-            "humidity": 47,
-            "windSpeedKmph": 10,
-            "windSpeedMiles": 6,
-            "windDir": "SSW",
-            "cloudcover": 10,
-            "uvIndex": 3
-          },
-          {
-            "timeRaw": "1200",
-            "timeFormatted": "12:00 PM",
-            "tempC": 36,
-            "tempF": 96,
-            "feelsLikeC": 42,
-            "feelsLikeF": 108,
-            "desc": "Sunny",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 2,
-            "chanceOfSnow": 0,
-            "humidity": 49,
-            "windSpeedKmph": 18,
-            "windSpeedMiles": 11,
-            "windDir": "WNW",
-            "cloudcover": 5,
-            "uvIndex": 9
-          },
-          {
-            "timeRaw": "1500",
-            "timeFormatted": "3:00 PM",
-            "tempC": 35,
-            "tempF": 94,
-            "feelsLikeC": 44,
-            "feelsLikeF": 111,
-            "desc": "Sunny",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 4,
-            "chanceOfSnow": 0,
-            "humidity": 61,
-            "windSpeedKmph": 23,
-            "windSpeedMiles": 15,
-            "windDir": "NW",
-            "cloudcover": 5,
-            "uvIndex": 5
-          },
-          {
-            "timeRaw": "1800",
-            "timeFormatted": "6:00 PM",
-            "tempC": 34,
-            "tempF": 93,
-            "feelsLikeC": 43,
-            "feelsLikeF": 109,
-            "desc": "Sunny",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 4,
-            "chanceOfSnow": 0,
-            "humidity": 63,
-            "windSpeedKmph": 19,
-            "windSpeedMiles": 12,
-            "windDir": "NNW",
-            "cloudcover": 5,
-            "uvIndex": 0
-          },
-          {
-            "timeRaw": "2100",
-            "timeFormatted": "9:00 PM",
-            "tempC": 33,
-            "tempF": 92,
-            "feelsLikeC": 42,
-            "feelsLikeF": 108,
-            "desc": "Clear",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 4,
-            "chanceOfSnow": 0,
-            "humidity": 65,
-            "windSpeedKmph": 15,
-            "windSpeedMiles": 9,
-            "windDir": "NW",
-            "cloudcover": 0,
-            "uvIndex": 0
-          }
-        ]
-      },
-      {
-        "dayIndex": 1,
-        "date": "2026-09-07",
-        "displayDate": "Sep 07, 2026",
-        "dayLabel": "Tomorrow",
-        "weekday": "Monday",
-        "desc": "Sunny",
-        "icon": "\u2600\ufe0f",
-        "maxTempC": 36,
-        "maxTempF": 98,
-        "minTempC": 32,
-        "minTempF": 89,
-        "avgTempC": 34,
-        "avgTempF": 93,
-        "uvIndex": 9,
-        "sunHour": 12.0,
-        "maxRainChance": 5,
-        "astronomy": {
-          "sunrise": "06:02 AM",
-          "sunset": "06:32 PM",
-          "moonrise": "01:46 AM",
-          "moonset": "03:58 PM",
-          "moonPhase": "Waning Crescent",
-          "moonIllum": "21"
-        },
-        "hourly": [
-          {
-            "timeRaw": "0",
-            "timeFormatted": "12:00 AM",
-            "tempC": 33,
-            "tempF": 91,
-            "feelsLikeC": 42,
-            "feelsLikeF": 107,
-            "desc": "Clear",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 5,
-            "chanceOfSnow": 0,
-            "humidity": 68,
-            "windSpeedKmph": 5,
-            "windSpeedMiles": 3,
-            "windDir": "E",
-            "cloudcover": 5,
-            "uvIndex": 0
-          },
-          {
-            "timeRaw": "300",
-            "timeFormatted": "3:00 AM",
-            "tempC": 32,
-            "tempF": 89,
-            "feelsLikeC": 37,
-            "feelsLikeF": 98,
-            "desc": "Clear",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 3,
-            "chanceOfSnow": 0,
-            "humidity": 59,
-            "windSpeedKmph": 9,
-            "windSpeedMiles": 6,
-            "windDir": "SSE",
-            "cloudcover": 9,
-            "uvIndex": 0
-          },
-          {
-            "timeRaw": "600",
-            "timeFormatted": "6:00 AM",
-            "tempC": 32,
-            "tempF": 90,
-            "feelsLikeC": 37,
-            "feelsLikeF": 98,
-            "desc": "Clear",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 3,
-            "chanceOfSnow": 0,
-            "humidity": 55,
-            "windSpeedKmph": 11,
-            "windSpeedMiles": 7,
-            "windDir": "S",
-            "cloudcover": 5,
-            "uvIndex": 0
-          },
-          {
-            "timeRaw": "900",
-            "timeFormatted": "9:00 AM",
-            "tempC": 35,
-            "tempF": 96,
-            "feelsLikeC": 41,
-            "feelsLikeF": 105,
-            "desc": "Sunny",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 1,
-            "chanceOfSnow": 0,
-            "humidity": 46,
-            "windSpeedKmph": 25,
-            "windSpeedMiles": 15,
-            "windDir": "SSW",
-            "cloudcover": 0,
-            "uvIndex": 3
-          },
-          {
-            "timeRaw": "1200",
-            "timeFormatted": "12:00 PM",
-            "tempC": 36,
-            "tempF": 97,
-            "feelsLikeC": 44,
-            "feelsLikeF": 112,
-            "desc": "Sunny",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 2,
-            "chanceOfSnow": 0,
-            "humidity": 52,
-            "windSpeedKmph": 26,
-            "windSpeedMiles": 16,
-            "windDir": "WSW",
-            "cloudcover": 0,
-            "uvIndex": 9
-          },
-          {
-            "timeRaw": "1500",
-            "timeFormatted": "3:00 PM",
-            "tempC": 35,
-            "tempF": 95,
-            "feelsLikeC": 44,
-            "feelsLikeF": 112,
-            "desc": "Sunny",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 3,
-            "chanceOfSnow": 0,
-            "humidity": 57,
-            "windSpeedKmph": 26,
-            "windSpeedMiles": 16,
-            "windDir": "W",
-            "cloudcover": 0,
-            "uvIndex": 5
-          },
-          {
-            "timeRaw": "1800",
-            "timeFormatted": "6:00 PM",
-            "tempC": 34,
-            "tempF": 94,
-            "feelsLikeC": 44,
-            "feelsLikeF": 111,
-            "desc": "Sunny",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 4,
-            "chanceOfSnow": 0,
-            "humidity": 62,
-            "windSpeedKmph": 18,
-            "windSpeedMiles": 11,
-            "windDir": "WNW",
-            "cloudcover": 0,
-            "uvIndex": 0
-          },
-          {
-            "timeRaw": "2100",
-            "timeFormatted": "9:00 PM",
-            "tempC": 34,
-            "tempF": 93,
-            "feelsLikeC": 43,
-            "feelsLikeF": 110,
-            "desc": "Clear",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 4,
-            "chanceOfSnow": 0,
-            "humidity": 63,
-            "windSpeedKmph": 12,
-            "windSpeedMiles": 7,
-            "windDir": "WNW",
-            "cloudcover": 0,
-            "uvIndex": 0
-          }
-        ]
-      },
-      {
-        "dayIndex": 2,
-        "date": "2026-09-08",
-        "displayDate": "Sep 08, 2026",
-        "dayLabel": "Tuesday",
-        "weekday": "Tuesday",
-        "desc": "Sunny",
-        "icon": "\u2600\ufe0f",
-        "maxTempC": 37,
-        "maxTempF": 98,
-        "minTempC": 32,
-        "minTempF": 90,
-        "avgTempC": 34,
-        "avgTempF": 93,
-        "uvIndex": 9,
-        "sunHour": 12.0,
-        "maxRainChance": 4,
-        "astronomy": {
-          "sunrise": "06:02 AM",
-          "sunset": "06:30 PM",
-          "moonrise": "02:54 AM",
-          "moonset": "04:44 PM",
-          "moonPhase": "Waning Crescent",
-          "moonIllum": "12"
-        },
-        "hourly": [
-          {
-            "timeRaw": "0",
-            "timeFormatted": "12:00 AM",
-            "tempC": 33,
-            "tempF": 92,
-            "feelsLikeC": 43,
-            "feelsLikeF": 109,
-            "desc": "Clear",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 4,
-            "chanceOfSnow": 0,
-            "humidity": 66,
-            "windSpeedKmph": 8,
-            "windSpeedMiles": 5,
-            "windDir": "WNW",
-            "cloudcover": 0,
-            "uvIndex": 0
-          },
-          {
-            "timeRaw": "300",
-            "timeFormatted": "3:00 AM",
-            "tempC": 33,
-            "tempF": 92,
-            "feelsLikeC": 41,
-            "feelsLikeF": 105,
-            "desc": "Clear",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 4,
-            "chanceOfSnow": 0,
-            "humidity": 63,
-            "windSpeedKmph": 12,
-            "windSpeedMiles": 7,
-            "windDir": "SSW",
-            "cloudcover": 5,
-            "uvIndex": 0
-          },
-          {
-            "timeRaw": "600",
-            "timeFormatted": "6:00 AM",
-            "tempC": 32,
-            "tempF": 90,
-            "feelsLikeC": 37,
-            "feelsLikeF": 99,
-            "desc": "Clear",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 3,
-            "chanceOfSnow": 0,
-            "humidity": 57,
-            "windSpeedKmph": 20,
-            "windSpeedMiles": 13,
-            "windDir": "SSW",
-            "cloudcover": 5,
-            "uvIndex": 0
-          },
-          {
-            "timeRaw": "900",
-            "timeFormatted": "9:00 AM",
-            "tempC": 36,
-            "tempF": 96,
-            "feelsLikeC": 40,
-            "feelsLikeF": 104,
-            "desc": "Sunny",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 1,
-            "chanceOfSnow": 0,
-            "humidity": 44,
-            "windSpeedKmph": 28,
-            "windSpeedMiles": 17,
-            "windDir": "SSW",
-            "cloudcover": 5,
-            "uvIndex": 3
-          },
-          {
-            "timeRaw": "1200",
-            "timeFormatted": "12:00 PM",
-            "tempC": 36,
-            "tempF": 96,
-            "feelsLikeC": 43,
-            "feelsLikeF": 110,
-            "desc": "Sunny",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 2,
-            "chanceOfSnow": 0,
-            "humidity": 53,
-            "windSpeedKmph": 26,
-            "windSpeedMiles": 16,
-            "windDir": "W",
-            "cloudcover": 5,
-            "uvIndex": 9
-          },
-          {
-            "timeRaw": "1500",
-            "timeFormatted": "3:00 PM",
-            "tempC": 35,
-            "tempF": 95,
-            "feelsLikeC": 44,
-            "feelsLikeF": 112,
-            "desc": "Sunny",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 3,
-            "chanceOfSnow": 0,
-            "humidity": 59,
-            "windSpeedKmph": 20,
-            "windSpeedMiles": 12,
-            "windDir": "WNW",
-            "cloudcover": 0,
-            "uvIndex": 5
-          },
-          {
-            "timeRaw": "1800",
-            "timeFormatted": "6:00 PM",
-            "tempC": 34,
-            "tempF": 94,
-            "feelsLikeC": 44,
-            "feelsLikeF": 111,
-            "desc": "Sunny",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 3,
-            "chanceOfSnow": 0,
-            "humidity": 61,
-            "windSpeedKmph": 8,
-            "windSpeedMiles": 5,
-            "windDir": "WNW",
-            "cloudcover": 0,
-            "uvIndex": 0
-          },
-          {
-            "timeRaw": "2100",
-            "timeFormatted": "9:00 PM",
-            "tempC": 34,
-            "tempF": 93,
-            "feelsLikeC": 42,
-            "feelsLikeF": 108,
-            "desc": "Clear",
-            "icon": "\u2600\ufe0f",
-            "chanceOfRain": 4,
-            "chanceOfSnow": 0,
-            "humidity": 63,
-            "windSpeedKmph": 6,
-            "windSpeedMiles": 4,
-            "windDir": "WSW",
-            "cloudcover": 0,
-            "uvIndex": 0
-          }
-        ]
-      }
-    ]
-  },
   "sydney": {
     "id": "sydney",
     "name": "Pyrmont",
@@ -5859,6 +5537,556 @@
             "windSpeedMiles": 19,
             "windDir": "S",
             "cloudcover": 94,
+            "uvIndex": 0
+          }
+        ]
+      }
+    ]
+  },
+  "dubai": {
+    "id": "dubai",
+    "name": "Dubai",
+    "country": "United Arab Emirates",
+    "region": "Dubai",
+    "flag": "\ud83c\udde6\ud83c\uddea",
+    "latitude": "25.252",
+    "longitude": "55.280",
+    "current": {
+      "tempC": 33,
+      "tempF": 92,
+      "feelsLikeC": 41,
+      "feelsLikeF": 106,
+      "desc": "Clear",
+      "icon": "\u2600\ufe0f",
+      "weatherCode": "113",
+      "humidity": 67,
+      "windSpeedKmph": 12,
+      "windSpeedMiles": 7,
+      "windDir": "NNW",
+      "windDirDegree": "333",
+      "pressure": 1006,
+      "pressureInches": 30.0,
+      "visibilityKm": 10,
+      "visibilityMiles": 6,
+      "uvIndex": 0,
+      "cloudcover": 0,
+      "precipMM": 0.0,
+      "precipInches": 0.0,
+      "obsTime": ""
+    },
+    "forecast": [
+      {
+        "dayIndex": 0,
+        "date": "2026-09-06",
+        "displayDate": "Sep 06, 2026",
+        "dayLabel": "Today",
+        "weekday": "Sunday",
+        "desc": "Sunny",
+        "icon": "\u2600\ufe0f",
+        "maxTempC": 36,
+        "maxTempF": 97,
+        "minTempC": 32,
+        "minTempF": 90,
+        "avgTempC": 34,
+        "avgTempF": 93,
+        "uvIndex": 9,
+        "sunHour": 12.0,
+        "maxRainChance": 11,
+        "astronomy": {
+          "sunrise": "06:01 AM",
+          "sunset": "06:33 PM",
+          "moonrise": "12:38 AM",
+          "moonset": "03:06 PM",
+          "moonPhase": "Waning Crescent",
+          "moonIllum": "31"
+        },
+        "hourly": [
+          {
+            "timeRaw": "0",
+            "timeFormatted": "12:00 AM",
+            "tempC": 33,
+            "tempF": 91,
+            "feelsLikeC": 42,
+            "feelsLikeF": 107,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 5,
+            "chanceOfSnow": 0,
+            "humidity": 69,
+            "windSpeedKmph": 8,
+            "windSpeedMiles": 5,
+            "windDir": "NE",
+            "cloudcover": 0,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "300",
+            "timeFormatted": "3:00 AM",
+            "tempC": 32,
+            "tempF": 90,
+            "feelsLikeC": 39,
+            "feelsLikeF": 103,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 4,
+            "chanceOfSnow": 0,
+            "humidity": 64,
+            "windSpeedKmph": 9,
+            "windSpeedMiles": 6,
+            "windDir": "ENE",
+            "cloudcover": 5,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "600",
+            "timeFormatted": "6:00 AM",
+            "tempC": 32,
+            "tempF": 90,
+            "feelsLikeC": 37,
+            "feelsLikeF": 99,
+            "desc": "Overcast",
+            "icon": "\u2601\ufe0f",
+            "chanceOfRain": 11,
+            "chanceOfSnow": 0,
+            "humidity": 55,
+            "windSpeedKmph": 9,
+            "windSpeedMiles": 6,
+            "windDir": "ESE",
+            "cloudcover": 90,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "900",
+            "timeFormatted": "9:00 AM",
+            "tempC": 35,
+            "tempF": 95,
+            "feelsLikeC": 41,
+            "feelsLikeF": 105,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 2,
+            "chanceOfSnow": 0,
+            "humidity": 47,
+            "windSpeedKmph": 10,
+            "windSpeedMiles": 6,
+            "windDir": "SSW",
+            "cloudcover": 10,
+            "uvIndex": 3
+          },
+          {
+            "timeRaw": "1200",
+            "timeFormatted": "12:00 PM",
+            "tempC": 36,
+            "tempF": 96,
+            "feelsLikeC": 42,
+            "feelsLikeF": 108,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 2,
+            "chanceOfSnow": 0,
+            "humidity": 49,
+            "windSpeedKmph": 18,
+            "windSpeedMiles": 11,
+            "windDir": "WNW",
+            "cloudcover": 5,
+            "uvIndex": 9
+          },
+          {
+            "timeRaw": "1500",
+            "timeFormatted": "3:00 PM",
+            "tempC": 35,
+            "tempF": 94,
+            "feelsLikeC": 44,
+            "feelsLikeF": 111,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 4,
+            "chanceOfSnow": 0,
+            "humidity": 61,
+            "windSpeedKmph": 23,
+            "windSpeedMiles": 15,
+            "windDir": "NW",
+            "cloudcover": 5,
+            "uvIndex": 5
+          },
+          {
+            "timeRaw": "1800",
+            "timeFormatted": "6:00 PM",
+            "tempC": 34,
+            "tempF": 93,
+            "feelsLikeC": 43,
+            "feelsLikeF": 109,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 4,
+            "chanceOfSnow": 0,
+            "humidity": 63,
+            "windSpeedKmph": 19,
+            "windSpeedMiles": 12,
+            "windDir": "NNW",
+            "cloudcover": 5,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "2100",
+            "timeFormatted": "9:00 PM",
+            "tempC": 33,
+            "tempF": 92,
+            "feelsLikeC": 42,
+            "feelsLikeF": 108,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 4,
+            "chanceOfSnow": 0,
+            "humidity": 65,
+            "windSpeedKmph": 15,
+            "windSpeedMiles": 9,
+            "windDir": "NW",
+            "cloudcover": 0,
+            "uvIndex": 0
+          }
+        ]
+      },
+      {
+        "dayIndex": 1,
+        "date": "2026-09-07",
+        "displayDate": "Sep 07, 2026",
+        "dayLabel": "Tomorrow",
+        "weekday": "Monday",
+        "desc": "Sunny",
+        "icon": "\u2600\ufe0f",
+        "maxTempC": 36,
+        "maxTempF": 98,
+        "minTempC": 32,
+        "minTempF": 89,
+        "avgTempC": 34,
+        "avgTempF": 93,
+        "uvIndex": 9,
+        "sunHour": 12.0,
+        "maxRainChance": 5,
+        "astronomy": {
+          "sunrise": "06:02 AM",
+          "sunset": "06:32 PM",
+          "moonrise": "01:46 AM",
+          "moonset": "03:58 PM",
+          "moonPhase": "Waning Crescent",
+          "moonIllum": "21"
+        },
+        "hourly": [
+          {
+            "timeRaw": "0",
+            "timeFormatted": "12:00 AM",
+            "tempC": 33,
+            "tempF": 91,
+            "feelsLikeC": 42,
+            "feelsLikeF": 107,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 5,
+            "chanceOfSnow": 0,
+            "humidity": 68,
+            "windSpeedKmph": 5,
+            "windSpeedMiles": 3,
+            "windDir": "E",
+            "cloudcover": 5,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "300",
+            "timeFormatted": "3:00 AM",
+            "tempC": 32,
+            "tempF": 89,
+            "feelsLikeC": 37,
+            "feelsLikeF": 98,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 3,
+            "chanceOfSnow": 0,
+            "humidity": 59,
+            "windSpeedKmph": 9,
+            "windSpeedMiles": 6,
+            "windDir": "SSE",
+            "cloudcover": 9,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "600",
+            "timeFormatted": "6:00 AM",
+            "tempC": 32,
+            "tempF": 90,
+            "feelsLikeC": 37,
+            "feelsLikeF": 98,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 3,
+            "chanceOfSnow": 0,
+            "humidity": 55,
+            "windSpeedKmph": 11,
+            "windSpeedMiles": 7,
+            "windDir": "S",
+            "cloudcover": 5,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "900",
+            "timeFormatted": "9:00 AM",
+            "tempC": 35,
+            "tempF": 96,
+            "feelsLikeC": 41,
+            "feelsLikeF": 105,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 1,
+            "chanceOfSnow": 0,
+            "humidity": 46,
+            "windSpeedKmph": 25,
+            "windSpeedMiles": 15,
+            "windDir": "SSW",
+            "cloudcover": 0,
+            "uvIndex": 3
+          },
+          {
+            "timeRaw": "1200",
+            "timeFormatted": "12:00 PM",
+            "tempC": 36,
+            "tempF": 97,
+            "feelsLikeC": 44,
+            "feelsLikeF": 112,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 2,
+            "chanceOfSnow": 0,
+            "humidity": 52,
+            "windSpeedKmph": 26,
+            "windSpeedMiles": 16,
+            "windDir": "WSW",
+            "cloudcover": 0,
+            "uvIndex": 9
+          },
+          {
+            "timeRaw": "1500",
+            "timeFormatted": "3:00 PM",
+            "tempC": 35,
+            "tempF": 95,
+            "feelsLikeC": 44,
+            "feelsLikeF": 112,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 3,
+            "chanceOfSnow": 0,
+            "humidity": 57,
+            "windSpeedKmph": 26,
+            "windSpeedMiles": 16,
+            "windDir": "W",
+            "cloudcover": 0,
+            "uvIndex": 5
+          },
+          {
+            "timeRaw": "1800",
+            "timeFormatted": "6:00 PM",
+            "tempC": 34,
+            "tempF": 94,
+            "feelsLikeC": 44,
+            "feelsLikeF": 111,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 4,
+            "chanceOfSnow": 0,
+            "humidity": 62,
+            "windSpeedKmph": 18,
+            "windSpeedMiles": 11,
+            "windDir": "WNW",
+            "cloudcover": 0,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "2100",
+            "timeFormatted": "9:00 PM",
+            "tempC": 34,
+            "tempF": 93,
+            "feelsLikeC": 43,
+            "feelsLikeF": 110,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 4,
+            "chanceOfSnow": 0,
+            "humidity": 63,
+            "windSpeedKmph": 12,
+            "windSpeedMiles": 7,
+            "windDir": "WNW",
+            "cloudcover": 0,
+            "uvIndex": 0
+          }
+        ]
+      },
+      {
+        "dayIndex": 2,
+        "date": "2026-09-08",
+        "displayDate": "Sep 08, 2026",
+        "dayLabel": "Tuesday",
+        "weekday": "Tuesday",
+        "desc": "Sunny",
+        "icon": "\u2600\ufe0f",
+        "maxTempC": 37,
+        "maxTempF": 98,
+        "minTempC": 32,
+        "minTempF": 90,
+        "avgTempC": 34,
+        "avgTempF": 93,
+        "uvIndex": 9,
+        "sunHour": 12.0,
+        "maxRainChance": 4,
+        "astronomy": {
+          "sunrise": "06:02 AM",
+          "sunset": "06:30 PM",
+          "moonrise": "02:54 AM",
+          "moonset": "04:44 PM",
+          "moonPhase": "Waning Crescent",
+          "moonIllum": "12"
+        },
+        "hourly": [
+          {
+            "timeRaw": "0",
+            "timeFormatted": "12:00 AM",
+            "tempC": 33,
+            "tempF": 92,
+            "feelsLikeC": 43,
+            "feelsLikeF": 109,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 4,
+            "chanceOfSnow": 0,
+            "humidity": 66,
+            "windSpeedKmph": 8,
+            "windSpeedMiles": 5,
+            "windDir": "WNW",
+            "cloudcover": 0,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "300",
+            "timeFormatted": "3:00 AM",
+            "tempC": 33,
+            "tempF": 92,
+            "feelsLikeC": 41,
+            "feelsLikeF": 105,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 4,
+            "chanceOfSnow": 0,
+            "humidity": 63,
+            "windSpeedKmph": 12,
+            "windSpeedMiles": 7,
+            "windDir": "SSW",
+            "cloudcover": 5,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "600",
+            "timeFormatted": "6:00 AM",
+            "tempC": 32,
+            "tempF": 90,
+            "feelsLikeC": 37,
+            "feelsLikeF": 99,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 3,
+            "chanceOfSnow": 0,
+            "humidity": 57,
+            "windSpeedKmph": 20,
+            "windSpeedMiles": 13,
+            "windDir": "SSW",
+            "cloudcover": 5,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "900",
+            "timeFormatted": "9:00 AM",
+            "tempC": 36,
+            "tempF": 96,
+            "feelsLikeC": 40,
+            "feelsLikeF": 104,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 1,
+            "chanceOfSnow": 0,
+            "humidity": 44,
+            "windSpeedKmph": 28,
+            "windSpeedMiles": 17,
+            "windDir": "SSW",
+            "cloudcover": 5,
+            "uvIndex": 3
+          },
+          {
+            "timeRaw": "1200",
+            "timeFormatted": "12:00 PM",
+            "tempC": 36,
+            "tempF": 96,
+            "feelsLikeC": 43,
+            "feelsLikeF": 110,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 2,
+            "chanceOfSnow": 0,
+            "humidity": 53,
+            "windSpeedKmph": 26,
+            "windSpeedMiles": 16,
+            "windDir": "W",
+            "cloudcover": 5,
+            "uvIndex": 9
+          },
+          {
+            "timeRaw": "1500",
+            "timeFormatted": "3:00 PM",
+            "tempC": 35,
+            "tempF": 95,
+            "feelsLikeC": 44,
+            "feelsLikeF": 112,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 3,
+            "chanceOfSnow": 0,
+            "humidity": 59,
+            "windSpeedKmph": 20,
+            "windSpeedMiles": 12,
+            "windDir": "WNW",
+            "cloudcover": 0,
+            "uvIndex": 5
+          },
+          {
+            "timeRaw": "1800",
+            "timeFormatted": "6:00 PM",
+            "tempC": 34,
+            "tempF": 94,
+            "feelsLikeC": 44,
+            "feelsLikeF": 111,
+            "desc": "Sunny",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 3,
+            "chanceOfSnow": 0,
+            "humidity": 61,
+            "windSpeedKmph": 8,
+            "windSpeedMiles": 5,
+            "windDir": "WNW",
+            "cloudcover": 0,
+            "uvIndex": 0
+          },
+          {
+            "timeRaw": "2100",
+            "timeFormatted": "9:00 PM",
+            "tempC": 34,
+            "tempF": 93,
+            "feelsLikeC": 42,
+            "feelsLikeF": 108,
+            "desc": "Clear",
+            "icon": "\u2600\ufe0f",
+            "chanceOfRain": 4,
+            "chanceOfSnow": 0,
+            "humidity": 63,
+            "windSpeedKmph": 6,
+            "windSpeedMiles": 4,
+            "windDir": "WSW",
+            "cloudcover": 0,
             "uvIndex": 0
           }
         ]
@@ -8936,6 +9164,40 @@
       } catch (e) {}
       applyTheme(savedTheme);
     }
+
+    /* Settings Hamburger Dropdown Controller */
+    function toggleSettingsMenu(e) {
+      if (e) e.stopPropagation();
+      const dropdown = document.getElementById('settings-dropdown');
+      const btn = document.getElementById('hamburger-btn');
+      if (!dropdown || !btn) return;
+
+      const isOpen = dropdown.classList.toggle('open');
+      btn.classList.toggle('open', isOpen);
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    }
+
+    function closeSettingsMenu() {
+      const dropdown = document.getElementById('settings-dropdown');
+      const btn = document.getElementById('hamburger-btn');
+      if (dropdown) dropdown.classList.remove('open');
+      if (btn) {
+        btn.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    }
+
+    // Auto-close settings menu on outside click and Escape key
+    document.addEventListener('click', (e) => {
+      const container = document.getElementById('settings-menu-container');
+      if (container && !container.contains(e.target)) {
+        closeSettingsMenu();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSettingsMenu();
+    });
 
     // Initialize
     initTheme();
