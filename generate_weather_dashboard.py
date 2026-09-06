@@ -6,9 +6,7 @@ parse the JSON data, and generate an interactive HTML dashboard: 'weather_dashbo
 
 import json
 import urllib.request
-import urllib.parse
 import datetime
-import time
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -375,7 +373,7 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       align-items: center;
       justify-content: center;
       font-size: 24px;
-      box-shadow: var(--shadow-glow);
+      box-shadow: 0 4px 14px var(--border-glow);
     }}
 
     .brand-title {{
@@ -924,7 +922,6 @@ def generate_html(weather_data: dict, city_list: list) -> str:
     .badge-emerald {{ background: rgba(16, 185, 129, 0.2); color: #34d399; }}
     .badge-amber {{ background: rgba(245, 158, 11, 0.2); color: #fbbf24; }}
     .badge-rose {{ background: rgba(244, 63, 94, 0.2); color: #fb7185; }}
-    .badge-cyan {{ background: rgba(6, 182, 212, 0.2); color: #38bdf8; }}
 
     /* Forecast Section */
     .section-title {{
@@ -1387,18 +1384,6 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       box-shadow: 0 2px 8px rgba(66, 133, 244, 0.4);
     }}
 
-    [data-theme="light"] .action-btn {{
-      background: rgba(255, 255, 255, 0.85);
-      border-color: rgba(226, 232, 240, 0.95);
-      color: var(--text-main);
-    }}
-
-    [data-theme="light"] .action-btn:hover {{
-      background: rgba(255, 255, 255, 1);
-      border-color: rgba(66, 133, 244, 0.5);
-      box-shadow: 0 4px 14px rgba(66, 133, 244, 0.2);
-    }}
-
     [data-theme="light"] .hamburger-btn {{
       background: rgba(241, 245, 249, 0.75);
       border: 1px solid rgba(226, 232, 240, 0.95);
@@ -1488,7 +1473,7 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       box-shadow: 0 16px 36px -8px rgba(15, 23, 42, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.95);
     }}
 
-    [data-theme="light"] .hero-badge {{
+    [data-theme="light"] .city-badge {{
       background: rgba(66, 133, 244, 0.12);
       border-color: rgba(66, 133, 244, 0.3);
       color: #1a73e8;
@@ -1521,12 +1506,6 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       background: rgba(234, 67, 53, 0.15);
       color: #c5221f;
       border: 1px solid rgba(234, 67, 53, 0.35);
-    }}
-
-    [data-theme="light"] .badge-cyan {{
-      background: rgba(66, 133, 244, 0.15);
-      color: #1967d2;
-      border: 1px solid rgba(66, 133, 244, 0.35);
     }}
 
     [data-theme="light"] .forecast-card:hover {{
@@ -1600,11 +1579,6 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       pointer-events: none;
       transition: opacity 0.5s ease;
     }}
-
-    @keyframes spin {{
-      from {{ transform: rotate(0deg); }}
-      to {{ transform: rotate(360deg); }}
-    }}
   </style>
 </head>
 <body>
@@ -1648,7 +1622,7 @@ def generate_html(weather_data: dict, city_list: list) -> str:
 
         <!-- Settings Hamburger Dropdown Container -->
         <div class="settings-menu-container" id="settings-menu-container">
-          <button class="action-btn hamburger-btn" id="hamburger-btn" onclick="toggleSettingsMenu(event)" aria-label="Settings Menu" aria-expanded="false" title="Settings & Controls">
+          <button class="hamburger-btn" id="hamburger-btn" onclick="toggleSettingsMenu(event)" aria-label="Settings Menu" aria-expanded="false" title="Settings & Controls">
             <span class="hamburger-icon" aria-hidden="true">
               <span></span>
               <span></span>
@@ -2053,9 +2027,9 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       const orb3 = document.querySelector('.orb-3');
       if (!orb1 || !orb2) return;
 
-      if (!desc && window.currentCityId && weatherData[window.currentCityId]) {{
-        desc = weatherData[window.currentCityId].current.desc;
-        code = weatherData[window.currentCityId].current.weatherCode;
+      if (!desc && currentCityId && weatherData[currentCityId]) {{
+        desc = weatherData[currentCityId].current.desc;
+        code = weatherData[currentCityId].current.weatherCode;
       }}
       if (!desc) return;
 
@@ -2463,6 +2437,7 @@ def generate_html(weather_data: dict, city_list: list) -> str:
         this.windAngle = 0;
         this.windSpeed = 10;
         this.enabled = true;
+        this.theme = document.documentElement.getAttribute('data-theme') || 'dark';
         this.animId = null;
 
         this.resize();
@@ -2621,7 +2596,7 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       draw() {{
         this.ctx.clearRect(0, 0, this.width, this.height);
 
-        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        const isLight = this.theme === 'light';
 
         if (this.condition === 'thunder' && this.lightning.active) {{
           // High-contrast electric blue lightning flash in light mode, bright sky-blue in dark mode
