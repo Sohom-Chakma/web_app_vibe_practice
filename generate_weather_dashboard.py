@@ -368,7 +368,7 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       box-shadow: 0 2px 8px rgba(14, 165, 233, 0.4);
     }}
 
-    /* City Selector Bar (12 Cities) */
+    /* City Selector Bar (12 Cities) with Tactile Scroll Snapping */
     .city-nav-bar {{
       background: var(--bg-card);
       backdrop-filter: blur(12px);
@@ -377,10 +377,15 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       padding: 12px 18px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       overflow-x: auto;
       scrollbar-width: thin;
-      scrollbar-color: rgba(255,255,255,0.2) transparent;
+      scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      scroll-padding: 0 18px;
+      overscroll-behavior-x: contain;
+      -webkit-overflow-scrolling: touch;
     }}
 
     .city-nav-item {{
@@ -398,6 +403,9 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       white-space: nowrap;
       transition: var(--transition-smooth);
       user-select: none;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      flex-shrink: 0;
     }}
 
     .city-nav-item:hover {{
@@ -1590,10 +1598,33 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       }}
     }}
 
+    function setupNavBarScroll() {{
+      const navBar = document.getElementById('city-nav-bar');
+      if (!navBar) return;
+
+      // Intercept mouse wheel when pointer is directly over the locations bar
+      navBar.addEventListener('wheel', (e) => {{
+        // When vertical scroll (deltaY) is dominant, translate it into horizontal snap scroll
+        if (Math.abs(e.deltaY) >= Math.abs(e.deltaX)) {{
+          e.preventDefault(); // Stop main page from scrolling vertically
+          
+          const item = navBar.querySelector('.city-nav-item');
+          const step = item ? (item.offsetWidth + 10) : 150;
+          const direction = Math.sign(e.deltaY);
+
+          navBar.scrollBy({{
+            left: direction * step,
+            behavior: 'smooth'
+          }});
+        }}
+      }}, {{ passive: false }});
+    }}
+
     // Initialize
     initCompareDropdowns();
     renderNavBar();
     renderDashboard();
+    setupNavBarScroll();
   </script>
 </body>
 </html>
