@@ -356,6 +356,8 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       border-radius: var(--radius-xl);
       box-shadow: var(--glass-shadow), var(--glass-bevel);
       gap: 16px;
+      position: relative;
+      z-index: 50;
     }}
 
     .brand-group {{
@@ -469,12 +471,37 @@ def generate_html(weather_data: dict, city_list: list) -> str:
     }}
 
     .hamburger-btn {{
-      display: flex;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 7px 15px;
+      display: inline-flex;
       align-items: center;
       gap: 9px;
-      padding: 7px 14px;
       cursor: pointer;
+      transition: var(--transition-smooth);
+      box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.1);
       user-select: none;
+    }}
+
+    .hamburger-btn:hover {{
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.09);
+      border-color: var(--glass-border-hover);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), inset 0 1px 1px 0 rgba(255, 255, 255, 0.18);
+      transform: translateY(-1px);
+    }}
+
+    .hamburger-btn.open {{
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      color: #ffffff;
+      border-color: rgba(165, 180, 252, 0.5);
+      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.45), inset 0 1px 1px 0 rgba(255, 255, 255, 0.3);
     }}
 
     .hamburger-icon {{
@@ -510,15 +537,15 @@ def generate_html(weather_data: dict, city_list: list) -> str:
 
     .settings-dropdown {{
       position: absolute;
-      top: calc(100% + 10px);
+      top: calc(100% + 12px);
       right: 0;
-      width: 290px;
-      background: rgba(18, 26, 48, 0.94);
-      backdrop-filter: var(--glass-blur);
-      -webkit-backdrop-filter: var(--glass-blur);
+      width: 295px;
+      background: rgba(15, 22, 42, 0.96);
+      backdrop-filter: blur(28px) saturate(200%);
+      -webkit-backdrop-filter: blur(28px) saturate(200%);
       border: 1px solid var(--glass-border);
       border-radius: var(--radius-lg);
-      box-shadow: 0 20px 45px -8px rgba(0, 0, 0, 0.7), var(--glass-bevel);
+      box-shadow: 0 24px 50px -8px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.08), var(--glass-bevel);
       padding: 14px;
       display: flex;
       flex-direction: column;
@@ -527,7 +554,7 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       opacity: 0;
       pointer-events: none;
       transform: translateY(-8px) scale(0.96);
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
     }}
 
     .settings-dropdown.open {{
@@ -1370,6 +1397,27 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       background: rgba(255, 255, 255, 1);
       border-color: rgba(66, 133, 244, 0.5);
       box-shadow: 0 4px 14px rgba(66, 133, 244, 0.2);
+    }}
+
+    [data-theme="light"] .hamburger-btn {{
+      background: rgba(241, 245, 249, 0.75);
+      border: 1px solid rgba(226, 232, 240, 0.95);
+      color: var(--text-muted);
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+    }}
+
+    [data-theme="light"] .hamburger-btn:hover {{
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.95);
+      border-color: rgba(66, 133, 244, 0.45);
+      box-shadow: 0 4px 14px rgba(66, 133, 244, 0.18);
+    }}
+
+    [data-theme="light"] .hamburger-btn.open {{
+      background: linear-gradient(135deg, #4285F4, #1a73e8);
+      color: #ffffff;
+      border-color: rgba(66, 133, 244, 0.6);
+      box-shadow: 0 4px 16px rgba(66, 133, 244, 0.35);
     }}
 
     [data-theme="light"] .settings-dropdown {{
