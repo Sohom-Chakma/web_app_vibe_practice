@@ -27,14 +27,21 @@ A modern, interactive weather dashboard tracking **12 major world cities** using
 - **Metric / Imperial Unit Switcher**: Seamless live toggle between **°C (km/h)** and **°F (mph)**.
 - **Scroll-Driven Location Selection**: Scrolling over the locations bar automatically activates and selects the next/previous city, updating the entire dashboard in real time. Supports both single-notch 1-at-a-time navigation and rapid multi-item scrolling with CSS Scroll Snapping (`scroll-snap-type: x mandatory`, `scroll-snap-align: center`) and hidden scrollbars across all modern browsers.
 - **Refractive Glassmorphism UI**: Multi-layered frosted glass panels (`backdrop-filter: blur(24px) saturate(190%)`), specular bevel rim highlights, and condition-adaptive ambient background glow that shifts dynamically with the active city's weather.
-- **Data-Driven HTML5 Canvas Physics Engine (Option 2)**:
+- **Light & Dark Mode Switcher with Scoped Google Signature Accents**:
+  - Interactive header toggle (**☀️ Light / 🌙 Dark**) with `localStorage` persistence.
+  - **Dark Mode**: Retains the original cyber/cosmic glassmorphism aesthetic with deep navy background (`#060913`), indigo/cyan ambient glows, and dark frosted glass.
+  - **Light Mode**: Exclusively unlocks **Google Signature Brand Accents**:
+    - Signature 4-color Google stripe at top (`#4285F4`, `#EA4335`, `#FBBC05`, `#34A853`).
+    - Google Blue (`#4285F4`) primary active states, tabs, and navigation pills.
+    - Google-tinted metric badges, astronomy highlights, and high/low indicators.
+    - High-contrast white frosted glass surfaces (`rgba(255, 255, 255, 0.74)`).
+- **Adaptive Data-Driven HTML5 Canvas Physics Engine**:
   - Real-time particle simulation running behind glass cards on a fixed hardware-accelerated canvas.
+  - **Theme-Adaptive Particle Hues**: Rain droplets render as Google Blue (`#4285F4`) in Light Mode and sky blue in Dark Mode; snowflakes render as soft periwinkle frost on light backgrounds; sun motes pulse in Google Yellow (`#FBBC05`).
   - Rain particles angle and slant based on live wind direction (`windDirDegree`) and velocity (`windSpeedKmph`).
   - Snowflakes drift with sinusoidal swaying physics and wind slant.
   - Atmospheric cloud puffs drift softly across overcast skies.
   - Lightning flash simulation triggers dynamically for thunderstorm conditions.
-  - Floating warm golden dust motes circulate under sunny, clear skies.
-  - Particles visibly refract through semi-transparent frosted cards and shine crisply in negative space.
   - Header controls include an interactive **✨ FX: On / Off** toggle button.
 
 ---

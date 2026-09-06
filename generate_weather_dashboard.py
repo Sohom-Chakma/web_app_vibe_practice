@@ -228,6 +228,38 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }}
 
+    /* Light Mode with Google Signature Brand Accents */
+    [data-theme="light"] {{
+      --bg-base: #f8fafc;
+      --glass-surface: rgba(255, 255, 255, 0.74);
+      --glass-surface-hover: rgba(255, 255, 255, 0.92);
+      --glass-border: rgba(226, 232, 240, 0.9);
+      --glass-border-hover: rgba(66, 133, 244, 0.45);
+      --glass-bevel: inset 0 1px 1px 0 rgba(255, 255, 255, 0.98), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.04);
+      --glass-shadow: 0 14px 32px -8px rgba(15, 23, 42, 0.08), 0 1px 3px 0 rgba(15, 23, 42, 0.04);
+      --glass-blur: blur(20px) saturate(180%);
+      --border-subtle: rgba(226, 232, 240, 0.9);
+      --border-glow: rgba(66, 133, 244, 0.35);
+
+      /* Google Signature Brand Accents (Scoped to Light Mode) */
+      --google-blue: #4285F4;
+      --google-red: #EA4335;
+      --google-yellow: #FBBC05;
+      --google-green: #34A853;
+      --google-blue-dark: #1a73e8;
+
+      --primary: var(--google-blue);
+      --primary-light: var(--google-blue-dark);
+      --accent-cyan: var(--google-blue);
+      --accent-emerald: var(--google-green);
+      --accent-amber: var(--google-yellow);
+      --accent-rose: var(--google-red);
+
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-faint: #94a3b8;
+    }}
+
     * {{
       box-sizing: border-box;
       margin: 0;
@@ -236,13 +268,14 @@ def generate_html(weather_data: dict, city_list: list) -> str:
 
     body {{
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #060913;
+      background: var(--bg-base);
       color: var(--text-main);
       min-height: 100vh;
       line-height: 1.5;
       padding: 24px 16px;
       position: relative;
       overflow-x: hidden;
+      transition: background 0.3s ease, color 0.3s ease;
     }}
 
     /* Ambient Background Mesh for Glassmorphic Refraction */
@@ -1111,6 +1144,218 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       }}
     }}
 
+    /* =========================================================
+       LIGHT MODE: Frosted Glassmorphism with Google Signature Accents
+       ========================================================= */
+    .google-stripe {{
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 4px;
+      background: linear-gradient(90deg, #4285F4 25%, #EA4335 25% 50%, #FBBC05 50% 75%, #34A853 75% 100%);
+      z-index: 99999;
+      box-shadow: 0 1px 8px rgba(66, 133, 244, 0.35);
+    }}
+
+    [data-theme="light"] .google-stripe {{
+      display: block;
+    }}
+
+    [data-theme="light"] .ambient-orb {{
+      opacity: 0.22;
+      filter: blur(105px);
+    }}
+
+    [data-theme="light"] .orb-1 {{
+      background: radial-gradient(circle, #4285F4 0%, rgba(66, 133, 244, 0) 70%);
+    }}
+
+    [data-theme="light"] .orb-2 {{
+      background: radial-gradient(circle, #34A853 0%, rgba(52, 168, 83, 0) 70%);
+    }}
+
+    [data-theme="light"] .orb-3 {{
+      background: radial-gradient(circle, #FBBC05 0%, rgba(251, 188, 5, 0) 70%);
+    }}
+
+    [data-theme="light"] .brand-icon {{
+      background: linear-gradient(135deg, #4285F4 0%, #34A853 100%);
+      box-shadow: 0 4px 16px rgba(66, 133, 244, 0.3);
+    }}
+
+    [data-theme="light"] .brand-title {{
+      background: linear-gradient(to right, #0f172a, #334155);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }}
+
+    [data-theme="light"] .view-mode-tabs {{
+      background: rgba(241, 245, 249, 0.75);
+      border-color: rgba(226, 232, 240, 0.95);
+    }}
+
+    [data-theme="light"] .mode-tab-btn.active {{
+      background: linear-gradient(135deg, #4285F4, #1a73e8);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(66, 133, 244, 0.35);
+    }}
+
+    [data-theme="light"] .unit-switch {{
+      background: rgba(241, 245, 249, 0.75);
+      border-color: rgba(226, 232, 240, 0.95);
+    }}
+
+    [data-theme="light"] .unit-toggle-btn.active {{
+      background: #4285F4;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(66, 133, 244, 0.4);
+    }}
+
+    [data-theme="light"] .action-btn {{
+      background: rgba(255, 255, 255, 0.85);
+      border-color: rgba(226, 232, 240, 0.95);
+      color: var(--text-main);
+    }}
+
+    [data-theme="light"] .action-btn:hover {{
+      background: rgba(255, 255, 255, 1);
+      border-color: rgba(66, 133, 244, 0.5);
+      box-shadow: 0 4px 14px rgba(66, 133, 244, 0.2);
+    }}
+
+    [data-theme="light"] .city-nav-item {{
+      background: rgba(255, 255, 255, 0.55);
+      border-color: rgba(226, 232, 240, 0.9);
+      color: var(--text-muted);
+    }}
+
+    [data-theme="light"] .city-nav-item:hover {{
+      background: rgba(255, 255, 255, 0.9);
+      border-color: rgba(66, 133, 244, 0.4);
+      color: var(--text-main);
+    }}
+
+    [data-theme="light"] .city-nav-item.active {{
+      background: linear-gradient(135deg, #4285F4, #1a73e8);
+      color: #ffffff;
+      border-color: rgba(66, 133, 244, 0.6);
+      box-shadow: 0 4px 18px rgba(66, 133, 244, 0.35), inset 0 1px 1px 0 rgba(255, 255, 255, 0.4);
+    }}
+
+    [data-theme="light"] .city-nav-pill-temp {{
+      background: rgba(0, 0, 0, 0.08);
+      border-color: rgba(0, 0, 0, 0.06);
+    }}
+
+    [data-theme="light"] .hero-weather-card {{
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(241, 245, 249, 0.82) 100%);
+      border-color: rgba(226, 232, 240, 0.95);
+      box-shadow: 0 16px 36px -8px rgba(15, 23, 42, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.95);
+    }}
+
+    [data-theme="light"] .hero-badge {{
+      background: rgba(66, 133, 244, 0.12);
+      border-color: rgba(66, 133, 244, 0.3);
+      color: #1a73e8;
+    }}
+
+    [data-theme="light"] .hero-highlights {{
+      background: rgba(248, 250, 252, 0.85);
+      border-color: rgba(226, 232, 240, 0.95);
+    }}
+
+    [data-theme="light"] .metric-card:hover {{
+      border-color: rgba(66, 133, 244, 0.45);
+      box-shadow: 0 16px 36px -8px rgba(66, 133, 244, 0.15), var(--glass-bevel);
+    }}
+
+    /* Google Colored Metric Badges in Light Mode */
+    [data-theme="light"] .badge-emerald {{
+      background: rgba(52, 168, 83, 0.15);
+      color: #188038;
+      border: 1px solid rgba(52, 168, 83, 0.35);
+    }}
+
+    [data-theme="light"] .badge-amber {{
+      background: rgba(251, 188, 5, 0.18);
+      color: #b45309;
+      border: 1px solid rgba(251, 188, 5, 0.38);
+    }}
+
+    [data-theme="light"] .badge-rose {{
+      background: rgba(234, 67, 53, 0.15);
+      color: #c5221f;
+      border: 1px solid rgba(234, 67, 53, 0.35);
+    }}
+
+    [data-theme="light"] .badge-cyan {{
+      background: rgba(66, 133, 244, 0.15);
+      color: #1967d2;
+      border: 1px solid rgba(66, 133, 244, 0.35);
+    }}
+
+    [data-theme="light"] .forecast-card:hover {{
+      border-color: rgba(66, 133, 244, 0.45);
+      box-shadow: 0 16px 36px -8px rgba(66, 133, 244, 0.15), var(--glass-bevel);
+    }}
+
+    [data-theme="light"] .forecast-card.selected {{
+      border: 2px solid #4285F4;
+      background: rgba(235, 244, 255, 0.88);
+      box-shadow: 0 0 25px rgba(66, 133, 244, 0.25), var(--glass-bevel);
+    }}
+
+    [data-theme="light"] .forecast-card.selected::after {{
+      background: #4285F4;
+    }}
+
+    [data-theme="light"] .forecast-max {{
+      color: #EA4335;
+    }}
+
+    [data-theme="light"] .forecast-min {{
+      color: #1a73e8;
+    }}
+
+    [data-theme="light"] .forecast-stats-pill {{
+      background: rgba(241, 245, 249, 0.85);
+      border: 1px solid rgba(226, 232, 240, 0.95);
+      color: var(--text-muted);
+    }}
+
+    [data-theme="light"] .hourly-card {{
+      background: rgba(255, 255, 255, 0.68);
+      border-color: rgba(226, 232, 240, 0.9);
+      box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.9);
+    }}
+
+    [data-theme="light"] .hourly-card:hover {{
+      background: rgba(255, 255, 255, 0.96);
+      border-color: rgba(66, 133, 244, 0.45);
+    }}
+
+    [data-theme="light"] .hourly-rain {{
+      color: #1a73e8;
+    }}
+
+    [data-theme="light"] .city-card-item:hover {{
+      border-color: rgba(66, 133, 244, 0.45);
+      box-shadow: 0 16px 36px -8px rgba(66, 133, 244, 0.15), var(--glass-bevel);
+    }}
+
+    [data-theme="light"] .city-select {{
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--text-main);
+      border-color: rgba(226, 232, 240, 0.95);
+    }}
+
+    [data-theme="light"] .city-select:focus {{
+      border-color: #4285F4;
+      box-shadow: 0 0 12px rgba(66, 133, 244, 0.35);
+    }}
+
     /* Real-Time HTML5 Weather Canvas Layer */
     .weather-canvas {{
       position: fixed;
@@ -1130,6 +1375,9 @@ def generate_html(weather_data: dict, city_list: list) -> str:
   </style>
 </head>
 <body>
+  <!-- Google 4-Color Signature Accent Stripe (Active in Light Mode) -->
+  <div class="google-stripe" aria-hidden="true"></div>
+
   <!-- Ambient Glassmorphic Background Mesh -->
   <div class="ambient-mesh" id="ambient-mesh" aria-hidden="true">
     <div class="ambient-orb orb-1"></div>
@@ -1170,6 +1418,11 @@ def generate_html(weather_data: dict, city_list: list) -> str:
           <button class="unit-toggle-btn active" id="btn-celsius" onclick="setUnit('C')">°C, km/h</button>
           <button class="unit-toggle-btn" id="btn-fahrenheit" onclick="setUnit('F')">°F, mph</button>
         </div>
+
+        <!-- Theme Switcher (☀️ Light / 🌙 Dark) -->
+        <button class="action-btn" id="btn-theme-toggle" onclick="toggleTheme()" title="Switch Light / Dark Theme">
+          <span id="theme-icon">☀️</span> <span id="theme-label">Light</span>
+        </button>
 
         <!-- Dynamic Weather Canvas FX Switcher -->
         <button class="action-btn" id="btn-toggle-fx" onclick="toggleWeatherFX()" title="Toggle Weather Particle Canvas Animation">
@@ -1521,33 +1774,80 @@ def generate_html(weather_data: dict, city_list: list) -> str:
     function updateAmbientWeatherTheme(desc, code) {{
       const orb1 = document.querySelector('.orb-1');
       const orb2 = document.querySelector('.orb-2');
+      const orb3 = document.querySelector('.orb-3');
       if (!orb1 || !orb2) return;
 
+      if (!desc && window.currentCityId && weatherData[window.currentCityId]) {{
+        desc = weatherData[window.currentCityId].current.desc;
+        code = weatherData[window.currentCityId].current.weatherCode;
+      }}
+      if (!desc) return;
+
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
       const d = desc.toLowerCase();
       const c = parseInt(code) || 0;
 
-      let c1 = '#4f46e5';
-      let c2 = '#06b6d4';
+      let c1, c2, c3;
 
-      if (d.includes('clear') || d.includes('sunny') || c === 113) {{
-        c1 = '#d97706';
-        c2 = '#6366f1';
-      }} else if (d.includes('rain') || d.includes('shower') || d.includes('drizzle')) {{
-        c1 = '#0284c7';
-        c2 = '#1e3a8a';
-      }} else if (d.includes('snow') || d.includes('ice') || d.includes('sleet')) {{
-        c1 = '#38bdf8';
-        c2 = '#9333ea';
-      }} else if (d.includes('thunder')) {{
-        c1 = '#7c3aed';
-        c2 = '#1e1b4b';
-      }} else if (d.includes('cloud') || d.includes('overcast')) {{
-        c1 = '#475569';
-        c2 = '#4338ca';
+      if (isLight) {{
+        // Google Signature Brand Accents in Light Mode
+        if (d.includes('clear') || d.includes('sunny') || c === 113) {{
+          c1 = '#FBBC05'; // Google Yellow
+          c2 = '#EA4335'; // Google Red
+          c3 = '#4285F4'; // Google Blue
+        }} else if (d.includes('rain') || d.includes('shower') || d.includes('drizzle')) {{
+          c1 = '#4285F4'; // Google Blue
+          c2 = '#1a73e8'; // Google Blue Dark
+          c3 = '#34A853'; // Google Green
+        }} else if (d.includes('snow') || d.includes('ice') || d.includes('sleet')) {{
+          c1 = '#8ab4f8';
+          c2 = '#d2e3fc';
+          c3 = '#4285F4';
+        }} else if (d.includes('thunder')) {{
+          c1 = '#EA4335'; // Google Red
+          c2 = '#4285F4'; // Google Blue
+          c3 = '#FBBC05'; // Google Yellow
+        }} else if (d.includes('cloud') || d.includes('overcast')) {{
+          c1 = '#94a3b8';
+          c2 = '#4285F4';
+          c3 = '#cbd5e1';
+        }} else {{
+          c1 = '#4285F4';
+          c2 = '#34A853';
+          c3 = '#FBBC05';
+        }}
+      }} else {{
+        // Preserved Original Cosmic Theme in Dark Mode
+        if (d.includes('clear') || d.includes('sunny') || c === 113) {{
+          c1 = '#d97706';
+          c2 = '#6366f1';
+          c3 = '#8b5cf6';
+        }} else if (d.includes('rain') || d.includes('shower') || d.includes('drizzle')) {{
+          c1 = '#0284c7';
+          c2 = '#1e3a8a';
+          c3 = '#06b6d4';
+        }} else if (d.includes('snow') || d.includes('ice') || d.includes('sleet')) {{
+          c1 = '#38bdf8';
+          c2 = '#9333ea';
+          c3 = '#6366f1';
+        }} else if (d.includes('thunder')) {{
+          c1 = '#7c3aed';
+          c2 = '#1e1b4b';
+          c3 = '#4f46e5';
+        }} else if (d.includes('cloud') || d.includes('overcast')) {{
+          c1 = '#475569';
+          c2 = '#4338ca';
+          c3 = '#334155';
+        }} else {{
+          c1 = '#4f46e5';
+          c2 = '#06b6d4';
+          c3 = '#8b5cf6';
+        }}
       }}
 
       orb1.style.background = `radial-gradient(circle, ${{c1}} 0%, rgba(0,0,0,0) 70%)`;
       orb2.style.background = `radial-gradient(circle, ${{c2}} 0%, rgba(0,0,0,0) 70%)`;
+      if (orb3) orb3.style.background = `radial-gradient(circle, ${{c3}} 0%, rgba(0,0,0,0) 70%)`;
     }}
 
     function renderDashboard() {{
@@ -2038,11 +2338,17 @@ def generate_html(weather_data: dict, city_list: list) -> str:
         }}
       }}
 
+      setTheme(theme) {{
+        this.theme = theme;
+      }}
+
       draw() {{
         this.ctx.clearRect(0, 0, this.width, this.height);
 
+        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+
         if (this.condition === 'thunder' && this.lightning.active) {{
-          this.ctx.fillStyle = `rgba(186, 230, 253, ${{this.lightning.opacity}})`;
+          this.ctx.fillStyle = isLight ? `rgba(66, 133, 244, ${{this.lightning.opacity * 0.35}})` : `rgba(186, 230, 253, ${{this.lightning.opacity}})`;
           this.ctx.fillRect(0, 0, this.width, this.height);
         }}
 
@@ -2050,28 +2356,36 @@ def generate_html(weather_data: dict, city_list: list) -> str:
 
         for (let p of this.particles) {{
           if (this.condition === 'rain' || this.condition === 'thunder') {{
-            this.ctx.strokeStyle = `rgba(186, 230, 253, ${{p.opacity}})`;
+            // Google Blue in light mode, sky blue in dark mode
+            this.ctx.strokeStyle = isLight ? `rgba(66, 133, 244, ${{p.opacity * 0.85}})` : `rgba(186, 230, 253, ${{p.opacity}})`;
             this.ctx.lineWidth = p.width;
             this.ctx.beginPath();
             this.ctx.moveTo(p.x, p.y);
             this.ctx.lineTo(p.x + slantX * 1.4, p.y + p.len);
             this.ctx.stroke();
           }} else if (this.condition === 'snow') {{
-            this.ctx.fillStyle = `rgba(255, 255, 255, ${{p.opacity}})`;
+            // Soft periwinkle frost in light mode, pure white in dark mode
+            this.ctx.fillStyle = isLight ? `rgba(99, 140, 219, ${{p.opacity * 0.75}})` : `rgba(255, 255, 255, ${{p.opacity}})`;
             this.ctx.beginPath();
             this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
             this.ctx.fill();
           }} else if (this.condition === 'cloud') {{
             const grad = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
-            grad.addColorStop(0, `rgba(203, 213, 225, ${{p.opacity}})`);
-            grad.addColorStop(1, 'rgba(203, 213, 225, 0)');
+            if (isLight) {{
+              grad.addColorStop(0, `rgba(148, 163, 184, ${{p.opacity * 0.75}})`);
+              grad.addColorStop(1, 'rgba(148, 163, 184, 0)');
+            }} else {{
+              grad.addColorStop(0, `rgba(203, 213, 225, ${{p.opacity}})`);
+              grad.addColorStop(1, 'rgba(203, 213, 225, 0)');
+            }}
             this.ctx.fillStyle = grad;
             this.ctx.beginPath();
             this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
             this.ctx.fill();
           }} else {{
+            // Google Yellow in light mode, golden in dark mode
             const alpha = Math.max(0.08, p.opacity * (0.6 + 0.4 * Math.sin(p.pulse)));
-            this.ctx.fillStyle = `rgba(251, 191, 36, ${{alpha}})`;
+            this.ctx.fillStyle = isLight ? `rgba(251, 188, 5, ${{alpha * 0.85}})` : `rgba(251, 191, 36, ${{alpha}})`;
             this.ctx.beginPath();
             this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
             this.ctx.fill();
@@ -2121,7 +2435,41 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       }}
     }}
 
+    function applyTheme(theme) {{
+      document.documentElement.setAttribute('data-theme', theme);
+      try {{
+        localStorage.setItem('weather_theme', theme);
+      }} catch (e) {{}}
+
+      const icon = document.getElementById('theme-icon');
+      const label = document.getElementById('theme-label');
+      if (icon && label) {{
+        icon.textContent = theme === 'light' ? '🌙' : '☀️';
+        label.textContent = theme === 'light' ? 'Dark' : 'Light';
+      }}
+
+      if (window.canvasEngine) {{
+        window.canvasEngine.setTheme(theme);
+      }}
+
+      updateAmbientWeatherTheme();
+    }}
+
+    function toggleTheme() {{
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      applyTheme(current === 'light' ? 'dark' : 'light');
+    }}
+
+    function initTheme() {{
+      let savedTheme = 'dark';
+      try {{
+        savedTheme = localStorage.getItem('weather_theme') || 'dark';
+      }} catch (e) {{}}
+      applyTheme(savedTheme);
+    }}
+
     // Initialize
+    initTheme();
     window.canvasEngine = new WeatherCanvasEngine('weather-canvas');
     initCompareDropdowns();
     buildNavBar();
