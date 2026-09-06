@@ -25,8 +25,17 @@ A modern, interactive weather dashboard tracking **12 major world cities** using
   - **⚖️ Head-to-Head Comparison**: Select any 2 cities from dropdowns to compare their atmospheric conditions and forecasts side-by-side.
 - **High-Speed Concurrent Fetching**: Powered by Python's `ThreadPoolExecutor` (4 concurrent worker threads), speeding up multi-city fetching by ~70% while respecting server limits.
 - **Metric / Imperial Unit Switcher**: Seamless live toggle between **°C (km/h)** and **°F (mph)**.
-- **Scroll-Driven Location Selection**: Scrolling over the locations bar automatically activates and selects the next/previous city, updating the entire dashboard in real time. Supports both single-notch 1-at-a-time navigation and rapid multi-item scrolling with CSS Scroll Snapping (`scroll-snap-type: x mandatory`, `scroll-snap-align: center`).
-- **Refractive Glassmorphism UI**: Multi-layered frosted glass panels (`backdrop-filter: blur(24px) saturate(190%)`), specular bevel rim highlights, and condition-adaptive ambient background orbs that react dynamically to the selected city's weather mood.
+- **Scroll-Driven Location Selection**: Scrolling over the locations bar automatically activates and selects the next/previous city, updating the entire dashboard in real time. Supports both single-notch 1-at-a-time navigation and rapid multi-item scrolling with CSS Scroll Snapping (`scroll-snap-type: x mandatory`, `scroll-snap-align: center`) and hidden scrollbars across all modern browsers.
+- **Refractive Glassmorphism UI**: Multi-layered frosted glass panels (`backdrop-filter: blur(24px) saturate(190%)`), specular bevel rim highlights, and condition-adaptive ambient background glow that shifts dynamically with the active city's weather.
+- **Data-Driven HTML5 Canvas Physics Engine (Option 2)**:
+  - Real-time particle simulation running behind glass cards on a fixed hardware-accelerated canvas.
+  - Rain particles angle and slant based on live wind direction (`windDirDegree`) and velocity (`windSpeedKmph`).
+  - Snowflakes drift with sinusoidal swaying physics and wind slant.
+  - Atmospheric cloud puffs drift softly across overcast skies.
+  - Lightning flash simulation triggers dynamically for thunderstorm conditions.
+  - Floating warm golden dust motes circulate under sunny, clear skies.
+  - Particles visibly refract through semi-transparent frosted cards and shine crisply in negative space.
+  - Header controls include an interactive **✨ FX: On / Off** toggle button.
 
 ---
 

@@ -1111,6 +1111,18 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       }}
     }}
 
+    /* Real-Time HTML5 Weather Canvas Layer */
+    .weather-canvas {{
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }}
+
     @keyframes spin {{
       from {{ transform: rotate(0deg); }}
       to {{ transform: rotate(360deg); }}
@@ -1124,6 +1136,9 @@ def generate_html(weather_data: dict, city_list: list) -> str:
     <div class="ambient-orb orb-2"></div>
     <div class="ambient-orb orb-3"></div>
   </div>
+
+  <!-- Real-Time HTML5 Canvas Physics Engine -->
+  <canvas id="weather-canvas" class="weather-canvas" aria-hidden="true"></canvas>
 
   <div class="container">
     <!-- Header -->
@@ -1155,6 +1170,11 @@ def generate_html(weather_data: dict, city_list: list) -> str:
           <button class="unit-toggle-btn active" id="btn-celsius" onclick="setUnit('C')">°C, km/h</button>
           <button class="unit-toggle-btn" id="btn-fahrenheit" onclick="setUnit('F')">°F, mph</button>
         </div>
+
+        <!-- Dynamic Weather Canvas FX Switcher -->
+        <button class="action-btn" id="btn-toggle-fx" onclick="toggleWeatherFX()" title="Toggle Weather Particle Canvas Animation">
+          <span>✨</span> <span id="fx-label">FX: On</span>
+        </button>
       </div>
     </header>
 
@@ -1540,6 +1560,11 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       // Update atmospheric refractive glow to match city weather
       updateAmbientWeatherTheme(curr.desc, curr.weatherCode);
 
+      // Update real-time HTML5 physics canvas particles
+      if (window.canvasEngine) {{
+        window.canvasEngine.setWeather(curr.desc, curr.weatherCode, curr.windSpeedKmph, curr.windDirDegree);
+      }}
+
       // Hero Elements
       document.getElementById('hero-flag').textContent = city.flag;
       document.getElementById('hero-region').textContent = `${{city.region || city.country}}`;
@@ -1851,7 +1876,253 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       }}, {{ passive: true }});
     }}
 
+    class WeatherCanvasEngine {{
+      constructor(canvasId) {{
+        this.canvas = document.getElementById(canvasId);
+        if (!this.canvas) return;
+        this.ctx = this.canvas.getContext('2d');
+        this.particles = [];
+        this.lightning = {{ active: false, opacity: 0, timer: 0 }};
+        this.condition = 'clear';
+        this.windAngle = 0;
+        this.windSpeed = 10;
+        this.enabled = true;
+        this.animId = null;
+
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+
+        document.addEventListener('visibilitychange', () => {{
+          if (document.hidden) this.stop();
+          else if (this.enabled) this.start();
+        }});
+
+        this.initParticles();
+        this.start();
+      }}
+
+      resize() {{
+        this.width = window.innerWidth;
+        this.height = window.innerHeight;
+        this.canvas.width = this.width;
+        this.canvas.height = this.height;
+      }}
+
+      setWeather(desc, code, windSpeedKmph, windDirDegree) {{
+        const d = desc.toLowerCase();
+        const c = parseInt(code) || 0;
+        const speed = Math.max(5, Math.min(55, parseInt(windSpeedKmph) || 12));
+        const deg = (parseInt(windDirDegree) || 0) * (Math.PI / 180);
+
+        this.windSpeed = speed;
+        this.windAngle = deg;
+
+        let newCondition = 'clear';
+        if (d.includes('thunder') || [200, 386, 389, 392, 395].includes(c)) {{
+          newCondition = 'thunder';
+        }} else if (d.includes('snow') || d.includes('blizzard') || d.includes('sleet') || d.includes('ice') || [179, 182, 185, 227, 230, 323, 326, 329, 332, 335, 338, 350, 368, 371, 374, 377].includes(c)) {{
+          newCondition = 'snow';
+        }} else if (d.includes('rain') || d.includes('shower') || d.includes('drizzle') || [176, 263, 266, 293, 296, 299, 302, 305, 308, 311, 314, 353, 356, 359].includes(c)) {{
+          newCondition = 'rain';
+        }} else if (d.includes('cloud') || d.includes('overcast') || d.includes('fog') || d.includes('mist') || [119, 122, 143, 248, 260].includes(c)) {{
+          newCondition = 'cloud';
+        }} else {{
+          newCondition = 'clear';
+        }}
+
+        if (newCondition !== this.condition) {{
+          this.condition = newCondition;
+          this.initParticles();
+        }}
+      }}
+
+      initParticles() {{
+        this.particles = [];
+        const count = this.condition === 'rain' || this.condition === 'thunder' ? 100 :
+                      this.condition === 'snow' ? 70 :
+                      this.condition === 'cloud' ? 22 : 40;
+
+        for (let i = 0; i < count; i++) {{
+          this.particles.push(this.createParticle(true));
+        }}
+      }}
+
+      createParticle(randomY = false) {{
+        const y = randomY ? Math.random() * this.height : -20;
+        const x = Math.random() * (this.width + 100) - 50;
+
+        if (this.condition === 'rain' || this.condition === 'thunder') {{
+          return {{
+            x: x,
+            y: y,
+            len: 14 + Math.random() * 18,
+            speed: 15 + Math.random() * 10 + (this.windSpeed * 0.18),
+            opacity: 0.25 + Math.random() * 0.45,
+            width: 1 + Math.random() * 1.2
+          }};
+        }} else if (this.condition === 'snow') {{
+          return {{
+            x: x,
+            y: y,
+            radius: 1.5 + Math.random() * 3,
+            speed: 1.2 + Math.random() * 2.2,
+            swaySpeed: 0.02 + Math.random() * 0.03,
+            swayOffset: Math.random() * Math.PI * 2,
+            opacity: 0.35 + Math.random() * 0.55
+          }};
+        }} else if (this.condition === 'cloud') {{
+          return {{
+            x: x,
+            y: Math.random() * (this.height * 0.65),
+            radius: 90 + Math.random() * 140,
+            speed: 0.25 + Math.random() * 0.5 + (this.windSpeed * 0.015),
+            opacity: 0.035 + Math.random() * 0.04
+          }};
+        }} else {{
+          return {{
+            x: x,
+            y: y,
+            radius: 1.2 + Math.random() * 2.8,
+            vx: (Math.random() - 0.5) * 0.5,
+            vy: (Math.random() - 0.5) * 0.5 - 0.2,
+            opacity: 0.2 + Math.random() * 0.4,
+            pulse: Math.random() * Math.PI * 2
+          }};
+        }}
+      }}
+
+      update() {{
+        const slantX = Math.sin(this.windAngle) * (this.windSpeed * 0.16);
+
+        if (this.condition === 'thunder') {{
+          this.lightning.timer++;
+          if (this.lightning.timer > 150 && Math.random() < 0.03) {{
+            this.lightning.active = true;
+            this.lightning.opacity = 0.35 + Math.random() * 0.35;
+            this.lightning.timer = 0;
+          }}
+          if (this.lightning.active) {{
+            this.lightning.opacity *= 0.86;
+            if (this.lightning.opacity < 0.02) this.lightning.active = false;
+          }}
+        }}
+
+        for (let p of this.particles) {{
+          if (this.condition === 'rain' || this.condition === 'thunder') {{
+            p.y += p.speed;
+            p.x += slantX;
+            if (p.y > this.height || p.x > this.width + 60 || p.x < -60) {{
+              Object.assign(p, this.createParticle(false));
+            }}
+          }} else if (this.condition === 'snow') {{
+            p.swayOffset += p.swaySpeed;
+            p.y += p.speed;
+            p.x += Math.sin(p.swayOffset) * 1.3 + (slantX * 0.5);
+            if (p.y > this.height || p.x > this.width + 60 || p.x < -60) {{
+              Object.assign(p, this.createParticle(false));
+            }}
+          }} else if (this.condition === 'cloud') {{
+            p.x += p.speed;
+            if (p.x - p.radius > this.width + 50) {{
+              p.x = -p.radius;
+              p.y = Math.random() * (this.height * 0.65);
+            }}
+          }} else {{
+            p.pulse += 0.03;
+            p.x += p.vx;
+            p.y += p.vy;
+            if (p.x < 0 || p.x > this.width || p.y < 0 || p.y > this.height) {{
+              Object.assign(p, this.createParticle(true));
+            }}
+          }}
+        }}
+      }}
+
+      draw() {{
+        this.ctx.clearRect(0, 0, this.width, this.height);
+
+        if (this.condition === 'thunder' && this.lightning.active) {{
+          this.ctx.fillStyle = `rgba(186, 230, 253, ${{this.lightning.opacity}})`;
+          this.ctx.fillRect(0, 0, this.width, this.height);
+        }}
+
+        const slantX = Math.sin(this.windAngle) * (this.windSpeed * 0.16);
+
+        for (let p of this.particles) {{
+          if (this.condition === 'rain' || this.condition === 'thunder') {{
+            this.ctx.strokeStyle = `rgba(186, 230, 253, ${{p.opacity}})`;
+            this.ctx.lineWidth = p.width;
+            this.ctx.beginPath();
+            this.ctx.moveTo(p.x, p.y);
+            this.ctx.lineTo(p.x + slantX * 1.4, p.y + p.len);
+            this.ctx.stroke();
+          }} else if (this.condition === 'snow') {{
+            this.ctx.fillStyle = `rgba(255, 255, 255, ${{p.opacity}})`;
+            this.ctx.beginPath();
+            this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            this.ctx.fill();
+          }} else if (this.condition === 'cloud') {{
+            const grad = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
+            grad.addColorStop(0, `rgba(203, 213, 225, ${{p.opacity}})`);
+            grad.addColorStop(1, 'rgba(203, 213, 225, 0)');
+            this.ctx.fillStyle = grad;
+            this.ctx.beginPath();
+            this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            this.ctx.fill();
+          }} else {{
+            const alpha = Math.max(0.08, p.opacity * (0.6 + 0.4 * Math.sin(p.pulse)));
+            this.ctx.fillStyle = `rgba(251, 191, 36, ${{alpha}})`;
+            this.ctx.beginPath();
+            this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            this.ctx.fill();
+          }}
+        }}
+      }}
+
+      loop() {{
+        if (!this.enabled) return;
+        this.update();
+        this.draw();
+        this.animId = requestAnimationFrame(() => this.loop());
+      }}
+
+      start() {{
+        if (!this.animId) {{
+          this.animId = requestAnimationFrame(() => this.loop());
+        }}
+      }}
+
+      stop() {{
+        if (this.animId) {{
+          cancelAnimationFrame(this.animId);
+          this.animId = null;
+        }}
+      }}
+
+      toggle() {{
+        this.enabled = !this.enabled;
+        if (this.enabled) {{
+          this.canvas.style.opacity = '1';
+          this.start();
+        }} else {{
+          this.canvas.style.opacity = '0';
+          this.stop();
+          this.ctx.clearRect(0, 0, this.width, this.height);
+        }}
+        return this.enabled;
+      }}
+    }}
+
+    function toggleWeatherFX() {{
+      if (window.canvasEngine) {{
+        const isEnabled = window.canvasEngine.toggle();
+        const lbl = document.getElementById('fx-label');
+        if (lbl) lbl.textContent = isEnabled ? 'FX: On' : 'FX: Off';
+      }}
+    }}
+
     // Initialize
+    window.canvasEngine = new WeatherCanvasEngine('weather-canvas');
     initCompareDropdowns();
     buildNavBar();
     renderDashboard();
