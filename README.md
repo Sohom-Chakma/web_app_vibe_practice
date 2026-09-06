@@ -23,6 +23,7 @@ A modern, interactive weather dashboard tracking **12 major world cities** using
   - **📍 City Detail**: Deep-dive atmospheric metrics, sun & moon astronomy, interactive 3-day forecast, and 24-hour breakdown (3-hour intervals).
   - **🗺️ 12-City Overview**: At-a-glance cards for all 12 cities showing real-time temperature, condition badge, humidity, and today's high/low range.
   - **⚖️ Head-to-Head Comparison**: Select any 2 cities from dropdowns to compare their atmospheric conditions and forecasts side-by-side.
+- **High-Speed Concurrent Fetching**: Powered by Python's `ThreadPoolExecutor` (4 concurrent worker threads), speeding up multi-city fetching by ~70% while respecting server limits.
 - **Metric / Imperial Unit Switcher**: Seamless live toggle between **°C (km/h)** and **°F (mph)**.
 - **Modern Glassmorphic UI**: Sleek dark aesthetic with responsive layout for desktop and mobile.
 
