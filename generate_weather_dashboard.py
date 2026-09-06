@@ -202,11 +202,15 @@ def generate_html(weather_data: dict, city_list: list) -> str:
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {{
-      --bg-base: #0a0f1d;
-      --bg-surface: #131b2e;
-      --bg-card: rgba(23, 32, 54, 0.75);
-      --bg-card-hover: rgba(30, 42, 70, 0.9);
-      --border-subtle: rgba(255, 255, 255, 0.08);
+      --bg-base: #060913;
+      --glass-surface: rgba(18, 26, 48, 0.55);
+      --glass-surface-hover: rgba(28, 38, 70, 0.72);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --glass-border-hover: rgba(255, 255, 255, 0.28);
+      --glass-bevel: inset 0 1px 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.25);
+      --glass-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      --glass-blur: blur(24px) saturate(190%);
+      --border-subtle: rgba(255, 255, 255, 0.1);
       --border-glow: rgba(99, 102, 241, 0.35);
       --primary: #6366f1;
       --primary-light: #818cf8;
@@ -221,8 +225,6 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       --radius-lg: 16px;
       --radius-md: 12px;
       --radius-sm: 8px;
-      --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-      --shadow-glow: 0 0 25px rgba(99, 102, 241, 0.25);
       --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }}
 
@@ -234,12 +236,67 @@ def generate_html(weather_data: dict, city_list: list) -> str:
 
     body {{
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: radial-gradient(circle at 20% 15%, #1e1b4b 0%, #0a0f1d 70%);
-      background-attachment: fixed;
+      background: #060913;
       color: var(--text-main);
       min-height: 100vh;
       line-height: 1.5;
       padding: 24px 16px;
+      position: relative;
+      overflow-x: hidden;
+    }}
+
+    /* Ambient Background Mesh for Glassmorphic Refraction */
+    .ambient-mesh {{
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+    }}
+
+    .ambient-orb {{
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(85px);
+      opacity: 0.45;
+      animation: floatOrb 22s ease-in-out infinite alternate;
+      transition: background 1.2s ease, opacity 1s ease;
+    }}
+
+    .orb-1 {{
+      width: 580px;
+      height: 580px;
+      background: radial-gradient(circle, #4f46e5 0%, rgba(79, 70, 229, 0) 70%);
+      top: -120px;
+      left: 12%;
+    }}
+
+    .orb-2 {{
+      width: 620px;
+      height: 620px;
+      background: radial-gradient(circle, #06b6d4 0%, rgba(6, 182, 212, 0) 70%);
+      bottom: -160px;
+      right: 8%;
+      animation-duration: 26s;
+      animation-direction: alternate-reverse;
+    }}
+
+    .orb-3 {{
+      width: 460px;
+      height: 460px;
+      background: radial-gradient(circle, #8b5cf6 0%, rgba(139, 92, 246, 0) 70%);
+      top: 35%;
+      right: 28%;
+      animation-duration: 18s;
+    }}
+
+    @keyframes floatOrb {{
+      0% {{ transform: translate(0, 0) scale(1); }}
+      50% {{ transform: translate(55px, 35px) scale(1.1); }}
+      100% {{ transform: translate(-45px, 65px) scale(0.94); }}
     }}
 
     .container {{
@@ -248,21 +305,23 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       display: flex;
       flex-direction: column;
       gap: 24px;
+      position: relative;
+      z-index: 1;
     }}
 
-    /* Top Navigation Header */
+    /* Top Navigation Header (Frosted Glass Pill) */
     header.dashboard-header {{
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
       padding: 20px 28px;
-      background: var(--bg-card);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--border-subtle);
+      background: var(--glass-surface);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
       border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-glass);
+      box-shadow: var(--glass-shadow), var(--glass-bevel);
       gap: 16px;
     }}
 
@@ -370,10 +429,12 @@ def generate_html(weather_data: dict, city_list: list) -> str:
 
     /* City Selector Bar (12 Cities) with Tactile Scroll Snapping */
     .city-nav-bar {{
-      background: var(--bg-card);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--border-subtle);
+      background: var(--glass-surface);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
       border-radius: var(--radius-xl);
+      box-shadow: var(--glass-shadow), var(--glass-bevel);
       padding: 12px 18px;
       display: flex;
       align-items: center;
@@ -396,10 +457,13 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 8px 16px;
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid var(--border-subtle);
+      padding: 9px 18px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
       border-radius: var(--radius-lg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.15);
       color: var(--text-muted);
       font-size: 13px;
       font-weight: 600;
@@ -413,24 +477,26 @@ def generate_html(weather_data: dict, city_list: list) -> str:
     }}
 
     .city-nav-item:hover {{
-      background: rgba(30, 42, 70, 0.8);
+      background: rgba(255, 255, 255, 0.12);
       color: var(--text-main);
-      border-color: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.28);
+      transform: translateY(-1px);
     }}
 
     .city-nav-item.active {{
-      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.95), rgba(99, 102, 241, 0.95));
       color: #fff;
-      border-color: transparent;
-      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+      border-color: rgba(165, 180, 252, 0.5);
+      box-shadow: 0 4px 18px rgba(99, 102, 241, 0.45), inset 0 1px 1px 0 rgba(255, 255, 255, 0.3);
     }}
 
     .city-nav-pill-temp {{
       font-size: 12px;
-      opacity: 0.9;
-      background: rgba(0, 0, 0, 0.2);
-      padding: 2px 6px;
+      opacity: 0.95;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 2px 8px;
       border-radius: 9999px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }}
 
     /* Main City Weather Overview */
@@ -441,10 +507,10 @@ def generate_html(weather_data: dict, city_list: list) -> str:
     }}
 
     .hero-weather-card {{
-      background: linear-gradient(135deg, rgba(30, 27, 75, 0.8) 0%, rgba(15, 23, 42, 0.85) 100%);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(129, 140, 248, 0.2);
+      background: linear-gradient(135deg, rgba(28, 25, 68, 0.65) 0%, rgba(13, 20, 38, 0.72) 100%);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
       border-radius: var(--radius-xl);
       padding: 32px;
       display: grid;
@@ -452,7 +518,7 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       gap: 32px;
       position: relative;
       overflow: hidden;
-      box-shadow: var(--shadow-glass);
+      box-shadow: var(--glass-shadow), var(--glass-bevel);
     }}
 
     .city-meta {{
@@ -596,21 +662,24 @@ def generate_html(weather_data: dict, city_list: list) -> str:
     }}
 
     .metric-card {{
-      background: var(--bg-card);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--border-subtle);
+      background: var(--glass-surface);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
       border-radius: var(--radius-lg);
       padding: 18px 20px;
       display: flex;
       flex-direction: column;
       gap: 8px;
       transition: var(--transition-smooth);
+      box-shadow: var(--glass-shadow), var(--glass-bevel);
     }}
 
     .metric-card:hover {{
-      transform: translateY(-2px);
-      background: var(--bg-card-hover);
-      border-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-3px);
+      background: var(--glass-surface-hover);
+      border-color: var(--glass-border-hover);
+      box-shadow: 0 20px 40px -8px rgba(0, 0, 0, 0.6), var(--glass-bevel), 0 0 22px rgba(99, 102, 241, 0.22);
     }}
 
     .metric-header {{
@@ -668,27 +737,30 @@ def generate_html(weather_data: dict, city_list: list) -> str:
     }}
 
     .forecast-card {{
-      background: var(--bg-card);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--border-subtle);
+      background: var(--glass-surface);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
       border-radius: var(--radius-lg);
       padding: 22px;
       cursor: pointer;
       transition: var(--transition-smooth);
       position: relative;
       overflow: hidden;
+      box-shadow: var(--glass-shadow), var(--glass-bevel);
     }}
 
     .forecast-card:hover {{
-      background: var(--bg-card-hover);
-      border-color: rgba(99, 102, 241, 0.4);
-      transform: translateY(-2px);
+      background: var(--glass-surface-hover);
+      border-color: var(--glass-border-hover);
+      transform: translateY(-3px);
+      box-shadow: 0 20px 40px -8px rgba(0, 0, 0, 0.6), var(--glass-bevel), 0 0 22px rgba(99, 102, 241, 0.25);
     }}
 
     .forecast-card.selected {{
       border: 2px solid var(--primary-light);
-      background: rgba(30, 41, 69, 0.95);
-      box-shadow: 0 0 20px rgba(99, 102, 241, 0.25);
+      background: rgba(30, 41, 69, 0.85);
+      box-shadow: 0 0 25px rgba(99, 102, 241, 0.35), var(--glass-bevel);
     }}
 
     .forecast-card.selected::after {{
@@ -764,12 +836,13 @@ def generate_html(weather_data: dict, city_list: list) -> str:
 
     /* Hourly Breakdown Section */
     .hourly-container {{
-      background: var(--bg-card);
-      backdrop-filter: blur(16px);
-      border: 1px solid var(--border-subtle);
+      background: var(--glass-surface);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
       border-radius: var(--radius-xl);
       padding: 24px;
-      box-shadow: var(--shadow-glass);
+      box-shadow: var(--glass-shadow), var(--glass-bevel);
       margin-top: 8px;
     }}
 
@@ -789,8 +862,8 @@ def generate_html(weather_data: dict, city_list: list) -> str:
     }}
 
     .hourly-card {{
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--glass-border);
       border-radius: var(--radius-md);
       padding: 16px 12px;
       display: flex;
@@ -800,11 +873,13 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       text-align: center;
       min-width: 105px;
       transition: var(--transition-smooth);
+      box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.1);
     }}
 
     .hourly-card:hover {{
-      background: rgba(30, 42, 70, 0.8);
-      border-color: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--glass-border-hover);
+      transform: translateY(-2px);
     }}
 
     .hourly-time {{
@@ -852,8 +927,10 @@ def generate_html(weather_data: dict, city_list: list) -> str:
     }}
 
     .city-card-item {{
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
+      background: var(--glass-surface);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
       border-radius: var(--radius-lg);
       padding: 20px;
       cursor: pointer;
@@ -861,13 +938,14 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       display: flex;
       flex-direction: column;
       gap: 12px;
+      box-shadow: var(--glass-shadow), var(--glass-bevel);
     }}
 
     .city-card-item:hover {{
       transform: translateY(-3px);
-      border-color: var(--primary-light);
-      background: var(--bg-card-hover);
-      box-shadow: var(--shadow-glow);
+      border-color: var(--glass-border-hover);
+      background: var(--glass-surface-hover);
+      box-shadow: 0 20px 40px -8px rgba(0, 0, 0, 0.6), var(--glass-bevel), 0 0 25px rgba(99, 102, 241, 0.3);
     }}
 
     .city-card-header {{
@@ -909,10 +987,13 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       display: flex;
       gap: 16px;
       align-items: center;
-      background: var(--bg-card);
+      background: var(--glass-surface);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
       padding: 16px 24px;
       border-radius: var(--radius-lg);
-      border: 1px solid var(--border-subtle);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow), var(--glass-bevel);
       flex-wrap: wrap;
     }}
 
@@ -927,14 +1008,20 @@ def generate_html(weather_data: dict, city_list: list) -> str:
     .city-select {{
       flex: 1;
       padding: 10px 14px;
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid var(--border-subtle);
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--glass-border);
       border-radius: var(--radius-md);
       color: var(--text-main);
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
       outline: none;
+      transition: var(--transition-smooth);
+    }}
+
+    .city-select:focus {{
+      border-color: var(--primary-light);
+      box-shadow: 0 0 12px rgba(99, 102, 241, 0.35);
     }}
 
     .comparison-grid {{
@@ -944,13 +1031,16 @@ def generate_html(weather_data: dict, city_list: list) -> str:
     }}
 
     .compare-card {{
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
+      background: var(--glass-surface);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
       border-radius: var(--radius-xl);
       padding: 28px;
       display: flex;
       flex-direction: column;
       gap: 20px;
+      box-shadow: var(--glass-shadow), var(--glass-bevel);
     }}
 
     .compare-title {{
@@ -1028,6 +1118,13 @@ def generate_html(weather_data: dict, city_list: list) -> str:
   </style>
 </head>
 <body>
+  <!-- Ambient Glassmorphic Background Mesh -->
+  <div class="ambient-mesh" id="ambient-mesh" aria-hidden="true">
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="ambient-orb orb-3"></div>
+  </div>
+
   <div class="container">
     <!-- Header -->
     <header class="dashboard-header">
@@ -1401,12 +1498,47 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       }});
     }}
 
+    function updateAmbientWeatherTheme(desc, code) {{
+      const orb1 = document.querySelector('.orb-1');
+      const orb2 = document.querySelector('.orb-2');
+      if (!orb1 || !orb2) return;
+
+      const d = desc.toLowerCase();
+      const c = parseInt(code) || 0;
+
+      let c1 = '#4f46e5';
+      let c2 = '#06b6d4';
+
+      if (d.includes('clear') || d.includes('sunny') || c === 113) {{
+        c1 = '#d97706';
+        c2 = '#6366f1';
+      }} else if (d.includes('rain') || d.includes('shower') || d.includes('drizzle')) {{
+        c1 = '#0284c7';
+        c2 = '#1e3a8a';
+      }} else if (d.includes('snow') || d.includes('ice') || d.includes('sleet')) {{
+        c1 = '#38bdf8';
+        c2 = '#9333ea';
+      }} else if (d.includes('thunder')) {{
+        c1 = '#7c3aed';
+        c2 = '#1e1b4b';
+      }} else if (d.includes('cloud') || d.includes('overcast')) {{
+        c1 = '#475569';
+        c2 = '#4338ca';
+      }}
+
+      orb1.style.background = `radial-gradient(circle, ${{c1}} 0%, rgba(0,0,0,0) 70%)`;
+      orb2.style.background = `radial-gradient(circle, ${{c2}} 0%, rgba(0,0,0,0) 70%)`;
+    }}
+
     function renderDashboard() {{
       const city = weatherData[currentCityId];
       if (!city) return;
 
       const curr = city.current;
       const day0 = city.forecast[0];
+
+      // Update atmospheric refractive glow to match city weather
+      updateAmbientWeatherTheme(curr.desc, curr.weatherCode);
 
       // Hero Elements
       document.getElementById('hero-flag').textContent = city.flag;
