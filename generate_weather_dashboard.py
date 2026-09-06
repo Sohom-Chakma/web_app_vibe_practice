@@ -379,13 +379,17 @@ def generate_html(weather_data: dict, city_list: list) -> str:
       align-items: center;
       gap: 10px;
       overflow-x: auto;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
       scroll-snap-type: x mandatory;
       scroll-behavior: smooth;
       scroll-padding: 0 40px;
       overscroll-behavior-x: contain;
       -webkit-overflow-scrolling: touch;
+    }}
+
+    .city-nav-bar::-webkit-scrollbar {{
+      display: none;
     }}
 
     .city-nav-item {{
