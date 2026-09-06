@@ -231,13 +231,13 @@ def generate_html(weather_data: dict, city_list: list) -> str:
     /* Light Mode with Google Signature Brand Accents */
     [data-theme="light"] {{
       --bg-base: #f8fafc;
-      --glass-surface: rgba(255, 255, 255, 0.74);
-      --glass-surface-hover: rgba(255, 255, 255, 0.92);
+      --glass-surface: rgba(255, 255, 255, 0.68);
+      --glass-surface-hover: rgba(255, 255, 255, 0.88);
       --glass-border: rgba(226, 232, 240, 0.9);
       --glass-border-hover: rgba(66, 133, 244, 0.45);
       --glass-bevel: inset 0 1px 1px 0 rgba(255, 255, 255, 0.98), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.04);
       --glass-shadow: 0 14px 32px -8px rgba(15, 23, 42, 0.08), 0 1px 3px 0 rgba(15, 23, 42, 0.04);
-      --glass-blur: blur(20px) saturate(180%);
+      --glass-blur: blur(18px) saturate(180%);
       --border-subtle: rgba(226, 232, 240, 0.9);
       --border-glow: rgba(66, 133, 244, 0.35);
 
@@ -1338,8 +1338,8 @@ def generate_html(weather_data: dict, city_list: list) -> str:
     }}
 
     [data-theme="light"] .ambient-orb {{
-      opacity: 0.22;
-      filter: blur(105px);
+      opacity: 0.35;
+      filter: blur(88px);
     }}
 
     [data-theme="light"] .orb-1 {{
@@ -2624,7 +2624,8 @@ def generate_html(weather_data: dict, city_list: list) -> str:
         const isLight = document.documentElement.getAttribute('data-theme') === 'light';
 
         if (this.condition === 'thunder' && this.lightning.active) {{
-          this.ctx.fillStyle = isLight ? `rgba(66, 133, 244, ${{this.lightning.opacity * 0.35}})` : `rgba(186, 230, 253, ${{this.lightning.opacity}})`;
+          // High-contrast electric blue lightning flash in light mode, bright sky-blue in dark mode
+          this.ctx.fillStyle = isLight ? `rgba(26, 115, 232, ${{Math.min(0.65, this.lightning.opacity * 0.9)}})` : `rgba(186, 230, 253, ${{this.lightning.opacity}})`;
           this.ctx.fillRect(0, 0, this.width, this.height);
         }}
 
@@ -2632,23 +2633,45 @@ def generate_html(weather_data: dict, city_list: list) -> str:
 
         for (let p of this.particles) {{
           if (this.condition === 'rain' || this.condition === 'thunder') {{
-            // Google Blue in light mode, sky blue in dark mode
-            this.ctx.strokeStyle = isLight ? `rgba(66, 133, 244, ${{p.opacity * 0.85}})` : `rgba(186, 230, 253, ${{p.opacity}})`;
-            this.ctx.lineWidth = p.width;
+            // Deep, high-contrast Google Blue droplets with bold stroke in light mode
+            const rainAlpha = isLight ? Math.min(0.95, 0.58 + p.opacity * 0.45) : p.opacity;
+            const rainWidth = isLight ? p.width * 1.8 : p.width;
+            const rainLen = isLight ? p.len * 1.25 : p.len;
+
+            this.ctx.strokeStyle = isLight ? `rgba(26, 115, 232, ${{rainAlpha}})` : `rgba(186, 230, 253, ${{p.opacity}})`;
+            this.ctx.lineWidth = rainWidth;
             this.ctx.beginPath();
             this.ctx.moveTo(p.x, p.y);
-            this.ctx.lineTo(p.x + slantX * 1.4, p.y + p.len);
+            this.ctx.lineTo(p.x + slantX * 1.4, p.y + rainLen);
             this.ctx.stroke();
           }} else if (this.condition === 'snow') {{
-            // Soft periwinkle frost in light mode, pure white in dark mode
-            this.ctx.fillStyle = isLight ? `rgba(99, 140, 219, ${{p.opacity * 0.75}})` : `rgba(255, 255, 255, ${{p.opacity}})`;
-            this.ctx.beginPath();
-            this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-            this.ctx.fill();
+            if (isLight) {{
+              // Crisply discernible frost crystals: Google Blue outer ring + white crystal core
+              const radius = p.radius * 1.4;
+              const snowAlpha = Math.min(0.92, 0.48 + p.opacity * 0.52);
+
+              this.ctx.fillStyle = `rgba(66, 133, 244, ${{snowAlpha}})`;
+              this.ctx.beginPath();
+              this.ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+              this.ctx.fill();
+
+              this.ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
+              this.ctx.beginPath();
+              this.ctx.arc(p.x, p.y, radius * 0.45, 0, Math.PI * 2);
+              this.ctx.fill();
+            }} else {{
+              this.ctx.fillStyle = `rgba(255, 255, 255, ${{p.opacity}})`;
+              this.ctx.beginPath();
+              this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+              this.ctx.fill();
+            }}
           }} else if (this.condition === 'cloud') {{
             const grad = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
             if (isLight) {{
-              grad.addColorStop(0, `rgba(148, 163, 184, ${{p.opacity * 0.75}})`);
+              // Distinct atmospheric cloud billows with visible slate-blue depth
+              const cloudAlpha = Math.min(0.32, 0.12 + p.opacity * 3.2);
+              grad.addColorStop(0, `rgba(100, 116, 139, ${{cloudAlpha}})`);
+              grad.addColorStop(0.55, `rgba(148, 163, 184, ${{cloudAlpha * 0.45}})`);
               grad.addColorStop(1, 'rgba(148, 163, 184, 0)');
             }} else {{
               grad.addColorStop(0, `rgba(203, 213, 225, ${{p.opacity}})`);
@@ -2659,12 +2682,30 @@ def generate_html(weather_data: dict, city_list: list) -> str:
             this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
             this.ctx.fill();
           }} else {{
-            // Google Yellow in light mode, golden in dark mode
-            const alpha = Math.max(0.08, p.opacity * (0.6 + 0.4 * Math.sin(p.pulse)));
-            this.ctx.fillStyle = isLight ? `rgba(251, 188, 5, ${{alpha * 0.85}})` : `rgba(251, 191, 36, ${{alpha}})`;
-            this.ctx.beginPath();
-            this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-            this.ctx.fill();
+            if (isLight) {{
+              // Radiant Google Amber sun motes with golden corona
+              const alpha = Math.max(0.12, p.opacity * (0.6 + 0.4 * Math.sin(p.pulse)));
+              const sunAlpha = Math.min(0.95, 0.52 + alpha * 0.55);
+              const radius = p.radius * 1.45;
+
+              // Soft golden halo
+              this.ctx.fillStyle = `rgba(245, 158, 11, ${{sunAlpha * 0.35}})`;
+              this.ctx.beginPath();
+              this.ctx.arc(p.x, p.y, radius * 1.8, 0, Math.PI * 2);
+              this.ctx.fill();
+
+              // Saturated Google Amber core
+              this.ctx.fillStyle = `rgba(217, 119, 6, ${{sunAlpha}})`;
+              this.ctx.beginPath();
+              this.ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+              this.ctx.fill();
+            }} else {{
+              const alpha = Math.max(0.08, p.opacity * (0.6 + 0.4 * Math.sin(p.pulse)));
+              this.ctx.fillStyle = `rgba(251, 191, 36, ${{alpha}})`;
+              this.ctx.beginPath();
+              this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+              this.ctx.fill();
+            }}
           }}
         }}
       }}
