@@ -1,23 +1,47 @@
 #!/usr/bin/env python3
 """
-Fetch current weather and 3-day forecast for London and Ankara from wttr.in (format=j1),
+Fetch current weather and 3-day forecast for 12 major cities from wttr.in (format=j1),
 parse the JSON data, and generate an interactive HTML dashboard: 'weather_dashboard.html'.
 """
 
 import json
 import urllib.request
+import urllib.parse
 import datetime
-from datetime import timezone
+import time
+import sys
 
-def fetch_weather(city: str) -> dict:
-    url = f"https://wttr.in/{city}?format=j1"
+# Ensure UTF-8 output encoding for Windows consoles (supports emoji)
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8")
+
+# 12 Major global cities
+CITIES = [
+    {"name": "London", "flag": "🇬🇧", "query": "London"},
+    {"name": "Ankara", "flag": "🇹🇷", "query": "Ankara"},
+    {"name": "Tokyo", "flag": "🇯🇵", "query": "Tokyo"},
+    {"name": "New York", "flag": "🇺🇸", "query": "New+York"},
+    {"name": "Paris", "flag": "🇫🇷", "query": "Paris"},
+    {"name": "Berlin", "flag": "🇩🇪", "query": "Berlin"},
+    {"name": "Sydney", "flag": "🇦🇺", "query": "Sydney"},
+    {"name": "Dubai", "flag": "🇦🇪", "query": "Dubai"},
+    {"name": "Singapore", "flag": "🇸🇬", "query": "Singapore"},
+    {"name": "Toronto", "flag": "🇨🇦", "query": "Toronto"},
+    {"name": "Rome", "flag": "🇮🇹", "query": "Rome"},
+    {"name": "Cairo", "flag": "🇪🇬", "query": "Cairo"},
+]
+
+def fetch_weather(city_query: str) -> dict:
+    url = f"https://wttr.in/{city_query}?format=j1"
     headers = {"User-Agent": "curl/7.68.0"}
     req = urllib.request.Request(url, headers=headers)
     with urllib.request.urlopen(req, timeout=15) as response:
         return json.loads(response.read().decode("utf-8"))
 
 def format_time(t_str: str) -> str:
-    """Format time string like '0', '300', '1200' to '00:00', '03:00', '12:00'."""
+    """Format time string like '0', '300', '1200' to '12:00 AM', '3:00 AM', '12:00 PM'."""
     val = int(t_str)
     hours = val // 100
     minutes = val % 100
@@ -28,7 +52,7 @@ def format_time(t_str: str) -> str:
 def get_weather_icon(desc: str, code: str) -> str:
     """Return appropriate weather emoji based on description and code."""
     d = desc.lower()
-    c = int(code) if code.isdigit() else 0
+    c = int(code) if str(code).isdigit() else 0
     
     if "thunder" in d or c in [200, 386, 389, 392, 395]:
         return "⛈️"
@@ -57,7 +81,6 @@ def parse_city_weather(raw: dict, city_alias: str, country_flag: str) -> dict:
     curr_desc = curr.get("weatherDesc", [{}])[0].get("value", "Clear").strip()
     curr_code = curr.get("weatherCode", "113")
     
-    # Process 3-day forecast
     forecast_days = []
     for day_idx, day_data in enumerate(raw.get("weather", [])):
         date_str = day_data.get("date", "")
@@ -71,7 +94,6 @@ def parse_city_weather(raw: dict, city_alias: str, country_flag: str) -> dict:
             
         astro = day_data.get("astronomy", [{}])[0]
         
-        # Process hourly
         hourly_list = []
         for h in day_data.get("hourly", []):
             h_desc = h.get("weatherDesc", [{}])[0].get("value", "Clear").strip()
@@ -95,12 +117,9 @@ def parse_city_weather(raw: dict, city_alias: str, country_flag: str) -> dict:
                 "uvIndex": int(h.get("uvIndex", 0))
             })
             
-        # Determine day general condition from noon (12:00) or mid-day
         mid_hourly = day_data.get("hourly", [{}])[len(day_data.get("hourly", [])) // 2] if day_data.get("hourly") else {}
         day_desc = mid_hourly.get("weatherDesc", [{}])[0].get("value", "Clear").strip()
         day_code = mid_hourly.get("weatherCode", "113")
-        
-        # Max chance of rain for the day
         max_rain = max([int(h.get("chanceofrain", 0)) for h in day_data.get("hourly", [])], default=0)
         
         forecast_days.append({
@@ -131,8 +150,9 @@ def parse_city_weather(raw: dict, city_alias: str, country_flag: str) -> dict:
             "hourly": hourly_list
         })
 
+    city_id = city_alias.lower().replace(" ", "-")
     return {
-        "id": city_alias.lower(),
+        "id": city_id,
         "name": city_name,
         "country": country,
         "region": region,
@@ -165,16 +185,17 @@ def parse_city_weather(raw: dict, city_alias: str, country_flag: str) -> dict:
         "forecast": forecast_days
     }
 
-def generate_html(weather_data: dict) -> str:
+def generate_html(weather_data: dict, city_list: list) -> str:
     generated_timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     weather_json_str = json.dumps(weather_data, indent=2)
+    cities_json_str = json.dumps(city_list, indent=2)
 
     html_content = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Global Weather Intelligence | London & Ankara</title>
+  <title>Global Weather Intelligence | 12 World Cities</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -221,7 +242,7 @@ def generate_html(weather_data: dict) -> str:
     }}
 
     .container {{
-      max-width: 1280px;
+      max-width: 1320px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
@@ -283,35 +304,36 @@ def generate_html(weather_data: dict) -> str:
       flex-wrap: wrap;
     }}
 
-    /* City Selector Tabs */
-    .view-tabs {{
+    /* View Modes (Single, All Cities Grid, Head-to-Head) */
+    .view-mode-tabs {{
       display: flex;
       background: rgba(15, 23, 42, 0.6);
       padding: 4px;
       border-radius: var(--radius-lg);
       border: 1px solid var(--border-subtle);
+      gap: 4px;
     }}
 
-    .tab-btn {{
+    .mode-tab-btn {{
       background: transparent;
       border: none;
       color: var(--text-muted);
       font-weight: 600;
-      font-size: 14px;
-      padding: 8px 18px;
+      font-size: 13px;
+      padding: 7px 14px;
       border-radius: var(--radius-md);
       cursor: pointer;
       transition: var(--transition-smooth);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }}
 
-    .tab-btn:hover {{
+    .mode-tab-btn:hover {{
       color: var(--text-main);
     }}
 
-    .tab-btn.active {{
+    .mode-tab-btn.active {{
       background: linear-gradient(135deg, #4f46e5, #6366f1);
       color: #fff;
       box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
@@ -325,11 +347,10 @@ def generate_html(weather_data: dict) -> str:
       padding: 4px;
       display: flex;
       align-items: center;
-      cursor: pointer;
     }}
 
     .unit-toggle-btn {{
-      padding: 6px 14px;
+      padding: 6px 12px;
       font-size: 13px;
       font-weight: 700;
       border-radius: var(--radius-md);
@@ -346,25 +367,57 @@ def generate_html(weather_data: dict) -> str:
       box-shadow: 0 2px 8px rgba(14, 165, 233, 0.4);
     }}
 
-    /* Action Buttons */
-    .action-btn {{
-      background: rgba(255, 255, 255, 0.05);
+    /* City Selector Bar (12 Cities) */
+    .city-nav-bar {{
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
       border: 1px solid var(--border-subtle);
-      color: var(--text-main);
-      padding: 9px 16px;
-      border-radius: var(--radius-lg);
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition-smooth);
+      border-radius: var(--radius-xl);
+      padding: 12px 18px;
       display: flex;
       align-items: center;
       gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.2) transparent;
     }}
 
-    .action-btn:hover {{
-      background: rgba(255, 255, 255, 0.1);
+    .city-nav-item {{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: var(--transition-smooth);
+      user-select: none;
+    }}
+
+    .city-nav-item:hover {{
+      background: rgba(30, 42, 70, 0.8);
+      color: var(--text-main);
       border-color: rgba(255, 255, 255, 0.2);
+    }}
+
+    .city-nav-item.active {{
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+    }}
+
+    .city-nav-pill-temp {{
+      font-size: 12px;
+      opacity: 0.9;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 2px 6px;
+      border-radius: 9999px;
     }}
 
     /* Main City Weather Overview */
@@ -387,18 +440,6 @@ def generate_html(weather_data: dict) -> str:
       position: relative;
       overflow: hidden;
       box-shadow: var(--shadow-glass);
-    }}
-
-    .hero-weather-card::before {{
-      content: '';
-      position: absolute;
-      top: -50%;
-      right: -20%;
-      width: 400px;
-      height: 400px;
-      background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
-      border-radius: 50%;
-      pointer-events: none;
     }}
 
     .city-meta {{
@@ -784,11 +825,103 @@ def generate_html(weather_data: dict) -> str:
       color: var(--text-faint);
     }}
 
-    /* Comparison View (Side-by-Side) */
+    /* All Cities Overview Grid View */
+    .all-cities-view {{
+      display: none;
+      flex-direction: column;
+      gap: 20px;
+    }}
+
+    .cities-overview-grid {{
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 18px;
+    }}
+
+    .city-card-item {{
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }}
+
+    .city-card-item:hover {{
+      transform: translateY(-3px);
+      border-color: var(--primary-light);
+      background: var(--bg-card-hover);
+      box-shadow: var(--shadow-glow);
+    }}
+
+    .city-card-header {{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }}
+
+    .city-card-name {{
+      font-size: 18px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }}
+
+    .city-card-temp {{
+      font-size: 32px;
+      font-weight: 800;
+    }}
+
+    .city-card-footer {{
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 10px;
+    }}
+
+    /* Comparison View (Head to Head) */
     .comparison-view {{
       display: none;
       flex-direction: column;
       gap: 24px;
+    }}
+
+    .compare-selectors {{
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      background: var(--bg-card);
+      padding: 16px 24px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      flex-wrap: wrap;
+    }}
+
+    .compare-select-group {{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      min-width: 240px;
+    }}
+
+    .city-select {{
+      flex: 1;
+      padding: 10px 14px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      color: var(--text-main);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
     }}
 
     .comparison-grid {{
@@ -811,7 +944,7 @@ def generate_html(weather_data: dict) -> str:
       display: flex;
       align-items: center;
       gap: 12px;
-      font-size: 26px;
+      font-size: 24px;
       font-weight: 800;
     }}
 
@@ -860,7 +993,7 @@ def generate_html(weather_data: dict) -> str:
     }}
 
     /* Responsive */
-    @media (max-width: 900px) {{
+    @media (max-width: 960px) {{
       .hero-weather-card {{
         grid-template-columns: 1fr;
       }}
@@ -888,39 +1021,39 @@ def generate_html(weather_data: dict) -> str:
       <div class="brand-group">
         <div class="brand-icon">🌐</div>
         <div>
-          <h1 class="brand-title">Weather Intelligence Dashboard</h1>
-          <p class="brand-subtitle">Real-time Observations & 3-Day Forecast via wttr.in</p>
+          <h1 class="brand-title">Global Weather Intelligence</h1>
+          <p class="brand-subtitle">Real-time Weather & 3-Day Forecast for 12 Major Cities via wttr.in</p>
         </div>
       </div>
 
       <div class="controls-group">
-        <!-- City View Tabs -->
-        <div class="view-tabs">
-          <button class="tab-btn active" onclick="switchCity('london')" id="tab-london">
-            <span>🇬🇧</span> London
+        <!-- View Mode Tabs -->
+        <div class="view-mode-tabs">
+          <button class="mode-tab-btn active" onclick="setViewMode('single')" id="btn-mode-single">
+            <span>📍</span> City Detail
           </button>
-          <button class="tab-btn" onclick="switchCity('ankara')" id="tab-ankara">
-            <span>🇹🇷</span> Ankara
+          <button class="mode-tab-btn" onclick="setViewMode('all')" id="btn-mode-all">
+            <span>🗺️</span> 12-City Overview
           </button>
-          <button class="tab-btn" onclick="switchView('compare')" id="tab-compare">
-            <span>⚖️</span> Compare Both
+          <button class="mode-tab-btn" onclick="setViewMode('compare')" id="btn-mode-compare">
+            <span>⚖️</span> Compare
           </button>
         </div>
 
         <!-- Units Switcher -->
-        <div class="unit-switch" title="Toggle Temperature & Wind units">
+        <div class="unit-switch" title="Toggle Units">
           <button class="unit-toggle-btn active" id="btn-celsius" onclick="setUnit('C')">°C, km/h</button>
           <button class="unit-toggle-btn" id="btn-fahrenheit" onclick="setUnit('F')">°F, mph</button>
         </div>
-
-        <!-- Live Refresh -->
-        <button class="action-btn" onclick="reloadWeatherData()" title="Reload from wttr.in">
-          <span id="refresh-icon">🔄</span> Refresh
-        </button>
       </div>
     </header>
 
-    <!-- Single City View (London / Ankara) -->
+    <!-- 12 Cities Quick Navigation Bar -->
+    <nav class="city-nav-bar" id="city-nav-bar">
+      <!-- Populated by JS -->
+    </nav>
+
+    <!-- VIEW 1: Single City Detailed View -->
     <main id="city-view" class="city-view-container">
       <!-- Hero Weather Card -->
       <section class="hero-weather-card" id="hero-card">
@@ -989,9 +1122,9 @@ def generate_html(weather_data: dict) -> str:
         </div>
       </section>
 
-      <!-- Current Detailed Metrics -->
+      <!-- Detailed Metrics Grid -->
       <section>
-        <h3 class="section-title"><span>📊</span> Current Atmospheric Conditions</h3>
+        <h3 class="section-title"><span>📊</span> Atmospheric Conditions</h3>
         <div class="metrics-grid">
           <div class="metric-card">
             <div class="metric-header">
@@ -1060,7 +1193,7 @@ def generate_html(weather_data: dict) -> str:
 
       <!-- 3-Day Forecast Cards -->
       <section>
-        <h3 class="section-title"><span>📅</span> 3-Day Weather Forecast <span style="font-size: 13px; font-weight: 500; color: var(--text-muted); margin-left: 8px;">(Click any day to view hourly breakdown)</span></h3>
+        <h3 class="section-title"><span>📅</span> 3-Day Weather Forecast <span style="font-size: 13px; font-weight: 500; color: var(--text-muted); margin-left: 8px;">(Click any day to view 24h hourly breakdown)</span></h3>
         <div class="forecast-grid" id="forecast-cards-container">
           <!-- Populated by JavaScript -->
         </div>
@@ -1080,26 +1213,48 @@ def generate_html(weather_data: dict) -> str:
       </section>
     </main>
 
-    <!-- Side-by-Side Comparison View -->
+    <!-- VIEW 2: 12-City Overview Grid -->
+    <main id="all-cities-view" class="all-cities-view">
+      <h2 class="section-title"><span>🗺️</span> 12 World Cities At-a-Glance</h2>
+      <div class="cities-overview-grid" id="cities-overview-grid">
+        <!-- Populated via JS -->
+      </div>
+    </main>
+
+    <!-- VIEW 3: Head-to-Head Comparison View -->
     <main id="compare-view" class="comparison-view">
-      <h2 class="section-title"><span>⚖️</span> Head-to-Head Comparison: London vs. Ankara</h2>
+      <h2 class="section-title"><span>⚖️</span> Head-to-Head Weather Comparison</h2>
+      <div class="compare-selectors">
+        <div class="compare-select-group">
+          <label style="font-size: 13px; color: var(--text-muted); font-weight: 600;">City 1:</label>
+          <select id="select-city-1" class="city-select" onchange="updateComparison()">
+            <!-- Populated via JS -->
+          </select>
+        </div>
+        <div style="font-size: 20px; font-weight: 700; color: var(--text-muted);">VS</div>
+        <div class="compare-select-group">
+          <label style="font-size: 13px; color: var(--text-muted); font-weight: 600;">City 2:</label>
+          <select id="select-city-2" class="city-select" onchange="updateComparison()">
+            <!-- Populated via JS -->
+          </select>
+        </div>
+      </div>
+
       <div class="comparison-grid">
-        <!-- London Compare Box -->
         <div class="compare-card">
-          <div class="compare-title">
-            <span>🇬🇧</span> London, United Kingdom
+          <div class="compare-title" id="compare-title-1">
+            <span>🇬🇧</span> London
           </div>
-          <table class="compare-table" id="compare-table-london">
+          <table class="compare-table" id="compare-table-1">
             <!-- Populated via JS -->
           </table>
         </div>
 
-        <!-- Ankara Compare Box -->
         <div class="compare-card">
-          <div class="compare-title">
-            <span>🇹🇷</span> Ankara, Turkey
+          <div class="compare-title" id="compare-title-2">
+            <span>🇹🇷</span> Ankara
           </div>
-          <table class="compare-table" id="compare-table-ankara">
+          <table class="compare-table" id="compare-table-2">
             <!-- Populated via JS -->
           </table>
         </div>
@@ -1109,7 +1264,7 @@ def generate_html(weather_data: dict) -> str:
     <!-- Footer -->
     <footer class="dashboard-footer">
       <div>
-        Data source: <strong>wttr.in/&lt;location&gt;?format=j1</strong> • Parsed with Python & modern web standards
+        Data source: <strong>wttr.in/&lt;location&gt;?format=j1</strong> • 12 Global Cities Tracked
       </div>
       <div>
         Last Updated: <span id="footer-timestamp">{generated_timestamp}</span>
@@ -1120,39 +1275,44 @@ def generate_html(weather_data: dict) -> str:
   <!-- Embedded Live Weather Data -->
   <script>
     const weatherData = {weather_json_str};
+    const cityList = {cities_json_str};
 
     let currentCityId = 'london';
     let currentUnit = 'C'; // 'C' or 'F'
     let selectedDayIndex = 0;
+    let currentViewMode = 'single'; // 'single', 'all', 'compare'
 
     function setUnit(unit) {{
       currentUnit = unit;
       document.getElementById('btn-celsius').classList.toggle('active', unit === 'C');
       document.getElementById('btn-fahrenheit').classList.toggle('active', unit === 'F');
-      renderDashboard();
+      renderNavBar();
+      if (currentViewMode === 'single') renderDashboard();
+      if (currentViewMode === 'all') renderAllCitiesGrid();
+      if (currentViewMode === 'compare') updateComparison();
     }}
 
-    function switchCity(cityId) {{
+    function setViewMode(mode) {{
+      currentViewMode = mode;
+      document.getElementById('btn-mode-single').classList.toggle('active', mode === 'single');
+      document.getElementById('btn-mode-all').classList.toggle('active', mode === 'all');
+      document.getElementById('btn-mode-compare').classList.toggle('active', mode === 'compare');
+
+      document.getElementById('city-view').style.display = mode === 'single' ? 'flex' : 'none';
+      document.getElementById('all-cities-view').style.display = mode === 'all' ? 'flex' : 'none';
+      document.getElementById('compare-view').style.display = mode === 'compare' ? 'flex' : 'none';
+
+      if (mode === 'single') renderDashboard();
+      if (mode === 'all') renderAllCitiesGrid();
+      if (mode === 'compare') updateComparison();
+    }}
+
+    function selectCity(cityId) {{
       currentCityId = cityId;
       selectedDayIndex = 0;
-      document.getElementById('city-view').style.display = 'flex';
-      document.getElementById('compare-view').style.display = 'none';
-
-      document.getElementById('tab-london').classList.toggle('active', cityId === 'london');
-      document.getElementById('tab-ankara').classList.toggle('active', cityId === 'ankara');
-      document.getElementById('tab-compare').classList.remove('active');
+      setViewMode('single');
+      renderNavBar();
       renderDashboard();
-    }}
-
-    function switchView(viewName) {{
-      if (viewName === 'compare') {{
-        document.getElementById('city-view').style.display = 'none';
-        document.getElementById('compare-view').style.display = 'flex';
-        document.getElementById('tab-london').classList.remove('active');
-        document.getElementById('tab-ankara').classList.remove('active');
-        document.getElementById('tab-compare').classList.add('active');
-        renderComparison();
-      }}
     }}
 
     function selectDay(index) {{
@@ -1166,6 +1326,28 @@ def generate_html(weather_data: dict) -> str:
       if (uv <= 5) return {{ text: 'Moderate', class: 'badge-amber' }};
       if (uv <= 7) return {{ text: 'High', class: 'badge-rose' }};
       return {{ text: 'Very High', class: 'badge-rose' }};
+    }}
+
+    function renderNavBar() {{
+      const nav = document.getElementById('city-nav-bar');
+      nav.innerHTML = '';
+
+      cityList.forEach(c => {{
+        const cid = c.name.toLowerCase().replace(' ', '-');
+        const data = weatherData[cid];
+        if (!data) return;
+
+        const tempVal = currentUnit === 'C' ? data.current.tempC : data.current.tempF;
+        const btn = document.createElement('div');
+        btn.className = `city-nav-item ${{cid === currentCityId && currentViewMode === 'single' ? 'active' : ''}}`;
+        btn.onclick = () => selectCity(cid);
+        btn.innerHTML = `
+          <span>${{c.flag}}</span>
+          <span>${{c.name}}</span>
+          <span class="city-nav-pill-temp">${{tempVal}}°${{currentUnit}}</span>
+        `;
+        nav.appendChild(btn);
+      }});
     }}
 
     function renderDashboard() {{
@@ -1230,7 +1412,6 @@ def generate_html(weather_data: dict) -> str:
 
       renderForecastCards();
       renderHourly();
-      renderComparison();
     }}
 
     function renderForecastCards() {{
@@ -1297,12 +1478,78 @@ def generate_html(weather_data: dict) -> str:
       }});
     }}
 
-    function renderComparison() {{
-      const lon = weatherData.london;
-      const ank = weatherData.ankara;
+    function renderAllCitiesGrid() {{
+      const grid = document.getElementById('cities-overview-grid');
+      grid.innerHTML = '';
+      const unitSym = `°${{currentUnit}}`;
+
+      cityList.forEach(c => {{
+        const cid = c.name.toLowerCase().replace(' ', '-');
+        const data = weatherData[cid];
+        if (!data) return;
+
+        const curr = data.current;
+        const f0 = data.forecast[0];
+        const temp = currentUnit === 'C' ? curr.tempC : curr.tempF;
+        const maxT = currentUnit === 'C' ? f0.maxTempC : f0.maxTempF;
+        const minT = currentUnit === 'C' ? f0.minTempC : f0.minTempF;
+
+        const card = document.createElement('div');
+        card.className = 'city-card-item';
+        card.onclick = () => selectCity(cid);
+
+        card.innerHTML = `
+          <div class="city-card-header">
+            <div class="city-card-name">
+              <span style="font-size: 22px;">${{c.flag}}</span>
+              <span>${{c.name}}</span>
+            </div>
+            <span style="font-size: 28px;">${{curr.icon}}</span>
+          </div>
+          <div class="city-card-temp">${{temp}}${{unitSym}}</div>
+          <div style="font-size: 13px; color: var(--text-muted); font-weight: 500;">
+            ${{curr.desc}} • Feels like ${{currentUnit === 'C' ? curr.feelsLikeC : curr.feelsLikeF}}${{unitSym}}
+          </div>
+          <div class="city-card-footer">
+            <span>H: ${{maxT}}${{unitSym}} / L: ${{minT}}${{unitSym}}</span>
+            <span>💧 ${{curr.humidity}}% | 💨 ${{currentUnit === 'C' ? curr.windSpeedKmph + ' km/h' : curr.windSpeedMiles + ' mph'}}</span>
+          </div>
+        `;
+        grid.appendChild(card);
+      }});
+    }}
+
+    function initCompareDropdowns() {{
+      const sel1 = document.getElementById('select-city-1');
+      const sel2 = document.getElementById('select-city-2');
+      sel1.innerHTML = '';
+      sel2.innerHTML = '';
+
+      cityList.forEach(c => {{
+        const cid = c.name.toLowerCase().replace(' ', '-');
+        const opt1 = document.createElement('option');
+        opt1.value = cid;
+        opt1.textContent = `${{c.flag}} ${{c.name}} (${{c.query}})`;
+        if (cid === 'london') opt1.selected = true;
+        sel1.appendChild(opt1);
+
+        const opt2 = document.createElement('option');
+        opt2.value = cid;
+        opt2.textContent = `${{c.flag}} ${{c.name}} (${{c.query}})`;
+        if (cid === 'ankara') opt2.selected = true;
+        sel2.appendChild(opt2);
+      }});
+    }}
+
+    function updateComparison() {{
+      const id1 = document.getElementById('select-city-1').value || 'london';
+      const id2 = document.getElementById('select-city-2').value || 'ankara';
+      const c1 = weatherData[id1];
+      const c2 = weatherData[id2];
       const unitSym = `°${{currentUnit}}`;
 
       function makeRows(city) {{
+        if (!city) return '';
         const c = city.current;
         const f0 = city.forecast[0];
         const f1 = city.forecast[1];
@@ -1332,31 +1579,19 @@ def generate_html(weather_data: dict) -> str:
         `;
       }}
 
-      document.getElementById('compare-table-london').innerHTML = makeRows(lon);
-      document.getElementById('compare-table-ankara').innerHTML = makeRows(ank);
-    }}
-
-    async function reloadWeatherData() {{
-      const icon = document.getElementById('refresh-icon');
-      icon.style.display = 'inline-block';
-      icon.style.animation = 'spin 1s linear infinite';
-
-      try {{
-        const [resLon, resAnk] = await Promise.all([
-          fetch('https://wttr.in/London?format=j1').then(r => r.json()),
-          fetch('https://wttr.in/Ankara?format=j1').then(r => r.json())
-        ]);
-        alert('Live weather data fetched directly from wttr.in!');
-        location.reload();
-      }} catch (err) {{
-        console.warn('Direct client-side fetch restricted by CORS, reload python script to re-fetch:', err);
-        alert('Data was fetched fresh via Python generator! To update the file with newest live data, rerun the Python script.');
-      }} finally {{
-        icon.style.animation = '';
+      if (c1) {{
+        document.getElementById('compare-title-1').innerHTML = `<span>${{c1.flag}}</span> ${{c1.name}}, ${{c1.country}}`;
+        document.getElementById('compare-table-1').innerHTML = makeRows(c1);
+      }}
+      if (c2) {{
+        document.getElementById('compare-title-2').innerHTML = `<span>${{c2.flag}}</span> ${{c2.name}}, ${{c2.country}}`;
+        document.getElementById('compare-table-2').innerHTML = makeRows(c2);
       }}
     }}
 
-    // Initial render
+    // Initialize
+    initCompareDropdowns();
+    renderNavBar();
     renderDashboard();
   </script>
 </body>
@@ -1365,24 +1600,34 @@ def generate_html(weather_data: dict) -> str:
     return html_content
 
 def main():
-    print("Fetching weather data from wttr.in for London and Ankara...")
-    raw_london = fetch_weather("London")
-    raw_ankara = fetch_weather("Ankara")
-
-    print("Parsing weather data...")
-    data = {
-        "london": parse_city_weather(raw_london, "London", "🇬🇧"),
-        "ankara": parse_city_weather(raw_ankara, "Ankara", "🇹🇷")
-    }
-
-    print("Generating HTML dashboard...")
-    html = generate_html(data)
+    print(f"Fetching weather data for {len(CITIES)} cities (this may take a moment)... \n")
+    
+    parsed_data = {}
+    for city_info in CITIES:
+        name = city_info["name"]
+        query = city_info["query"]
+        flag = city_info["flag"]
+        
+        try:
+            raw_data = fetch_weather(query)
+            parsed = parse_city_weather(raw_data, name, flag)
+            cid = name.lower().replace(" ", "-")
+            parsed_data[cid] = parsed
+            print(f"✅ Successfully fetched data for {name}")
+        except Exception as e:
+            print(f"❌ Failed to fetch data for {name}: {e}")
+        
+        # Brief pause between calls to avoid rate limiting
+        time.sleep(0.3)
+    
+    print("\nGenerating HTML dashboard...")
+    html = generate_html(parsed_data, CITIES)
 
     output_filename = "weather_dashboard.html"
     with open(output_filename, "w", encoding="utf-8") as f:
         f.write(html)
 
-    print(f"Successfully generated '{output_filename}'!")
+    print(f"\n🎉 Successfully generated '{output_filename}' with live data for all {len(parsed_data)} cities!")
 
 if __name__ == "__main__":
     main()
